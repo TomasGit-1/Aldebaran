@@ -1,5 +1,7 @@
 import React from 'react'
-import {Card ,Nav , Button} from 'react-bootstrap';
+import {Card ,Nav ,Container} from 'react-bootstrap';
+import styles from '../styles/myStyle.css';
+
 
 import getInicio from '../services/conexion'
 import Formulario0 from './Formulario0'
@@ -13,7 +15,7 @@ class FormularioC extends React.Component {
             msg : "Primera aplicacion React",
             titles:[
                 {value : 0 ,text : "Datos personales"},
-                {value : 1 ,text : "Datos laboraless"},
+                {value : 1 ,text : "Datos laborales"},
                 {value : 2 ,text : "Formacion Academica"}
             ],
             show1:true,
@@ -62,30 +64,25 @@ class FormularioC extends React.Component {
         let { show2 } = this.state
         let { show3 } = this.state
         return (
-            <Card bg="light">
-                <Card.Header  bg="white" >
-                    <Nav fill variant="tabs" defaultActiveKey="#one">
-                        <Nav.Item>
-                            <Nav.Link href="#one"  onClick={() => this.ShowForm(0)} >{titles[0].text}</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link href="#two"  onClick={ () => this.ShowForm(1)} >{titles[1].text}</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link href="#three" onClick={ () => this.ShowForm(2)} >{titles[2].text}</Nav.Link>
-                        </Nav.Item>
-                    </Nav>
-                </Card.Header>
+            <Container fluid  className="container bg-light">
 
-                <Card.Body>
-                    <Card.Title >Special title treatment</Card.Title>
-                        { show1 ? <Formulario0 /> : null }
-                        { show2 ? <Formulario1 /> : null }
-                        { show3 ? <Formulario2 /> : null }
-                </Card.Body>
+                <Nav fill variant="tabs" defaultActiveKey="#one">
+                    <Nav.Item>
+                        <Nav.Link href="#one"  onClick={() => this.ShowForm(0)} >{titles[0].text}</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link href="#two"  onClick={ () => this.ShowForm(1)} >{titles[1].text}</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link href="#three" onClick={ () => this.ShowForm(2)} >{titles[2].text}</Nav.Link>
+                    </Nav.Item>
+                </Nav>
 
-            </Card>
-
+                    { show1 ? <Formulario0/> : null }
+                    { show2 ? <Formulario1 /> : null }
+                    { show3 ? <Formulario2 /> : null }
+                    
+            </Container>
         )
         
     }
