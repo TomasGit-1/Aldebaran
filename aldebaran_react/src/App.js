@@ -1,13 +1,13 @@
 import React , {Fragment} from 'react'
-import Navbar from './Components/Navbar'
-import Formulario from './Components/Formulario'
+import NavbarMain from './Components/NavbarS'
+import FormularioC from './Components/FormularioC'
 function App() {
   return (
       <Fragment>
-        <Navbar brand = "Ejemplo React" ></Navbar>
-        <div className="container">
+        <NavbarMain brand = "Ejemplo React" ></NavbarMain>
+        <div className="container mt-5">
           <div className="row">
-            <Formulario></Formulario>
+            <FormularioC/>
           </div>
         </div>
       </Fragment>

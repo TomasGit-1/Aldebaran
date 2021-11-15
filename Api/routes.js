@@ -2,9 +2,10 @@ const express = require('express');
 const routes = express.Router();
 
 
+
 // Aqui va toda la logica
 routes.get('/' , (req, res)=> {
-    res.send('testing Api');
+    res.send({ "name":"Testing Api"});
 });
 
 // Aqui va toda la logica
