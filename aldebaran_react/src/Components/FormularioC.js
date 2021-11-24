@@ -1,8 +1,5 @@
 import React from 'react'
-import {Card ,Nav ,Container} from 'react-bootstrap';
-import styles from '../styles/myStyle.css';
-
-
+import {Card ,Nav ,Container , Tabs , Tab ,Sonnet} from 'react-bootstrap';
 import getInicio from '../services/conexion'
 import Formulario0 from './Formulario0'
 import Formulario1 from './Formulario1'
@@ -15,8 +12,9 @@ class FormularioC extends React.Component {
             msg : "Primera aplicacion React",
             titles:[
                 {value : 0 ,text : "Datos personales"},
-                {value : 1 ,text : "Datos laborales"},
-                {value : 2 ,text : "Formacion Academica"}
+                {value : 1 ,text : "Formacion Academica"},
+                {value : 2 ,text : "Datos laborales"},
+                {value : 3 ,text : "Comprobantes de pago"}
             ],
             show1:true,
             show2:false,
@@ -64,25 +62,48 @@ class FormularioC extends React.Component {
         let { show2 } = this.state
         let { show3 } = this.state
         return (
-            <Container fluid  className="container bg-light">
+            <main>
+                    <Tabs
+                        defaultActiveKey="home"
+                        transition={false}
+                        id="noanim-tab-example"
+                        className="mb-3"
+                        >
+                        <Tab eventKey="home" title={titles[0].text}>
+                            <Container fluid="md" className="bg-light shadow-sm p-3 mb-5 bg-white rounded">
+                                <Formulario0/>
+                            </Container> 
 
-                <Nav fill variant="tabs" defaultActiveKey="#one">
-                    <Nav.Item>
-                        <Nav.Link href="#one"  onClick={() => this.ShowForm(0)} >{titles[0].text}</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                        <Nav.Link href="#two"  onClick={ () => this.ShowForm(1)} >{titles[1].text}</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                        <Nav.Link href="#three" onClick={ () => this.ShowForm(2)} >{titles[2].text}</Nav.Link>
-                    </Nav.Item>
-                </Nav>
+                        </Tab>
+                        <Tab eventKey="Form1" title={titles[1].text +'/'+ titles[2].text}>
+                            <Container fluid="md" className="bg-light shadow-sm p-3 mb-5 bg-white rounded">
+                                <Formulario1/>
+                            </Container> 
+                        </Tab>
+                        <Tab eventKey="Form2" title="Contact" >
+                            <Container fluid="md" className="bg-light shadow-sm p-3 mb-5 bg-white rounded">
+                                <Formulario2/>
+                            </Container> 
+                        </Tab>
+                    </Tabs>
 
+                    {/* <Nav fill variant="tabs" defaultActiveKey="#one" fluid="ls" className="shadow-lg" >
+                        <Nav.Item >
+                            <Nav.Link href="#one"  onClick={() => this.ShowForm(0)} style={{color: '#000000'}}>{titles[0].text}</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link href="#two"  onClick={ () => this.ShowForm(1)} style={{color: '#000000'}} >{titles[1].text} / {titles[2].text}</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link href="#three" onClick={ () => this.ShowForm(2)} style={{color: '#000000'}}>{titles[2].text}</Nav.Link>
+                        </Nav.Item>
+                    </Nav>
+                <Container fluid="md" className="bg-light shadow-lg">
                     { show1 ? <Formulario0/> : null }
                     { show2 ? <Formulario1 /> : null }
                     { show3 ? <Formulario2 /> : null }
-                    
-            </Container>
+                </Container> */}
+            </main>
         )
         
     }
