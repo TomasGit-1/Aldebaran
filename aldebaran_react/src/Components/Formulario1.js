@@ -6,7 +6,8 @@ class Formulario1 extends React.Component {
         super(props)
         this.state = {
             msg : "Primera aplicacion React",
-        }   
+            
+        };
     }
     render() {
         return (
@@ -14,7 +15,7 @@ class Formulario1 extends React.Component {
 
                 <Form>
                     <Row>
-                        <div className="mt-2 "  style={{background: '#015757', color: '#FFFFFF' , height:"30px" , borderRadius:"5px"}}>
+                        <div className="mt-2 "  style={{background: '#A90101', color: '#FFFFFF' , height:"30px" , borderRadius:"5px"}}>
                                 <small className="mt-0">Formacion academica del alumno </small>
                         </div>
                     </Row>
@@ -25,8 +26,8 @@ class Formulario1 extends React.Component {
                                 <Form.Select aria-label="Default select example">
                                     <option>Seleccione una opcion</option>
                                     <option value="0">Basico</option>
-                                    <option value="1">Medio superior</option>
-                                    <option value="2">superior</option>
+                                    <option value="1">Medio Superior</option>
+                                    <option value="2">Superior</option>
                                     <option value="3">Posgrado</option>
                                 </Form.Select>
                             </Form.Group>
@@ -36,7 +37,7 @@ class Formulario1 extends React.Component {
                                 <Form.Label>Situacion academica</Form.Label>
                                 <Form.Select aria-label="Default select example">
                                     <option>Seleccione una opcion</option>
-                                    <option value="0">Estudiante</option>
+                                    <option value="0">Estudiante (Cursando)</option>
                                     <option value="1">Pasante</option>
                                     <option value="2">Titulado</option>
                                 </Form.Select>
@@ -46,8 +47,8 @@ class Formulario1 extends React.Component {
                     <Row>
                         <Col sm>
                             <Form.Group className="mb-3">
-                                <Form.Label>Intitucion educativa</Form.Label>
-                                <Form.Control type="text" placeholder="Intitucion Educativa" />
+                                <Form.Label>Institucion educativa</Form.Label>
+                                <Form.Control type="text" placeholder="Institucion Educativa" />
                             </Form.Group>
                         </Col>
                         <Col sm>
@@ -62,6 +63,40 @@ class Formulario1 extends React.Component {
                             <Form.Group controlId="formFile" className="mb-3">
                                 <Form.Label>En caso de ser comunidad politecnica adjuntar evidencia</Form.Label>
                                 <Form.Control type="file" />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <div className="mt-2 "  style={{background: '#A90101', color: '#FFFFFF' , height:"30px" , borderRadius:"5px"}}>
+                                <small className="mt-0">Datos laborales</small>
+                        </div>
+                    </Row>
+                    {/* Opcionales */}
+                    <Row>
+                        <Col sm>
+                            <Form.Group className="mb-3" >
+                                <Form.Label  className="h5">Nombre de la institución</Form.Label>
+                                <Form.Control type="text" placeholder="Apellido paterno"/>
+                            </Form.Group>
+                        </Col>
+                        <Col sm>
+                            <Form.Group className="mb-3">
+                                <Form.Label  className="h5">Domicilio</Form.Label>
+                                <Form.Control type="text" placeholder="Apellido Materno" />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col sm>
+                            <Form.Group className="mb-3" >
+                                <Form.Label  className="h5">Puesto</Form.Label>
+                                <Form.Control type="text" placeholder="Apellido paterno"/>
+                            </Form.Group>
+                        </Col>
+                        <Col sm>
+                            <Form.Group className="mb-3">
+                                <Form.Label  className="h5">Telefono</Form.Label>
+                                <Form.Control type="text" placeholder="Apellido Materno" />
                             </Form.Group>
                         </Col>
                     </Row>

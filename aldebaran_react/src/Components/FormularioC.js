@@ -14,7 +14,8 @@ class FormularioC extends React.Component {
                 {value : 0 ,text : "Datos personales"},
                 {value : 1 ,text : "Formacion Academica"},
                 {value : 2 ,text : "Datos laborales"},
-                {value : 3 ,text : "Comprobantes de pago"}
+                {value : 3 ,text : "Comprobantes de pago"},
+                {value : 3 ,text : "Información Adicional"}
             ],
             show1:true,
             show2:false,
@@ -63,6 +64,20 @@ class FormularioC extends React.Component {
         let { show3 } = this.state
         return (
             <main>
+                    <section>
+                        <div style={{ border : '1px solid'}} className="mb-3">
+                            <p style={{ align: 'justify' , padding:'5px' }}>
+                                    El presente formulario tiene el objetivo de recabar los datos para realizar tu inscripción a los 
+                                    Servicios Educativos del Centro de Vinculación y Desarrollo Regional Unidad Oaxaca, agradecemos
+                                    llenes cada uno de los campos de forma correcta y verídica utilizando altas, bajas y acentos; 
+                                    dado que estos datos serán los que aparecerán en tu documento probatorio al termino del curso.<br></br>
+                                    Es importante que coloques tu correo electrónico de manera correcta, ya que a través de este medio 
+                                    se llevará a cabo la comunicación y seguimiento del programa.
+                                    <br></br>
+                                    IMPORTANTE. Cabe señalar que la información proporcionada se tomará como cierta y definitiva para que tu proceso de registro sea exitoso. 
+                            </p>
+                        </div>
+                    </section>
                     <Tabs
                         defaultActiveKey="home"
                         transition={false}
@@ -80,9 +95,14 @@ class FormularioC extends React.Component {
                                 <Formulario1/>
                             </Container> 
                         </Tab>
-                        <Tab eventKey="Form2" title="Contact" >
+                        <Tab eventKey="Form2" title={titles[3].text} >
                             <Container fluid="md" className="bg-light shadow-sm p-3 mb-5 bg-white rounded">
                                 <Formulario2/>
+                            </Container> 
+                        </Tab>
+                        <Tab eventKey="Form3" title={titles[4].text} >
+                            <Container fluid="md" className="bg-light shadow-sm p-3 mb-5 bg-white rounded">
+                                <Formulario1/>
                             </Container> 
                         </Tab>
                     </Tabs>
