@@ -1,6 +1,7 @@
 const express = require('express');
 const { Pool  } = require('pg');
 const routes = express.Router();
+
 /*
  *Obtenemos la configuracion de la base de datos  
  */
@@ -13,11 +14,9 @@ const config = {
     database:conexion[0]['database'],
     port:conexion[0]['port']
 }
-const pool = new Pool(config);
 /*
 *Finaliza la configuracion de la base de datos
 */
-
 
 // Aqui va toda la logica
 routes.get('/' , (req, res)=> {
@@ -30,29 +29,30 @@ routes.get('/Api' , (req, res)=> {
 });
 //Obtenemos Servicio educativo
 routes.get('/ServEducativo' , (req, res)=> {
-    pool.connect()
+    // console.log("Entrasmoa aqui");
+    // var rows =getServicios();
+    // res.json({ "Servicios":rows});
+    const pool = new Pool(config);
+    pool.connect();
     pool.query('SELECT * FROM SERVICIOEDUCATIVO')
     .then(response => {
         var data = response.rows;
         let setArray =[]
-
         data.map(row =>{
             if(row["habilitado"]){
                 setArray.push(row["nombre_servicio"]);
-                console.log(row["nombre_servicio"]);
             }
         })
-
-        console.log(setArray);
-
-
         pool.end()
         res.json({ "Servicios":setArray});
     })
     .catch(err => {
+        res.json({ "Error":err});
         pool.end()
     })
 });
+
+
 
 // app.get('/' , (req , res) => {
 //     console.log("Obtenemos los datos");

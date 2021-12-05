@@ -10,6 +10,14 @@ class Formulario0 extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            //Aqui tenemos la configuracion de la conexion
+            /**
+             *  url_api
+             *  puerto del api
+            */
+            urlApi:"",
+            puertoApi:"",
+
             show:false,
             //Mensajes que aparecen en la ionterfaz
             msgServicio:"Sólo aparecen los servicios educativos disponibles a la fecha de registro. No podrás registrarse a alguno diferente al aprobado por la Coordinación.",
@@ -56,6 +64,7 @@ class Formulario0 extends React.Component {
         this.uploadPhoto = this.uploadPhoto.bind(this)
         this.dataForm0 = this.dataForm0.bind(this); 
     }
+
     /*  
         ===========================================================================
                     Funciones que ayudan en la logica del proyecto
@@ -121,20 +130,37 @@ class Formulario0 extends React.Component {
         ===========================================================================
     */
     componentDidMount() {
+        this.setState({urlApi:"5000"});
+        this.setState({puertoApi:"http://localhost:"});
         this.apiServicios();
+
     }
-    apiServicios = () =>{
-        var array;
-        fetch('http://localhost:5000/ServEducativo')
-        .then((resp) => resp.json())
-        .then(function(data) {
-            return data["Servicios"];
-        })
-        .catch(function(error) {
-            console.log(error);
-        });
-        console.log(array);
+    apiServicios = async() =>{
+        try{
+            var array = [];
+            const response = await  fetch("http://localhost:5000/ServEducativo")
+            var responseJson = await response.json();
+            for(var i = 0 ; i< responseJson["Servicios"].length; i++){
+                array.push(responseJson["Servicios"][i]);
+            }
+            this.setState({opciones: array});   
+        }catch(e){
+            console.log(e);
+        }
+    
     }
+    // async apiServicios = () =>{
+    //     let array2= [];
+    //     fetch('http://localhost:5000/ServEducativo')
+    //     .then((resp) => resp.json())
+    //     .then(function(data) {
+    //         array2= data["Servicios"];
+    //     })
+    //     .catch(function(error) {
+    //         console.log(error);
+    //     });
+    //     console.log(array2);
+    // }
 
     render() {
         var {opciones} = this.state
