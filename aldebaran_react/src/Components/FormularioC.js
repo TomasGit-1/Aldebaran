@@ -1,6 +1,6 @@
 import React from 'react'
 import {Card ,Nav ,Container , Tabs , Tab ,Sonnet} from 'react-bootstrap';
-import getInicio from '../services/conexion'
+// import conexion from '../services/conexion'
 import Formulario0 from './Formulario0'
 import Formulario1 from './Formulario1'
 import Formulario2 from './Formulario2'

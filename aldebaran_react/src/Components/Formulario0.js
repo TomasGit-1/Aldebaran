@@ -1,10 +1,10 @@
 import React from 'react'
 import {Button , Form , Container ,Row ,Col ,Alert , Popover , Overlay } from 'react-bootstrap'
 import SweetAlert from 'sweetalert2-react';
+// import servicios from '../services/conexion'
+
+
 // import Select from 'react-select'
-
-
-
 
 class Formulario0 extends React.Component {
     constructor(props) {
@@ -16,9 +16,6 @@ class Formulario0 extends React.Component {
             msg : "Primera aplicacion React",
             inputValue:"Bienvenido",
             opciones : [
-                "Uno",
-                "Dos",
-                "Tres"
             ],
             opciones2 : [
                 { value: 'chocolate', label: 'Chocolate' },
@@ -59,6 +56,11 @@ class Formulario0 extends React.Component {
         this.uploadPhoto = this.uploadPhoto.bind(this)
         this.dataForm0 = this.dataForm0.bind(this); 
     }
+    /*  
+        ===========================================================================
+                    Funciones que ayudan en la logica del proyecto
+        ===========================================================================
+    */
     getDatos(){
         console.log("Esta funcion deberia de mandar la informacion al api");
     }
@@ -111,21 +113,27 @@ class Formulario0 extends React.Component {
             this.setState({municipio_Alumno: event.target.value});        
         }
     }
-    //Esta funcion trae toodos los servicios educativos que esten en la base de datos
+
+    /*  
+        ===========================================================================
+                    Esta funcion trae toodos los servicios educativos 
+                        que esten en la base de datos
+        ===========================================================================
+    */
     componentDidMount() {
-        console.log("Estamos cargando los servicios educativos");
-        // fetch('http://localhost:5000/ServEducativo')
-        // .then(result=>result.json())
-        // .then(items=>this.setState({
-        //     done: true,
-        //     items
-        // }))
-        // .catch(() => {
-        //     this.setState({
-        //         done: true,
-        //         success: false
-        //     })
-        // })
+        this.apiServicios();
+    }
+    apiServicios = () =>{
+        var array;
+        fetch('http://localhost:5000/ServEducativo')
+        .then((resp) => resp.json())
+        .then(function(data) {
+            return data["Servicios"];
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+        console.log(array);
     }
 
     render() {

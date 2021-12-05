@@ -6,4 +6,19 @@ export async function getInicio () {
     return responseJson
     
 }
-export default getInicio
+export function servicios() {
+    fetch('http://localhost:5000/ServEducativo')
+    .then((resp) => resp.json())
+    .then(function(data) {
+        var  array = []
+        data["Servicios"].forEach( function(valor) {
+            array.push(valor);
+        });
+        return array;
+    })
+    .catch(function(error) {
+        console.log(error);
+    });
+}
+
+export default servicios

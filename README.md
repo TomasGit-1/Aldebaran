@@ -17,3 +17,17 @@ npm run dev
 
 #Para instalar las dependencias
 npm install 
+
+# Documentacion
+
+    https://www.npmjs.com/package/sweetalert2-react
+    npm install sweetalert2-react
+
+
+
+
+
+    #Comandos Psql
+    \l  listar bases de datos
+    \c  Usar una base de datos
+    \dt lista las tablas creadas

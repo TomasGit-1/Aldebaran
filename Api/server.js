@@ -7,7 +7,7 @@ const cors = require('cors');
 const app = express();
 //const PORT = 3000;
 
-app.set('port' , process.env.PORT || 3000)
+app.set('port' , process.env.PORT || 5000)
 // req = request
 // res = response
 app.use((req, res, next) => {
@@ -18,6 +18,7 @@ app.use((req, res, next) => {
 	next();
 });
 app.use('/' , routes)
+
 app.use(cors())
 // Configurar cabeceras y cors
 
