@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'
 import {Button , Form , Container ,Row ,Col ,Alert , Popover , Overlay } from 'react-bootstrap'
 import SweetAlert from 'sweetalert2-react';
 // import servicios from '../services/conexion'
@@ -58,11 +59,13 @@ class Formulario0 extends React.Component {
             telContacto_Emerge:"",
             email_Emerge:""
         };
-        this.getDatos = this.getDatos.bind(this);  
+        this.SendDatos = this.SendDatos.bind(this);  
         this.handlechange = this.handlechange.bind(this);  
         this.onSeleccion = this.onSeleccion.bind(this);  
         this.uploadPhoto = this.uploadPhoto.bind(this)
         this.dataForm0 = this.dataForm0.bind(this); 
+        this.uploadFileCurp = this.uploadFileCurp.bind(this);
+        this.SeleccGenero = this.SeleccGenero.bind(this);
     }
 
     /*  
@@ -70,16 +73,66 @@ class Formulario0 extends React.Component {
                     Funciones que ayudan en la logica del proyecto
         ===========================================================================
     */
-    getDatos(){
+    SendDatos(){
         console.log("Esta funcion deberia de mandar la informacion al api");
+        console.log(this.state.curp_Alumno);
+        let data = {
+            //Datos de entrada del alumno
+            n_max_estudios:this.state.n_max_estudios,
+            modalidad:this.state.modalidad,
+            file_fotografia:this.state.file_fotografia,
+            email_Alumno:this.state.email_Alumno,
+            curp_Alumno:this.state.curp_Alumno,
+            fileCurp_Alumno:this.state.fileCurp_Alumno,
+            genero :this.state.genero,
+            nombre_Alumno:this.state.nombre_Alumno,
+            appPat_Alumno:this.state.appPat_Alumno,
+            appMat_Alumno:this.state.appMat_Alumno,
+            fechaNac_Alumno:this.state.fechaNac_Alumno,
+            edad_Alumno:this.state.edad_Alumno,
+            telPar_Alumno:this.state.telPar_Alumno,
+            telCel_Alumno:this.state.telCel_Alumno,
+            //Variables para el domicilio del alumno
+            calle_Alumno:this.state.calle_Alumno, 
+            num_Alumno:this.state.num_Alumno,
+            col_Alumno:this.state.col_Alumno,
+            cp_Alumno:this.state.cp_Alumno,
+            municipio_Alumno:this.state.municipio_Alumno,
+            //Contacto de emergencia
+            nombre_Emerge:this.state.nombre_Emerge,
+            appPat_Emerge:this.state.appPat_Emerge,
+            appMat_Emerge:this.state.appMat_Emerge,
+            telContacto_Emerge:this.state.telContacto_Emerge,
+            email_Emerge:this.state.email_Emerge
+            
+        };
+        for(var i=0 ; i<data.length; i++){
+            console.log(data[i]);
+        }
+
+        axios.post('http://localhost:5000/Api/Form0', { 
+            data ,
+        })
+        .then(res => {
+            console.log(res);
+            console.log(res.data);
+        }).catch(function(error){
+        });
+
     }
     //Esta funcion nos ayuda a obtener todos los datos del formulario
     //Evetos onChange para obtener los datos con React Js 
     handlechange(event){
+        console.log(event.target.value);
         this.setState({n_max_estudios: event.target.value});
     }
     onSeleccion(event){
+        console.log(event.target.value);
         this.setState({modalidad: event.target.value});        
+    }
+    SeleccGenero(event){
+        console.log(event.target.value);
+        this.setState({genero: event.target.value});        
     }
     uploadPhoto(event){
         var photoUser = event.target.value;
@@ -89,6 +142,16 @@ class Formulario0 extends React.Component {
             console.log("Imagen cargada");
             console.log(event.target.value);
             this.setState({file_fotografia: event.target.value});        
+        }
+    }
+    uploadFileCurp(event){
+        var fileCurp = event.target.value;
+        if (fileCurp === ""){
+            console.log("No se ha cargado ninguna archivo");
+        }else{
+            console.log("Curp crgada");
+            console.log(event.target.value);
+            this.setState({fileCurp_Alumno: event.target.value});        
         }
     }
     dataForm0(event , data){
@@ -120,6 +183,16 @@ class Formulario0 extends React.Component {
             this.setState({cp_Alumno: event.target.value});        
         }else if (data === "municipio"){
             this.setState({municipio_Alumno: event.target.value});        
+        }else if (data === "nombre_Emerge"){
+            this.setState({nombre_Emerge: event.target.value});        
+        }else if (data === "appPat_Emerge"){
+            this.setState({appPat_Emerge: event.target.value});        
+        }else if (data === "appMat_Emerge"){
+            this.setState({appMat_Emerge: event.target.value});        
+        }else if (data === "telContacto_Emerge"){
+            this.setState({telContacto_Emerge: event.target.value});        
+        }else if (data === "email_Emerge"){
+            this.setState({email_Emerge: event.target.value});        
         }
     }
 
@@ -133,7 +206,6 @@ class Formulario0 extends React.Component {
         this.setState({urlApi:"5000"});
         this.setState({puertoApi:"http://localhost:"});
         this.apiServicios();
-
     }
     apiServicios = async() =>{
         try{
@@ -244,8 +316,8 @@ class Formulario0 extends React.Component {
                         </Col>
                         <Col sm >
                             <Form.Group controlId="formFile" className="mb-3">
-                                <Form.Label className="h5">Archivo de CURP *</Form.Label>
-                                <Form.Control type="file"  accept=".pdf" />
+                                <Form.Label className="h5">Archivo de curp *</Form.Label>
+                                <Form.Control type="file"  accept=".pdf" onChange={this.uploadFileCurp} />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -254,10 +326,10 @@ class Formulario0 extends React.Component {
                             <Form.Group>
                                 <Form.Label className="h5" >Genero</Form.Label>
                                 {/* <Select   options={this.state.options}  /> */}
-                                <Form.Select aria-label="Default select example">
+                                <Form.Select aria-label="Default select example"  onChange={this.SeleccGenero}>
                                     <option>Seleccione una opcion</option>
-                                    <option value="0">Mujer</option>
-                                    <option value="1">Hombre</option>
+                                    <option value="Mujer">Mujer</option>
+                                    <option value="Hombre">Hombre</option>
                                 </Form.Select>
                             </Form.Group>
                         
@@ -346,19 +418,19 @@ class Formulario0 extends React.Component {
                         <Col sm>
                             <Form.Group className="mb-3">
                                 <Form.Label  className="h5">Nombre</Form.Label>
-                                <Form.Control type="text" placeholder="Nombre"   onChange={ (evt) => this.dataForm0(evt , "edad")}/>
+                                <Form.Control type="text" placeholder="Nombre"   onChange={ (evt) => this.dataForm0(evt , "nombre_Emerge")}/>
                             </Form.Group>
                         </Col>
                         <Col sm>
                             <Form.Group className="mb-3" >
                                 <Form.Label  className="h5">Apellido paterno</Form.Label>
-                                <Form.Control type="text" placeholder="Apellido paterno"/>
+                                <Form.Control type="text" placeholder="Apellido paterno" onChange={ (evt) => this.dataForm0(evt , "appPat_Emerge")}/>
                             </Form.Group>
                         </Col>
                         <Col sm>
                             <Form.Group className="mb-3">
                                 <Form.Label  className="h5">Apellido Materno</Form.Label>
-                                <Form.Control type="text" placeholder="Apellido Materno" />
+                                <Form.Control type="text" placeholder="Apellido Materno" onChange={ (evt) => this.dataForm0(evt , "appMat_Emerge")}/>
                             </Form.Group>
                         </Col>
                     </Row>
@@ -366,19 +438,19 @@ class Formulario0 extends React.Component {
                         <Col sm>
                             <Form.Group className="mb-3">
                                 <Form.Label  className="h5">Telefono de contacto</Form.Label>
-                                <Form.Control type="tel" placeholder="Telefono de contacto" />
+                                <Form.Control type="tel" placeholder="Telefono de contacto" onChange={ (evt) => this.dataForm0(evt , "telContacto_Emerge")}/>
                             </Form.Group>
                         </Col>
                         <Col sm>
                             <Form.Group className="mb-3">
                                 <Form.Label className="h5">Email</Form.Label>
-                                <Form.Control type="email" placeholder="Email" />
+                                <Form.Control type="email" placeholder="Email" onChange={ (evt) => this.dataForm0(evt , "email_Emerge")} />
                             </Form.Group>
                         </Col>
                     </Row>
                     <Row>
                         <Col sm>
-                            <Button  type="button" className=" mt- 3 mb-3 col-4" style={{background: '#A90101', color: '#FFFFFF' }}  onClick={() => this.setState({ show: true })}>
+                            <Button  type="button" className=" mt- 3 mb-3 col-4" style={{background: '#A90101', color: '#FFFFFF' }}  onClick={() => this.SendDatos()}>
                                 Enviar
                             </Button>
                             {/* <Button  type="button" className=" mt- 3 mb-3 col-4" style={{background: '#A90101', color: '#FFFFFF' }}  onClick={() => this.setState({ show: true })}>

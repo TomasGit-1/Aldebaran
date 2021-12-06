@@ -27,11 +27,17 @@ routes.get('/' , (req, res)=> {
 routes.get('/Api' , (req, res)=> {
     res.send(' Api');
 });
+//Recibimos la informacion del formulario 0
+routes.post('/Api/Form0' , (req, res , next)=> {
+    let datos = req.body;
+    //console.log(datos.data['curp']);
+    console.log(datos);
+    res.json({ "status": 200});
+});
+
+
 //Obtenemos Servicio educativo
 routes.get('/ServEducativo' , (req, res)=> {
-    // console.log("Entrasmoa aqui");
-    // var rows =getServicios();
-    // res.json({ "Servicios":rows});
     const pool = new Pool(config);
     pool.connect();
     pool.query('SELECT * FROM SERVICIOEDUCATIVO')
