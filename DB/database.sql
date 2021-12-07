@@ -74,11 +74,11 @@ CREATE TABLE PAGOS(
 
 
 
-INSERT INTO  SERVICIOEDUCATIVO  (Nombre_Servicio , Habilitado) VALUES 
-								('Curso de Excel' , true),
-								('Curso de Computacion' , true),
-								('Curso de Ingles' , true),
-								('Curso de Word' , true),
-								('Curso de BD' , true);
-select * from SERVICIOEDUCATIVO;
-delete  from SERVICIOEDUCATIVO;
+-- INSERT INTO  SERVICIOEDUCATIVO  (Nombre_Servicio , Habilitado) VALUES 
+-- 								('Curso de Excel' , true),
+-- 								('Curso de Computacion' , true),
+-- 								('Curso de Ingles' , true),
+-- 								('Curso de Word' , true),
+-- 								('Curso de BD' , true);
+-- select * from SERVICIOEDUCATIVO;
+-- delete  from SERVICIOEDUCATIVO;
