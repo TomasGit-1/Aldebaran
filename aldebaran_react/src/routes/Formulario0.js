@@ -221,19 +221,6 @@ class Formulario0 extends React.Component {
         }
     
     }
-    // async apiServicios = () =>{
-    //     let array2= [];
-    //     fetch('http://localhost:5000/ServEducativo')
-    //     .then((resp) => resp.json())
-    //     .then(function(data) {
-    //         array2= data["Servicios"];
-    //     })
-    //     .catch(function(error) {
-    //         console.log(error);
-    //     });
-    //     console.log(array2);
-    // }
-
     render() {
         var {opciones} = this.state
         return (

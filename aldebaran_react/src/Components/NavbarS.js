@@ -1,17 +1,23 @@
 import React from 'react';
 import {Navbar ,Container} from 'react-bootstrap';
+import img from '../static/ipn.png';
+
+// import ServicoEducativo from "./FormServicioEducativo";
 
 const NavbarMain = ({brand}) => {
     return(
-        <Navbar style={{background: '#A90101' ,  color: '#FFFFFF'}}>
-            <Container >
-                <Navbar.Brand href="#home" style={{color: '#FFFFFF'}}>IPN - Centro de vinculacion y desarrollo de oaxaca</Navbar.Brand>
-                <Navbar.Toggle />
-                <Navbar.Collapse className="justify-content-end">
-                <Navbar.Text >
-                    <a href="#login" style={{color: '#FFFFFF'}}>Iniciar session</a>
-                </Navbar.Text>
-                </Navbar.Collapse>
+        <Navbar style={{background: '#A80000' ,  color: '#FFFFFF'}}>
+            <Container>
+                <Navbar.Brand style={{color: '#FFFFFF'}}>
+                    <img
+                        src={img}
+                        width="30"
+                        height="30"
+                        className="d-inline-block align-top"
+                        alt="IPN - Centro de vinculacion y desarrollo de oaxaca"
+                    />
+                    IPN - Centro de vinculacion y desarrollo de oaxaca                
+                </Navbar.Brand>
             </Container>
         </Navbar>
     );
