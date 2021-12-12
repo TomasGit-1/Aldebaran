@@ -1,11 +1,17 @@
 import React from 'react';
+import NavbarMain from '../Components/NavbarS'
+
 
 // import ServicoEducativo from "./FormServicioEducativo";
 
 const Pagos = ({brand}) => {
 
     return(
-        <h1>PAgos</h1>
+        <main>
+            <NavbarMain/>
+
+            <h1>PAgos</h1>
+        </main>
     );
 
 }

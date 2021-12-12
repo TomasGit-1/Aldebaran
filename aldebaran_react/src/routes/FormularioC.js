@@ -5,6 +5,8 @@ import Formulario0 from './Formulario0'
 import Formulario1 from './Formulario1'
 import Formulario2 from './Formulario2'
 
+import NavbarMain from '../Components/NavbarS'
+
 class FormularioC extends React.Component {
     constructor(props) {
         super(props);
@@ -64,6 +66,8 @@ class FormularioC extends React.Component {
         let { show3 } = this.state
         return (
             <main>
+                    <NavbarMain/>
+
                     <section>
                         <div style={{ border : '1px solid'}} className="mb-3">
                             <p style={{ align: 'justify' , padding:'5px' }}>

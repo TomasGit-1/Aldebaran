@@ -4,6 +4,9 @@ import imgDolar from "../static/alumno.png";
 import imgAlum from "../static/dolarf.png";
 import imgServicio from "../static/servicio.png";
 import { Link  } from "react-router-dom";
+import NavbarMain from './NavbarS'
+import { Fragment } from "react";
+
 
 // import conexion from '../services/conexion'
 
