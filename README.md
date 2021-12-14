@@ -31,3 +31,5 @@ npm install
     \l  listar bases de datos
     \c  Usar una base de datos
     \dt lista las tablas creadas
+
+

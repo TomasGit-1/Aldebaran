@@ -82,3 +82,6 @@ CREATE TABLE PAGOS(
 -- 								('Curso de BD' , true);
 -- select * from SERVICIOEDUCATIVO;
 -- delete  from SERVICIOEDUCATIVO;
+
+-- SELECT * FROM servicioeducativo;
+-- INSERT INTO servicioeducativo (nombre_servicio , habilitado) VALUES('Curso programacion' , True);

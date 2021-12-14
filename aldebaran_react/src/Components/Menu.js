@@ -1,12 +1,9 @@
 import React from "react";
 import { Card, Button, CardGroup } from "react-bootstrap";
-import imgDolar from "../static/alumno.png";
-import imgAlum from "../static/dolarf.png";
+import imgDolar from "../static/dolarf.png";
+import imgAlum from "../static/alumno.png";
 import imgServicio from "../static/servicio.png";
 import { Link  } from "react-router-dom";
-import NavbarMain from './NavbarS'
-import { Fragment } from "react";
-
 
 // import conexion from '../services/conexion'
 
@@ -58,7 +55,6 @@ class MainApp extends React.Component {
                         <Card.Footer className="text-muted">
                             <div className="d-grid gap-2">
                                 <Link to="/Ingresos" className="btn btn-outline-primary">Ingresar</Link>
-
                             </div>
                         </Card.Footer>
                     </Card>

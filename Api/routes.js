@@ -14,6 +14,8 @@ const config = {
     database:conexion[0]['database'],
     port:conexion[0]['port']
 }
+
+
 /*
 *Finaliza la configuracion de la base de datos
 */
@@ -36,10 +38,11 @@ routes.post('/Api/Form0' , (req, res , next)=> {
 });
 
 
-//Obtenemos Servicio educativo
+//Obtenemos Servicio educativo habilitados
 routes.get('/ServEducativo' , (req, res)=> {
-    const pool = new Pool(config);
-    pool.connect();
+    const pool = new Pool(config).promises;
+    
+    pool.connect()
     pool.query('SELECT * FROM SERVICIOEDUCATIVO')
     .then(response => {
         var data = response.rows;
@@ -57,6 +60,47 @@ routes.get('/ServEducativo' , (req, res)=> {
         pool.end()
     })
 });
+//Obtenemos Servicio educativo habilitados
+routes.get('/TablaEducativo' , (req, res)=> {
+    const pool = new Pool(config);
+    pool.connect()
+    pool
+    .query('SELECT * FROM SERVICIOEDUCATIVO')
+    .then(result => {
+        console.log(result.rows);
+        var data = result.rows;
+        let id =[]
+        let servicio =[]
+        let habilitado =[]
+        data.map(row =>{
+            //setArray =[]
+            id.push(row['idserviciosedu']);
+            servicio.push(row['nombre_servicio']);
+            habilitado.push(String(row['habilitado']));
+        })
+        res.json({"id":id, "Servicios":servicio , "habilitado":habilitado});
+    })
+    .catch(e => console.error(e.stack))
+    .then(() => pool.end())
+});
+//Obtenemos Servicio educativo habilitados
+routes.post('/InsertarServicio' , (req, res)=> {
+    let datos = req.body;
+    console.log(datos.data.servicioNew);
+    const text = 'INSERT INTO servicioeducativo (nombre_servicio , habilitado) VALUES($1, $2) RETURNING *'
+    const values = [datos.data.servicioNew, 1]
+    const pool = new Pool(config);
+    pool.connect()
+    pool
+    .query(text ,values )
+    .then(result => {
+        console.log(result.rows[0])
+        res.json({ "status": 200});
+    })
+    .catch(e => console.error(e.stack))
+    .then(() => pool.end())
+});
+
 
 
 
