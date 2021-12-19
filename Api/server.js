@@ -1,4 +1,5 @@
 const express = require('express');
+const fileUpload = require('express-fileupload');
 const routes  = require('./routes');
 const cors = require('cors');
 //const configuration = require('config/confiApi.json');
@@ -9,7 +10,7 @@ const app = express();
 app.set('port' , process.env.PORT || 5000)
 // req = request
 // res = response
-
+app.use(fileUpload());
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: false })) // for parsing application/x-www-form-urlencoded
 
