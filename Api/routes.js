@@ -1,9 +1,9 @@
 const express = require('express');
 const { Pool  } = require('pg');
+const fileUpload = require('express-fileupload');
 const routes = express.Router();
-
 /*
- *Obtenemos la configuracion de la base de datos  
+    *Obtenemos la configuracion de la base de datos  
  */
 let json = require('./config/configApi.json');
 let conexion = json['postgresql'];
@@ -14,11 +14,11 @@ const config = {
     database:conexion[0]['database'],
     port:conexion[0]['port']
 }
-
-
 /*
-*Finaliza la configuracion de la base de datos
+    *Finaliza la configuracion de la base de datos
 */
+
+
 
 // Aqui va toda la logica
 routes.get('/' , (req, res)=> {
@@ -30,18 +30,28 @@ routes.get('/Api' , (req, res)=> {
     res.send(' Api');
 });
 //Recibimos la informacion del formulario 0
-routes.post('/Api/Form0' , (req, res , next)=> {
-    let datos = req.body;
-    //console.log(datos.data['curp']);
-    console.log(datos);
-    res.json({ "status": 200});
-});
+routes.post('/Api/Form0',  (req, res )=> {
+    let sampleFile;
+    let uploadPath;
+    if(!req.files || Object.keys(req.files).length === 0 ){
+        return res.status(400).send('No file were uploaded');
+    }
+    console.log("SI existe en archivos");
+    sampleFile = req.files.sampleFile;
+    uploadPath = __dirname + '/resource/images/' + sampleFile.name;
+    console.log(sampleFile);
+    console.log(uploadPath);
+    sampleFile.mv(uploadPath, function(err) {
+        if (err)
+            return res.status(500).send(err);
+            res.json({ "status": 200});
+        });
 
+});
 
 //Obtenemos Servicio educativo habilitados
 routes.get('/ServEducativo' , (req, res)=> {
     const pool = new Pool(config).promises;
-    
     pool.connect()
     pool.query('SELECT * FROM SERVICIOEDUCATIVO')
     .then(response => {
@@ -100,18 +110,5 @@ routes.post('/InsertarServicio' , (req, res)=> {
     .catch(e => console.error(e.stack))
     .then(() => pool.end())
 });
-
-
-
-
-// app.get('/' , (req , res) => {
-//     console.log("Obtenemos los datos");
-//     console.log(configuration);
-//     res.json({
-//         message : "Lista de usuarios",
-//         body :"Hola Mundo"
-//     });
-// });
-
 
 module.exports = routes;
