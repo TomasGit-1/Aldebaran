@@ -1,11 +1,14 @@
 const express = require('express');
 const { Pool  } = require('pg');
 const fileUpload = require('express-fileupload');
+var fs = require('fs');
+
 const routes = express.Router();
 /*
     *Obtenemos la configuracion de la base de datos  
  */
 let json = require('./config/configApi.json');
+let rutas = json['rutas'];
 let conexion = json['postgresql'];
 const config = {
     host:conexion[0]['host'],
@@ -19,7 +22,6 @@ const config = {
 */
 
 
-
 // Aqui va toda la logica
 routes.get('/' , (req, res)=> {
     res.send({ "name":"Testing Api"});
@@ -31,23 +33,43 @@ routes.get('/Api' , (req, res)=> {
 });
 //Recibimos la informacion del formulario 0
 routes.post('/Api/Form0',  (req, res )=> {
+    let datos = req.body;
+
     let sampleFile;
+    const curp = datos['curp'];
+    //En esta ruta se guardan los archivos pdf 
+    var dirpdf = __dirname +  rutas[0]['upload'] + curp+'/';
+    sampleFile = req.files.pdfcurp;
+    save(req , dirpdf , sampleFile);
+
+    //En esta ruta se guardan las fotografias 
+    var dirimg = __dirname +  rutas[0]['images'] + curp+'/';
+    sampleFile = req.files.imgUser;
+    save(req , dirimg , sampleFile);
+
+    // res.status(400).send('No file were uploaded')
+    res.json({ "status": 200});
+});
+const save = ( req , dir , sampleFile) =>{
     let uploadPath;
-    if(!req.files || Object.keys(req.files).length === 0 ){
-        return res.status(400).send('No file were uploaded');
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, 0744);
     }
-    console.log("SI existe en archivos");
-    sampleFile = req.files.sampleFile;
-    uploadPath = __dirname + '/resource/images/' + sampleFile.name;
+    if(!req.files || Object.keys(req.files).length === 0 ){
+        return [false , "No existe el archivo"];
+    }
+    console.log("Ss existe en archivos");
+    uploadPath = dir+ sampleFile.name;
     console.log(sampleFile);
     console.log(uploadPath);
     sampleFile.mv(uploadPath, function(err) {
         if (err)
-            return res.status(500).send(err);
-            res.json({ "status": 200});
-        });
+            return  [false , err];
+        return  [true , "Save"];
+    });
 
-});
+}
+
 
 //Obtenemos Servicio educativo habilitados
 routes.get('/ServEducativo' , (req, res)=> {

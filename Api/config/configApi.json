@@ -7,5 +7,11 @@
             "database":"IPN",
             "port":"5432"
         }
+    ],
+    "rutas":[
+        {
+            "images":"/resource/images/",
+            "upload":"/resource/upload/"
+        }
     ]
 }
