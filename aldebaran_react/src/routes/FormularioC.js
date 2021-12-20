@@ -197,21 +197,6 @@ class FormularioC extends React.Component {
     componentDidMount() {
         this.setState({ urlApi: "5000" });
         this.setState({ puertoApi: "http://localhost:" });
-        this.apiServicios();
-    }
-    apiServicios = async () => {
-        try {
-            var array = [];
-            const response = await fetch("http://localhost:5000/ServEducativo")
-            var responseJson = await response.json();
-            for (var i = 0; i < responseJson["Servicios"].length; i++) {
-                array.push(responseJson["Servicios"][i]);
-            }
-            this.setState({ opciones: array });
-        } catch (e) {
-            console.log(e);
-        }
-
     }
     render() {
         var { opciones } = this.state
@@ -221,7 +206,7 @@ class FormularioC extends React.Component {
                     <NavbarMain />
                 </section>
                 <section>
-                    <Container className="ml-2 mr-2">
+                    <Container className="mt-3 mb-3 border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2">
                         <SweetAlert
                             show={this.state.show}
                             title="Demo"

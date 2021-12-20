@@ -34,9 +34,9 @@ routes.get('/Api' , (req, res)=> {
 //Recibimos la informacion del formulario 0
 routes.post('/Api/Form0',  (req, res )=> {
     let datos = req.body;
-
     let sampleFile;
     const curp = datos['curp'];
+
     //En esta ruta se guardan los archivos pdf 
     var dirpdf = __dirname +  rutas[0]['upload'] + curp+'/';
     sampleFile = req.files.pdfcurp;
@@ -45,28 +45,32 @@ routes.post('/Api/Form0',  (req, res )=> {
     //En esta ruta se guardan las fotografias 
     var dirimg = __dirname +  rutas[0]['images'] + curp+'/';
     sampleFile = req.files.imgUser;
-    save(req , dirimg , sampleFile);
+    let respuesta = save(req , dirimg , sampleFile);
 
-    // res.status(400).send('No file were uploaded')
-    res.json({ "status": 200});
+
+    res.json({ "status": respuesta});
 });
 const save = ( req , dir , sampleFile) =>{
     let uploadPath;
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, 0744);
+    try {
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, 0744);
+        }
+        if(!req.files || Object.keys(req.files).length === 0 ){
+            console.log('No file were uploaded');
+        }
+
+        uploadPath = dir+ sampleFile.name;
+        sampleFile.mv(uploadPath, function(err) {
+            if (err){
+                console.log(err);
+            }
+        });
+        return 200;
+    } catch (error) {
+        return error;
+        
     }
-    if(!req.files || Object.keys(req.files).length === 0 ){
-        return [false , "No existe el archivo"];
-    }
-    console.log("Ss existe en archivos");
-    uploadPath = dir+ sampleFile.name;
-    console.log(sampleFile);
-    console.log(uploadPath);
-    sampleFile.mv(uploadPath, function(err) {
-        if (err)
-            return  [false , err];
-        return  [true , "Save"];
-    });
 
 }
 

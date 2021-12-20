@@ -1,8 +1,9 @@
 import React from 'react';
 import NavbarMain from '../Components/NavbarS';
-import { Table, Container, Col, Row, Form, Button } from 'react-bootstrap';
+import { Table, Container, Col, Row, Form, Button, Dropdown  } from 'react-bootstrap';
 import axios from 'axios'
-
+import Swal from 'sweetalert2'
+import SweetAlert from 'sweetalert2-react';
 
 // import ServicoEducativo from "./FormServicioEducativo";
 
@@ -17,34 +18,116 @@ class Servicios extends React.Component {
             ],
             habilitado: [
             ],
-            servicioNew:""
+            servicioNew: "",
+            show: false,
         }
         this.SendDatos = this.SendDatos.bind(this);
         this.dataForm0 = this.dataForm0.bind(this);
+        this.editar = this.editar.bind(this);
     }
-    dataForm0(event){
-        console.log( event.target.value);
+    dataForm0(event) {
+        console.log(event.target.value);
         this.setState({ servicioNew: event.target.value });
     }
     SendDatos() {
-        let data={
-            servicioNew: this.state.servicioNew,
+        let validacion = {
+            campo: this.state.servicioNew
         }
-        axios.post('http://localhost:5000/InsertarServicio', {
-            data,
+        console.log(validacion['campo']);
+        if (validacion['campo'] === "") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops..',
+                text: 'El campo servicio no tiene ningun datos',
+            })
+        } else {
+            var msg = '¿Estas seguro de agregar\n - ' + validacion['campo'] + '- como servicio?';
+            Swal.fire({
+                title: msg,
+                text: "¡No podrás revertir esto!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Continuar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let data = {
+                        servicioNew: this.state.servicioNew,
+                    }
+                    axios.post('http://localhost:5000/InsertarServicio', {
+                        data,
+                    })
+                        .then(res => {
+                            console.log(res);
+                            console.log(res.data);
+                            this.apiServicios();
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Servicio agregado',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                        }).catch(function (error) {
+                        });
+
+                }
+            })
+        }
+    }
+    editar(b) {
+        console.log(b);
+        let validacion = {
+            id: this.state.id,
+            servicio: this.state.servicio,
+            habilitado: this.state.habilitado,
+        }
+        var msg = ""
+        console.log(validacion['habilitado'][b]);
+        if(validacion['habilitado'][b]){
+            msg ="¿Desahabilitar el servicio?";
+        }else{
+            msg ="¿Habilitar el servicio?";
+        }
+        Swal.fire({
+            title: msg,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Continuar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let data = {
+                    servicioNew: this.state.servicioNew,
+                }
+                axios.post('http://localhost:5000/HabDesServicio', {
+                    data,
+                })
+                .then(res => {
+                    console.log(res);
+                    console.log(res.data);
+                    this.apiServicios();
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Servicio agregado',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                }).catch(function (error) {
+                });
+                
+            }
         })
-        .then(res => {
-            console.log(res);
-            console.log(res.data);
-            this.apiServicios();
-        }).catch(function (error) {
-        });
-    
+
     }
     componentDidMount() {
         this.apiServicios();
     }
     apiServicios = async () => {
+
         try {
             var id = [];
             var Servicios = [];
@@ -58,22 +141,23 @@ class Servicios extends React.Component {
                 Servicios.push(responseJson["Servicios"][i]);
                 habilitado.push(responseJson["habilitado"][i]);
             }
-            console.log(responseJson['id']);
-            console.log(responseJson['Servicios']);
-            console.log(responseJson['habilitado']);
-            this.setState({ id: id});
-            this.setState({ servicio: Servicios});
-            this.setState({ habilitado: habilitado});
+            // console.log(responseJson['id']);
+            // console.log(responseJson['Servicios']);
+            // console.log(responseJson['habilitado']);
+            this.setState({ id: id });
+            this.setState({ servicio: Servicios });
+            this.setState({ habilitado: habilitado });
         } catch (e) {
             console.log(e);
         }
-    
+
     }
     render() {
         var { id } = this.state
         var { servicio } = this.state
         var { habilitado } = this.state
-        return(
+
+        return (
             <main>
                 <NavbarMain />
                 <section>
@@ -81,8 +165,8 @@ class Servicios extends React.Component {
                         <Row >
                             <Col sm >
                                 <Form.Group >
-                                    <Form.Control type="text" placeholder="servicio"  onChange={(evt) => this.dataForm0(evt)}
-/>
+                                    <Form.Control type="text" placeholder="servicio" onChange={(evt) => this.dataForm0(evt)}
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col sm >
@@ -96,35 +180,68 @@ class Servicios extends React.Component {
                         </Row>
                     </Container>
                 </section>
+
+                {
+                    servicio.length === 0 ?
+                        <Container className="mt-3 mb-3"  >
+                            <div class="alert alert-danger mt-2" role="alert">
+                                No hay servicios en la base de datos
+                            </div>
+                        </Container>
+                        : null
+                }
+
                 <section>
                     <Container>
-                        <Table responsive>
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Servicio</th>
-                                    <th>Estatus</th>
-                                    <th>Opciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {id.map((_, index) => (
-
+                        <div class="table-responsive " style={{ height: "500px" }}>
+                            <Table  className="table-hover">
+                                <thead>
                                     <tr>
-                                        <td>{index}</td>
-                                        <td>{servicio[index]}</td>
-                                        <td>{habilitado[index]}</td>
-                                        <td><Button>Actualizar</Button></td>
+                                        <th>#</th>
+                                        <th>Servicio</th>
+                                        <th>Estatus</th>
+                                        <th>Opciones</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </Table>
-                    </Container>
+                                </thead>
+                                <tbody>
+                                    {id.map((_, index) => (
 
+                                        <tr>
+                                            <td>{index}</td>
+                                            <td>{servicio[index]}</td>
+                                            <td>{habilitado[index]}</td>
+                                            <td>
+                                                <Dropdown>
+                                                    <Dropdown.Toggle id="dropdown-basic">
+                                                        <i class="bi bi-three-dots-vertical"></i>
+                                                    </Dropdown.Toggle>
+                                                    <Dropdown.Menu>
+                                                        <Dropdown.Item ><Button onClick={() => this.editar(index)}>Editar</Button></Dropdown.Item>
+                                                        
+                                                        <Dropdown.Item onClick={() => this.editar(index)}>
+                                                            
+                                                                {
+                                                                    habilitado[index] ?
+                                                                        <small>desabilitar</small>
+                                                                    :  <p>Habilitar</p>
+                                                                }
+
+                                                        </Dropdown.Item>
+
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
+                                            </td>
+                                            <td><Button onClick={() => this.editar(index)}><i class="bi bi-pen-fill"></i></Button></td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </Table>
+                        </div>
+                    </Container>
                 </section>
 
             </main>
-        )                            
+        )
     }
 }
 export default Servicios;
