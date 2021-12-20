@@ -42,7 +42,7 @@ class Pagos extends React.Component {
             var id = [];
             var Servicios = [];
             var habilitado = [];
-            const response = await fetch("http://localhost:5000/TablaEducativo")
+            const response = await fetch("http://localhost:5000/Servicios")
             var responseJson = await response.json();
             console.log("Aqui esta el");
             for (var i = 0; i < responseJson["Servicios"].length; i++) {

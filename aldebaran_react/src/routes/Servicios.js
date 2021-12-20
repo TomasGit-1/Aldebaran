@@ -55,7 +55,7 @@ class Servicios extends React.Component {
                     let data = {
                         servicioNew: this.state.servicioNew,
                     }
-                    axios.post('http://localhost:5000/InsertarServicio', {
+                    axios.post('http://localhost:5000/createServicio', {
                         data,
                     })
                         .then(res => {
@@ -83,12 +83,15 @@ class Servicios extends React.Component {
             servicio: this.state.servicio,
             habilitado: this.state.habilitado,
         }
-        var msg = ""
-        console.log(validacion['habilitado'][b]);
-        if(validacion['habilitado'][b]){
+        var msg = "";
+        var opcion= false;
+        console.log(typeof validacion['habilitado'][b]);
+        if(validacion['habilitado'][b] === "true"){
             msg ="¿Desahabilitar el servicio?";
+            opcion = false;
         }else{
             msg ="¿Habilitar el servicio?";
+            opcion = true;
         }
         Swal.fire({
             title: msg,
@@ -100,9 +103,11 @@ class Servicios extends React.Component {
         }).then((result) => {
             if (result.isConfirmed) {
                 let data = {
-                    servicioNew: this.state.servicioNew,
+                    "id":validacion['id'][b],
+                    "habilitado":opcion
                 }
-                axios.post('http://localhost:5000/HabDesServicio', {
+                
+                axios.post('http://localhost:5000/HaDesa_bilitar', {
                     data,
                 })
                 .then(res => {
@@ -127,12 +132,11 @@ class Servicios extends React.Component {
         this.apiServicios();
     }
     apiServicios = async () => {
-
         try {
             var id = [];
             var Servicios = [];
             var habilitado = [];
-            const response = await fetch("http://localhost:5000/TablaEducativo")
+            const response = await fetch("http://localhost:5000/Servicios")
             var responseJson = await response.json();
             // console.log(responseJson["Servicios"][0]{);
             // console.log(responseJson["Servicios"][0]);

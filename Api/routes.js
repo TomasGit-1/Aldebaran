@@ -15,7 +15,10 @@ const config = {
     user:conexion[0]['user'],
     password:conexion[0]['password'],
     database:conexion[0]['database'],
-    port:conexion[0]['port']
+    port:conexion[0]['port'],
+    max: 20,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000,
 }
 /*
     *Finaliza la configuracion de la base de datos
@@ -46,10 +49,9 @@ routes.post('/Api/Form0',  (req, res )=> {
     var dirimg = __dirname +  rutas[0]['images'] + curp+'/';
     sampleFile = req.files.imgUser;
     let respuesta = save(req , dirimg , sampleFile);
-
-
     res.json({ "status": respuesta});
 });
+
 const save = ( req , dir , sampleFile) =>{
     let uploadPath;
     try {
@@ -76,51 +78,71 @@ const save = ( req , dir , sampleFile) =>{
 
 
 //Obtenemos Servicio educativo habilitados
-routes.get('/ServEducativo' , (req, res)=> {
-    const pool = new Pool(config).promises;
-    pool.connect()
-    pool.query('SELECT * FROM SERVICIOEDUCATIVO')
-    .then(response => {
-        var data = response.rows;
-        let setArray =[]
-        data.map(row =>{
-            if(row["habilitado"]){
-                setArray.push(row["nombre_servicio"]);
-            }
-        })
-        pool.end()
-        res.json({ "Servicios":setArray});
-    })
-    .catch(err => {
-        res.json({ "Error":err});
-        pool.end()
-    })
-});
-//Obtenemos Servicio educativo habilitados
-routes.get('/TablaEducativo' , (req, res)=> {
-    const pool = new Pool(config);
-    pool.connect()
-    pool
-    .query('SELECT * FROM SERVICIOEDUCATIVO')
-    .then(result => {
-        console.log(result.rows);
-        var data = result.rows;
-        let id =[]
-        let servicio =[]
-        let habilitado =[]
-        data.map(row =>{
-            //setArray =[]
-            id.push(row['idserviciosedu']);
-            servicio.push(row['nombre_servicio']);
-            habilitado.push(String(row['habilitado']));
-        })
-        res.json({"id":id, "Servicios":servicio , "habilitado":habilitado});
-    })
-    .catch(e => console.error(e.stack))
-    .then(() => pool.end())
-});
-//Obtenemos Servicio educativo habilitados
-routes.post('/InsertarServicio' , (req, res)=> {
+// routes.get('/ServEducativo' , (req, res)=> {
+//     const pool = new Pool(config).promises;
+//     pool.connect()
+//     pool.query('SELECT * FROM SERVICIOEDUCATIVO')
+//     .then(response => {
+//         var data = response.rows;
+//         let setArray =[]
+//         data.map(row =>{
+//             if(row["habilitado"]){
+//                 setArray.push(row["nombre_servicio"]);
+//             }
+//         })
+//         pool.end()
+//         res.json({ "Servicios":setArray});
+//     })
+//     .catch(err => {
+//         res.json({ "Error":err});
+//         pool.end()
+//     })
+// });
+
+// //Obtenemos Servicio educativo habilitados
+// routes.get('/TablaEducativo' , (req, res)=> {
+//     const cliente = new Pool(config);
+//     cliente.connect()
+//     cliente
+//     .query('SELECT * FROM SERVICIOEDUCATIVO')
+//     .then(result => {
+//         var data = result.rows;
+//         console.log(data);
+//         let id =[]
+//         let servicio =[]
+//         let habilitado =[]
+//         data.map(row =>{
+//             //setArray =[]
+//             id.push(row['idserviciosedu']);
+//             servicio.push(row['nombre_servicio']);
+//             habilitado.push(String(row['habilitado']));
+//         })
+//         res.json({"id":id, "Servicios":servicio , "habilitado":habilitado});
+//     })
+//     .catch(e => console.error(e.stack))
+//     .then(() => {
+//         cliente.end().then(() => console.log('pool has ended'))
+//     })
+// });
+// //Obtenemos Servicio educativo habilitados
+// routes.post('/InsertarServicio' , (req, res)=> {
+//     let datos = req.body;
+//     console.log(datos.data.servicioNew);
+//     const text = 'INSERT INTO servicioeducativo (nombre_servicio , habilitado) VALUES($1, $2) RETURNING *'
+//     const values = [datos.data.servicioNew, 1]
+//     const pool = new Pool(config);
+//     pool.connect()
+//     pool
+//     .query(text ,values )
+//     .then(result => {
+//         console.log(result.rows[0])
+//         res.json({ "status": 200});
+//     })
+//     .catch(e => console.error(e.stack))
+//     .then(() => pool.end())
+// });
+
+routes.post('/HabDesServicio' , (req, res)=> {
     let datos = req.body;
     console.log(datos.data.servicioNew);
     const text = 'INSERT INTO servicioeducativo (nombre_servicio , habilitado) VALUES($1, $2) RETURNING *'
@@ -135,6 +157,12 @@ routes.post('/InsertarServicio' , (req, res)=> {
     })
     .catch(e => console.error(e.stack))
     .then(() => pool.end())
+
+    const resultados = conexion.query(`update SERVICIOEDUCATIVO
+    set habilitado = $1,
+    where idServiciosEdu = $2`, [nombre, precio]);
+    return resultados;
+
 });
 
 module.exports = routes;
