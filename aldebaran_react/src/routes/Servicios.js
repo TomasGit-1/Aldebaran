@@ -186,32 +186,72 @@ class Servicios extends React.Component {
         return (
             <main>
                 <NavbarMain />
-                <section>
-                    <Container className="mt-3 mb-3"> 
-                        <ButtonGroup aria-label="Basic example">
-                        <Button variant="secondary" onClick={() => this.ShowForm(1)}>  
-                            Nuevo servicio &nbsp;&nbsp;<i class="bi bi-plus-circle-fill "></i>
-                        </Button>
-                        </ButtonGroup>
-                    </Container>
-                </section>
+               
 
                 { showForm ? 
                     <section>
-                        <Container className="mt-3 mb-3" >
+                        <Container className="mt-3 mb-3 border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2" >
+                        <Row className="mt-3 mb-3">
+                                <Col sm >
+                                    <Form.Group >
+                                    <Form.Label className="h5">Resgitro academico</Form.Label>
+                                        <Form.Control type="text" placeholder="Resgitro academico" onChange={(evt) => this.dataForm0(evt)}/>
+                                    </Form.Group>
+                                </Col>
+
+                            </Row>
                             <Row >
                                 <Col sm >
                                     <Form.Group >
-                                        <Form.Control type="text" placeholder="servicio" onChange={(evt) => this.dataForm0(evt)}
-                                        />
+                                    <Form.Label className="h5">Tipo de evento</Form.Label>
+                                        <Form.Control type="text" placeholder="Evento" onChange={(evt) => this.dataForm0(evt)}/>
                                     </Form.Group>
                                 </Col>
+                                <Col sm >
+                                    <Form.Group >
+                                    <Form.Label className="h5">NOMBRE DEL PROGRAMA ACADÉMICO</Form.Label>
+                                        <Form.Control type="text" placeholder="servicio" onChange={(evt) => this.dataForm0(evt)}/>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <Row className="mt-3 mb-3">
+                                <Col sm >
+                                    <Row>
+                                        <Form.Label className="h5">Modalidad *</Form.Label>
+                                    </Row>
+                                    <Form.Check
+                                        inline
+                                        label="Virtual"
+                                        name="modalidad"
+                                        type="radio"
+                                        value="Virtual"
+                                        onChange={this.onSeleccion}
+                                    />
+                                    <Form.Check
+                                        inline
+                                        label="Presencial"
+                                        name="modalidad"
+                                        type="radio"
+                                        value="Presencial"
+                                        onChange={this.onSeleccion}
+                                    />
+                                </Col>
+
+                                <Col sm >
+                                    <Form.Group >
+                                    <Form.Label className="h5">CUOTA POR PARTICIPANTE</Form.Label>
+                                        <Form.Control type="number" placeholder="CUOTA POR PARTICIPANTE" onChange={(evt) => this.dataForm0(evt)}/>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                          
+                            <Row className="mt-3 mb-3">
                                 <Col sm >
                                     <Form.Group >
                                         <Button variant="outline-primary" onClick={() => this.SendDatos()}>
                                             <i class="bi bi-plus-circle-fill "></i>
                                             &nbsp;&nbsp;Agregar
-                                        </Button>
+                                        </Button>&nbsp;&nbsp;
                                         <Button variant="outline-danger" onClick={() => this.ShowForm(0)}>
                                             <i class="bi bi-plus-circle-fill "></i>
                                             &nbsp;&nbsp;Cancelar
@@ -227,10 +267,19 @@ class Servicios extends React.Component {
                 { showTable ? 
 
                     <section>
-                        <Container>
+                        <section>
+                            <Container className="mt-3 mb-3"> 
+                            </Container>
+                        </section>
+                        <Container className="border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2" >
+                            <ButtonGroup aria-label="Basic example" className="mt-3 mb-3"> 
+                                <Button variant="secondary" onClick={() => this.ShowForm(1)}>  
+                                    Nuevo servicio &nbsp;&nbsp;<i class="bi bi-plus-circle-fill "></i>
+                                </Button>
+                            </ButtonGroup>
                             {
                                 servicio.length === 0 ?
-                                    <Container className="mt-3 mb-3"  >
+                                    <Container className="mb-3"  >
                                         <div class="alert alert-danger mt-2" role="alert">
                                             No hay servicios en la base de datos
                                         </div>
