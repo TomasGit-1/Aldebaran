@@ -1,6 +1,6 @@
 import React from 'react';
 import NavbarMain from '../Components/NavbarS';
-import { Table, Container, Col, Row, Form, Button, Dropdown  } from 'react-bootstrap';
+import { Table, Container, Col, Row, Form, Button, Dropdown , ButtonGroup } from 'react-bootstrap';
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import SweetAlert from 'sweetalert2-react';
@@ -165,6 +165,16 @@ class Servicios extends React.Component {
             <main>
                 <NavbarMain />
                 <section>
+                    <Container className="mt-3 mb-3"> 
+                        <ButtonGroup aria-label="Basic example">
+                        <Button variant="secondary"> 
+                            Nuevo servicio &nbsp;&nbsp;<i class="bi bi-plus-circle-fill "></i>
+                        </Button>
+                        </ButtonGroup>
+                    </Container>
+                </section>
+
+                <section>
                     <Container className="mt-3 mb-3" >
                         <Row >
                             <Col sm >
@@ -185,18 +195,18 @@ class Servicios extends React.Component {
                     </Container>
                 </section>
 
-                {
-                    servicio.length === 0 ?
-                        <Container className="mt-3 mb-3"  >
-                            <div class="alert alert-danger mt-2" role="alert">
-                                No hay servicios en la base de datos
-                            </div>
-                        </Container>
-                        : null
-                }
 
                 <section>
                     <Container>
+                        {
+                            servicio.length === 0 ?
+                                <Container className="mt-3 mb-3"  >
+                                    <div class="alert alert-danger mt-2" role="alert">
+                                        No hay servicios en la base de datos
+                                    </div>
+                                </Container>
+                            : null
+                        }
                         <div class="table-responsive " style={{ height: "500px" }}>
                             <Table  className="table-hover">
                                 <thead>
