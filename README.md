@@ -22,6 +22,7 @@ npm install
 
     https://www.npmjs.com/package/sweetalert2-react
     npm install sweetalert2-react
+    https://react-data-table-component.netlify.app/?path=/docs/getting-started-installation--page
 
 
 
@@ -31,5 +32,9 @@ npm install
     \l  listar bases de datos
     \c  Usar una base de datos
     \dt lista las tablas creadas
+
+
+600101
+
 
 

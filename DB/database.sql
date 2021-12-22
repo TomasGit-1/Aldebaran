@@ -69,7 +69,12 @@ CREATE TABLE PAGOS(
 	idPAgos serial primary key ,
 	idServiciosEduFk int references SERVICIOEDUCATIVO(idServiciosEdu),
 	idCurpFK varchar references Personas(Curp),
-	comprobantePath  varchar
+	comprobantePath  varchar,
+	modalidad varchar(30),
+	referencia varchar,
+	FechaHora 
+
+
 );
 
 
@@ -85,3 +90,10 @@ CREATE TABLE PAGOS(
 
 -- SELECT * FROM servicioeducativo;
 -- INSERT INTO servicioeducativo (nombre_servicio , habilitado) VALUES('Curso programacion' , True);
+
+
+-- UPDATE SERVICIOEDUCATIVO
+-- SET nombre_servicio = 'CURSO MATEMATICAS'
+-- WHERE idServiciosEdu = 23 ;
+
+-- select * from SERVICIOEDUCATIVO;
