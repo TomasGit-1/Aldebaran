@@ -13,8 +13,6 @@ npm i nodemon --D
 
 npm run dev
 
-
-
 #Para instalar las dependencias
 npm install 
 
@@ -37,4 +35,6 @@ npm install
 600101
 
 
+#Docker
+docker-compose up -build
 

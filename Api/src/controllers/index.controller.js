@@ -16,6 +16,11 @@ const config = {
 }
 const pool = new Pool(config);
 
+const Home = async(req , res ) =>{
+    res.status(200).json("Server funcionando")
+
+};
+
 const getServicios = async (req, res) => {
     const response = await pool.query('SELECT * FROM SERVICIOEDUCATIVO');
     var data = response.rows;
@@ -50,8 +55,6 @@ const updateHabilitado = async (req, res) => {
     ]);
     res.json('User Updated Successfully');
 };
-
-
 
 
 
@@ -104,5 +107,6 @@ const deleteUser = async (req, res) => {
 module.exports = {
     getServicios,
     createServicio,
-    updateHabilitado
+    updateHabilitado,
+    Home
 };

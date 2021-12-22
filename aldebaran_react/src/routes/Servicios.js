@@ -20,10 +20,26 @@ class Servicios extends React.Component {
             ],
             servicioNew: "",
             show: false,
+            showForm: false,
+            showTable: true,
         }
         this.SendDatos = this.SendDatos.bind(this);
         this.dataForm0 = this.dataForm0.bind(this);
         this.editar = this.editar.bind(this);
+        this.ShowForm = this.ShowForm.bind(this);
+    }
+    ShowForm (num) {
+        if (num === 1) {
+            this.setState({
+                showForm: true,
+                showTable: false,
+            });
+        }else if  (num === 0) {
+            this.setState({
+                showForm: false,
+                showTable: true,
+            });
+        }
     }
     dataForm0(event) {
         console.log(event.target.value);
@@ -69,6 +85,10 @@ class Servicios extends React.Component {
                                 showConfirmButton: false,
                                 timer: 1500
                             })
+                            this.setState({
+                                showForm: false,
+                                showTable: true,
+                            });
                         }).catch(function (error) {
                         });
 
@@ -106,7 +126,6 @@ class Servicios extends React.Component {
                     "id":validacion['id'][b],
                     "habilitado":opcion
                 }
-                
                 axios.post('http://localhost:5000/HaDesa_bilitar', {
                     data,
                 })
@@ -160,6 +179,9 @@ class Servicios extends React.Component {
         var { id } = this.state
         var { servicio } = this.state
         var { habilitado } = this.state
+        let { showForm } = this.state
+        let { showTable } = this.state
+
 
         return (
             <main>
@@ -167,93 +189,102 @@ class Servicios extends React.Component {
                 <section>
                     <Container className="mt-3 mb-3"> 
                         <ButtonGroup aria-label="Basic example">
-                        <Button variant="secondary"> 
+                        <Button variant="secondary" onClick={() => this.ShowForm(1)}>  
                             Nuevo servicio &nbsp;&nbsp;<i class="bi bi-plus-circle-fill "></i>
                         </Button>
                         </ButtonGroup>
                     </Container>
                 </section>
 
-                <section>
-                    <Container className="mt-3 mb-3" >
-                        <Row >
-                            <Col sm >
-                                <Form.Group >
-                                    <Form.Control type="text" placeholder="servicio" onChange={(evt) => this.dataForm0(evt)}
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col sm >
-                                <Form.Group >
-                                    <Button variant="outline-primary" onClick={() => this.SendDatos()}>
-                                        <i class="bi bi-plus-circle-fill "></i>
-                                        &nbsp;&nbsp;Agregar
-                                    </Button>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                    </Container>
-                </section>
+                { showForm ? 
+                    <section>
+                        <Container className="mt-3 mb-3" >
+                            <Row >
+                                <Col sm >
+                                    <Form.Group >
+                                        <Form.Control type="text" placeholder="servicio" onChange={(evt) => this.dataForm0(evt)}
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col sm >
+                                    <Form.Group >
+                                        <Button variant="outline-primary" onClick={() => this.SendDatos()}>
+                                            <i class="bi bi-plus-circle-fill "></i>
+                                            &nbsp;&nbsp;Agregar
+                                        </Button>
+                                        <Button variant="outline-danger" onClick={() => this.ShowForm(0)}>
+                                            <i class="bi bi-plus-circle-fill "></i>
+                                            &nbsp;&nbsp;Cancelar
+                                        </Button>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                        </Container>
+                    </section>
+                 : null 
+                }
 
+                { showTable ? 
 
-                <section>
-                    <Container>
-                        {
-                            servicio.length === 0 ?
-                                <Container className="mt-3 mb-3"  >
-                                    <div class="alert alert-danger mt-2" role="alert">
-                                        No hay servicios en la base de datos
-                                    </div>
-                                </Container>
-                            : null
-                        }
-                        <div class="table-responsive " style={{ height: "500px" }}>
-                            <Table  className="table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Servicio</th>
-                                        <th>Estatus</th>
-                                        <th>Opciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {id.map((_, index) => (
-
+                    <section>
+                        <Container>
+                            {
+                                servicio.length === 0 ?
+                                    <Container className="mt-3 mb-3"  >
+                                        <div class="alert alert-danger mt-2" role="alert">
+                                            No hay servicios en la base de datos
+                                        </div>
+                                    </Container>
+                                : null
+                            }
+                            <div class="table-responsive " style={{ height: "500px" }}>
+                                <Table  className="table-hover">
+                                    <thead>
                                         <tr>
-                                            <td>{index}</td>
-                                            <td>{servicio[index]}</td>
-                                            <td>{habilitado[index]}</td>
-                                            <td>
-                                                <Dropdown>
-                                                    <Dropdown.Toggle id="dropdown-basic">
-                                                        <i class="bi bi-three-dots-vertical"></i>
-                                                    </Dropdown.Toggle>
-                                                    <Dropdown.Menu>
-                                                        <Dropdown.Item ><Button onClick={() => this.editar(index)}>Editar</Button></Dropdown.Item>
-                                                        
-                                                        <Dropdown.Item onClick={() => this.editar(index)}>
-                                                            
-                                                                {
-                                                                    habilitado[index] ?
-                                                                        <small>desabilitar</small>
-                                                                    :  <p>Habilitar</p>
-                                                                }
-
-                                                        </Dropdown.Item>
-
-                                                    </Dropdown.Menu>
-                                                </Dropdown>
-                                            </td>
-                                            <td><Button onClick={() => this.editar(index)}><i class="bi bi-pen-fill"></i></Button></td>
+                                            <th>#</th>
+                                            <th>Servicio</th>
+                                            <th>Estatus</th>
+                                            <th>Opciones</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </Table>
-                        </div>
-                    </Container>
-                </section>
+                                    </thead>
+                                    <tbody>
+                                        {id.map((_, index) => (
 
+                                            <tr>
+                                                <td>{index}</td>
+                                                <td>{servicio[index]}</td>
+                                                <td>{habilitado[index]}</td>
+                                                <td>
+                                                    <Dropdown>
+                                                        <Dropdown.Toggle id="dropdown-basic">
+                                                            <i class="bi bi-three-dots-vertical"></i>
+                                                        </Dropdown.Toggle>
+                                                        <Dropdown.Menu>
+                                                            <Dropdown.Item ><Button onClick={() => this.editar(index)}>Editar</Button></Dropdown.Item>
+                                                            
+                                                            <Dropdown.Item onClick={() => this.editar(index)}>
+                                                                
+                                                                    {
+                                                                        habilitado[index]==="true" ?
+                                                                            <small>desabilitar</small>
+                                                                        :  <p>Habilitar</p>
+                                                                    }
+
+                                                            </Dropdown.Item>
+
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
+                                                </td>
+                                                <td><Button onClick={() => this.editar(index)}><i class="bi bi-pen-fill"></i></Button></td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </Table>
+                            </div>
+                        </Container>
+                    </section>
+                 : null 
+                }
             </main>
         )
     }
