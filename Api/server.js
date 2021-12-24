@@ -7,10 +7,11 @@ const cors = require('cors');
 const app = express();
 //const PORT = 3000;
 
-app.set('port' , process.env.PORT || 5000)
+app.set('port' , process.env.PORT || 5858)
+app.use(cors())
 // req = request
 // res = response
-app.use(fileUpload());
+// app.use(fileUpload());
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: false })) // for parsing application/x-www-form-urlencoded
 
@@ -23,7 +24,7 @@ app.use((req, res, next) => {
 });
 app.use('/' , routes)
 
-app.use(cors())
+
 // Configurar cabeceras y cors
 
 

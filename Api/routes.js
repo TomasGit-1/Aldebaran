@@ -2,7 +2,6 @@ const express = require('express');
 const { Pool  } = require('pg');
 const fileUpload = require('express-fileupload');
 var fs = require('fs');
-
 const routes = express.Router();
 /*
     *Obtenemos la configuracion de la base de datos  

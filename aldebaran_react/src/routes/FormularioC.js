@@ -102,15 +102,32 @@ class FormularioC extends React.Component {
             console.log(data[i]);
         }
 
-        axios.post('http://localhost:5000/Api/Form0', {
-            data,
+        // let formData = new FormData() 
+        // formData.set('data', data);
+        // axios.post('http://localhost:5000/createRegistro', {
+        //     data, headers: {'content-type': 'multipart/form-data'}
+        // })
+        //     .then(res => {
+        //         console.log(res);
+        //         console.log(res.data);
+        //     }).catch(function (error) {
+        //     });
+        var url =  "http://localhost:5000/createRegistro";
+        var bodyFormData = new FormData();
+        bodyFormData.append('curp', this.state.curp_Alumno);
+        bodyFormData.append('file', this.state.fileCurp_Alumno);
+        bodyFormData.append('file', this.state.file_fotografia);
+        axios({
+            method : 'POST',
+            url : url,
+            data: bodyFormData,
+            headers: {'Content-Type': 'application/json'}
+        }).then(function(response){
+            console.log("Aqui");
+                      
+        }).catch(function(error){
+            console.log(error.message)
         })
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-            }).catch(function (error) {
-            });
-
     }
     //Esta funcion nos ayuda a obtener todos los datos del formulario
     //Evetos onChange para obtener los datos con React Js 
