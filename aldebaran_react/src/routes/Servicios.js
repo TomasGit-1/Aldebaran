@@ -3,9 +3,6 @@ import NavbarMain from '../Components/NavbarS';
 import { Table, Container, Col, Row, Form, Button, Dropdown , ButtonGroup } from 'react-bootstrap';
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import SweetAlert from 'sweetalert2-react';
-
-// import ServicoEducativo from "./FormServicioEducativo";
 
 class Servicios extends React.Component {
     constructor(props) {
@@ -71,7 +68,7 @@ class Servicios extends React.Component {
                     let data = {
                         servicioNew: this.state.servicioNew,
                     }
-                    axios.post('http://localhost:5000/createServicio', {
+                    axios.post('http://localhost:5000/api/createServicio', {
                         data,
                     })
                         .then(res => {
@@ -126,7 +123,7 @@ class Servicios extends React.Component {
                     "id":validacion['id'][b],
                     "habilitado":opcion
                 }
-                axios.post('http://localhost:5000/HaDesa_bilitar', {
+                axios.post('http://localhost:5000/api/updateHabilitado', {
                     data,
                 })
                 .then(res => {
@@ -136,7 +133,7 @@ class Servicios extends React.Component {
                     Swal.fire({
                         position: 'top-end',
                         icon: 'success',
-                        title: 'Servicio agregado',
+                        title: 'Servicio modificado',
                         showConfirmButton: false,
                         timer: 1500
                     })
@@ -152,17 +149,20 @@ class Servicios extends React.Component {
     }
     apiServicios = async () => {
         try {
+            
             var id = [];
             var Servicios = [];
             var habilitado = [];
-            const response = await fetch("http://localhost:5000/Servicios")
+            const response = await fetch("http://localhost:5000/api/Servicios")
             var responseJson = await response.json();
-            // console.log(responseJson["Servicios"][0]{);
-            // console.log(responseJson["Servicios"][0]);
-            for (var i = 0; i < responseJson["Servicios"].length; i++) {
-                id.push(responseJson["id"][i]);
-                Servicios.push(responseJson["Servicios"][i]);
-                habilitado.push(responseJson["habilitado"][i]);
+            console.log("Estamos obnteniedo los ")
+            // console.log(responseJson.id[2]);
+            // console.log(responseJson.Servicios.length);
+            // console.log(responseJson.habilitado);
+            for (var i = 0; i < responseJson.Servicios.length; i++) {
+                id.push(responseJson.id[i]);
+                Servicios.push(responseJson.Servicios[i]);
+                habilitado.push(responseJson.habilitado[i]);
             }
             // console.log(responseJson['id']);
             // console.log(responseJson['Servicios']);
@@ -299,8 +299,8 @@ class Servicios extends React.Component {
                                     <tbody>
                                         {id.map((_, index) => (
 
-                                            <tr>
-                                                <td>{index}</td>
+                                            <tr key={index}>
+                                                <td >{index}</td>
                                                 <td>{servicio[index]}</td>
                                                 <td>{habilitado[index]}</td>
                                                 <td>

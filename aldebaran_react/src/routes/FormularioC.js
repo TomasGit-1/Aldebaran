@@ -1,7 +1,8 @@
 import React from 'react'
 import axios from 'axios'
-import { Button, Form, Container, Row, Col, Alert, Popover, Overlay, Card } from 'react-bootstrap'
-import SweetAlert from 'sweetalert2-react';
+import { Button, Form, Container, Row, Col, Alert} from 'react-bootstrap'
+import Swal from 'sweetalert2'
+
 
 import NavbarMain from '../Components/NavbarS'
 
@@ -216,7 +217,6 @@ class FormularioC extends React.Component {
         this.setState({ puertoApi: "http://localhost:" });
     }
     render() {
-        var { opciones } = this.state
         return (
             <main>
                 <section>
@@ -224,12 +224,6 @@ class FormularioC extends React.Component {
                 </section>
                 <section>
                     <Container className="mt-3 mb-3 border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2">
-                        <SweetAlert
-                            show={this.state.show}
-                            title="Demo"
-                            text="SweetAlert in React"
-                            onConfirm={() => this.setState({ show: false })}
-                        />
                         <Form>
                             <section>
                                 <Row>

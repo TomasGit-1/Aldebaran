@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Button, CardGroup } from "react-bootstrap";
+import { Card, CardGroup } from "react-bootstrap";
 import imgDolar from "../static/dolarf.png";
 import imgAlum from "../static/alumno.png";
 import imgServicio from "../static/servicio.png";
