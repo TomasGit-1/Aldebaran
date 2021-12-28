@@ -12,10 +12,13 @@ CREATE TABLE Permisos(
 
 CREATE TABLE SERVICIOEDUCATIVO(
 	idServiciosEdu serial primary key,
-	Nombre_Servicio varchar,
+	Registro_Academico varchar,
+	Tipo_Evento varchar,
+	Programa_Academico varchar,
+	Modalidad varchar,
+	cuota varchar,
 	Habilitado bool
 );
-
 
 CREATE TABLE Personas(
 	idPersona  serial,
@@ -72,9 +75,8 @@ CREATE TABLE PAGOS(
 	comprobantePath  varchar,
 	modalidad varchar(30),
 	referencia varchar,
-	FechaHora 
-
-
+	FechaHoraTicket  timestamp,
+	fechaHoraRegistro timestamp
 );
 
 

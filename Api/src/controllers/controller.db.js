@@ -29,14 +29,23 @@ const getServicios = async (valor) => {
     const response = await pool.query('SELECT * FROM SERVICIOEDUCATIVO');
     var data = response.rows;
     let id =[]
-    let servicio =[]
+    let registro = []
+    let evento = []
+    let programaAcademico =[]
     let habilitado =[]
+    let modalidad =[]
+    let cuota =[]
     data.map(row =>{
+        console.log(row);
         id.push(row['idserviciosedu']);
-        servicio.push(row['nombre_servicio']);
+        registro.push(row['registro_academico']);
+        evento.push(row['tipo_evento']);
+        programaAcademico.push(row['programa_academico']);
         habilitado.push(String(row['habilitado']));
+        modalidad.push(row['modalidad']);
+        cuota.push(row['cuota']);
     })
-    return {"id":id, "Servicios":servicio , "habilitado":habilitado};
+    return {"id":id, "registro":registro , "evento":evento , "programaAcademico":programaAcademico, "habilitado":habilitado , "modalidad":modalidad,"cuota":cuota };
 };
 const updateHabilitado = async (req) => {
     let datos = req.body;
@@ -50,8 +59,12 @@ const updateHabilitado = async (req) => {
 };
 const createServicio = async (req) => {
     let datos = req.body;
-    let servicio = datos.data.servicioNew;
-    const response = await pool.query('INSERT INTO servicioeducativo  (nombre_servicio , habilitado) VALUES ($1, $2)', [servicio, 1]);
+    let registroAcade = datos.validacion.registro;
+    let evento = datos.validacion.evento;
+    let nombreAcademico = datos.validacion.nombre;
+    let modalidad = datos.validacion.modalidad;
+    let cuota = datos.validacion.cuota;
+    const response = await pool.query('INSERT INTO servicioeducativo  (registro_academico , tipo_evento , programa_academico ,modalidad , cuota , habilitado ) VALUES ($1, $2 , $3 , $4 , $5 , $6 )', [registroAcade,evento,nombreAcademico, modalidad ,cuota, 1]);
     console.log(response);
     return {"mensaje" :'Servicio agregado'};
 };
