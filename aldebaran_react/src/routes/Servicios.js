@@ -19,9 +19,9 @@ class Servicios extends React.Component {
             ],
             programaAcademico: [
             ],
-            modalidad: [
+            modalidadArray: [
             ],
-            cuota: [
+            cuotaArray: [
             ],
             servicioNew: "",
             show: false,
@@ -214,8 +214,8 @@ class Servicios extends React.Component {
             let evento = []
             let programaAcademico =[]
             let habilitado =[]
-            let modalidad =[]
-            let cuota =[]
+            let modalidadArray =[]
+            let cuotaArray =[]
             const response = await fetch("http://localhost:5000/api/Servicios")
             var responseJson = await response.json();
             console.log("Estamos obnteniedo los ")
@@ -233,8 +233,8 @@ class Servicios extends React.Component {
                     console.log("Desabilidato");
                     habilitado.push("Desabilidato");
                 }
-                modalidad.push(responseJson.modalidad[i]);
-                cuota.push(responseJson.cuota[i]);
+                modalidadArray.push(responseJson.modalidad[i]);
+                cuotaArray.push(responseJson.cuota[i]);
             }
             // console.log(responseJson['id']);
             // console.log(responseJson['Servicios']);
@@ -244,8 +244,8 @@ class Servicios extends React.Component {
             this.setState({ evento: evento });
             this.setState({ programaAcademico: programaAcademico });
             this.setState({ habilitado: habilitado });
-            this.setState({ modalidad: modalidad });
-            this.setState({ cuota: cuota });
+            this.setState({ modalidad: modalidadArray });
+            this.setState({ cuota: cuotaArray });
         } catch (e) {
             console.log(e);
         }
@@ -257,8 +257,8 @@ class Servicios extends React.Component {
         let {evento} = this.state
         let {programaAcademico} =this.state
         let {habilitado} =this.state
-        let {modalidad} =this.state
-        let {cuota} =this.state
+        let {modalidadArray} =this.state
+        let {cuotaArray} =this.state
         let { showForm } = this.state
         let { showTable } = this.state
 
@@ -386,9 +386,9 @@ class Servicios extends React.Component {
                                                 <td >{index}</td>
                                                 <td>{registro[index]}</td>
                                                 <td>{evento[index]}</td>
-                                                <td >{programaAcademico}</td>
-                                                <td>{modalidad[index]}</td>
-                                                <td>{cuota[index]}</td>
+                                                <td >{programaAcademico[index]}</td>
+                                                <td>{modalidadArray[index]}</td>
+                                                <td>{cuotaArray[index]}</td>
                                                 <td>{habilitado[index]}</td>
                                                 <td>
                                                     <Dropdown>
