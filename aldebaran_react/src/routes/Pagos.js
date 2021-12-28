@@ -42,16 +42,13 @@ class Pagos extends React.Component {
             var id = [];
             var Servicios = [];
             var habilitado = [];
-            const response = await fetch("http://localhost:5000/Servicios")
+            const response = await fetch("http://localhost:5000/api/Servicios")
             var responseJson = await response.json();
-            console.log("Aqui esta el");
-            for (var i = 0; i < responseJson["Servicios"].length; i++) {
-                console.log(responseJson["habilitado"][i]);
-                if (responseJson["habilitado"][i] === "true"){
-                    console.log("Se entrando");    
-                    id.push(responseJson["id"][i]);
-                    Servicios.push(responseJson["Servicios"][i]);
-                    habilitado.push(responseJson["habilitado"][i]);
+            for (var i = 0; i < responseJson.id.length; i++) {
+                if (responseJson.habilitado[i] === "true"){
+                    id.push(responseJson.id[i]);
+                    Servicios.push(responseJson.programaAcademico[i]);
+                    habilitado.push(responseJson.habilitado[i]);
                 }
             }
             this.setState({ id: id});
@@ -70,7 +67,7 @@ class Pagos extends React.Component {
                     <Container className="mt-3 mb-3 border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2" >
                         <Form>
                             <Row>
-                                <div class="alert alert-secondary mt-2" role="alert">
+                                <div className="alert alert-secondary mt-2" role="alert">
                                     Pagos
                                 </div>
                             </Row>
@@ -83,7 +80,7 @@ class Pagos extends React.Component {
                                             <option value="null">Seleccione una opcion</option>
                                             {
                                                 servicio.map(function (item) {
-                                                    return <option value={item}>{item}</option>;
+                                                    return <option key={item} value={item}>{item}</option>;
                                                 })
                                             }
                                         </Form.Select>
@@ -119,7 +116,7 @@ class Pagos extends React.Component {
                             </Row>
                             
                             <Row>
-                                <div class="alert alert-secondary mt-2" role="alert">
+                                <div className="alert alert-secondary mt-2" role="alert">
                                     Pagos
                                 </div>
                             </Row>
