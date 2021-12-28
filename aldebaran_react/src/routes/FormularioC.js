@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import { Button, Form, Container, Row, Col, Alert} from 'react-bootstrap'
-import Swal from 'sweetalert2'
+// import Swal from 'sweetalert2'
 
 
 import NavbarMain from '../Components/NavbarS'
