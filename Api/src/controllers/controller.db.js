@@ -36,7 +36,6 @@ const getServicios = async (valor) => {
     let modalidad =[]
     let cuota =[]
     data.map(row =>{
-        console.log(row);
         id.push(row['idserviciosedu']);
         registro.push(row['registro_academico']);
         evento.push(row['tipo_evento']);
@@ -57,6 +56,17 @@ const updateHabilitado = async (req) => {
     ]);
     return {"mensaje" :'User Updated Successfully'};
 };
+const getCurp = async (req)  => {
+    let datos = req.body;
+    let curp = datos.curpAlum;
+    const response = await pool.query('SELECT * FROM personas WHERE curp = $1' ,[curp]);
+    if(response.rowCount == 0){
+        return 0
+    }else{
+        return 1
+    }
+};
+
 const createServicio = async (req) => {
     let datos = req.body;
     let registroAcade = datos.validacion.registro;
@@ -73,5 +83,6 @@ module.exports = {
     Home,
     getServicios,
     updateHabilitado,
+    getCurp,
     createServicio
 };

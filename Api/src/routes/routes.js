@@ -37,6 +37,21 @@ routes.post('/createServicio' , (req, res)=> {
     })
 });
 
+routes.post('/ExisteCurp',  (req, res )=> {
+    db.getCurp(req).then(respuesta =>{
+        if(respuesta == 0){
+        res.json({"mensaje":respuesta});
+        }else{
+            res.json({"mensaje":respuesta});
+        }
+        // res.json({ "status": 200 , "Servicios":respuesta});
+        // res.json(respuesta);
+    }).catch(error =>{
+        console.log(error);
+    })
+});
+
+
 routes.post('/createRegistro',  (req, res )=> {
     try {
         let datos = req.body;

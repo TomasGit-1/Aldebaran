@@ -1,14 +1,14 @@
-CREATE TABLE Usuarios(
-	idUsers int Primary Key, 
-	users varchar,
-	pass    varchar
-);
+-- CREATE TABLE Usuarios(
+-- 	idUsers int Primary Key, 
+-- 	users varchar,
+-- 	pass    varchar
+-- );
 
-CREATE TABLE Permisos(
-	idPermiso serial Primary Key, 
-	idUsersFK int references Usuarios(idUsers),
-	name_Permiso varchar
-);
+-- CREATE TABLE Permisos(
+-- 	idPermiso serial Primary Key, 
+-- 	idUsersFK int references Usuarios(idUsers),
+-- 	name_Permiso varchar
+-- );
 
 CREATE TABLE SERVICIOEDUCATIVO(
 	idServiciosEdu serial primary key,

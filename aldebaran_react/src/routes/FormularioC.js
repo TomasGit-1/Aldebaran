@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import { Button, Form, Container, Row, Col, Alert} from 'react-bootstrap'
-// import Swal from 'sweetalert2'
+import Swal from 'sweetalert2'
 
 
 import NavbarMain from '../Components/NavbarS'
@@ -51,7 +51,8 @@ class FormularioC extends React.Component {
             appPat_Emerge: "",
             appMat_Emerge: "",
             telContacto_Emerge: "",
-            email_Emerge: ""
+            email_Emerge: "",
+            validacionCurp:""
         };
         this.SendDatos = this.SendDatos.bind(this);
         this.handlechange = this.handlechange.bind(this);
@@ -60,12 +61,83 @@ class FormularioC extends React.Component {
         this.dataForm0 = this.dataForm0.bind(this);
         this.uploadFileCurp = this.uploadFileCurp.bind(this);
         this.SeleccGenero = this.SeleccGenero.bind(this);
+        this.existeCurpAlum = this.existeCurpAlum.bind(this);
     }
     /*  
         ===========================================================================
                 Funciones que ayudan en la logica del proyecto
         ===========================================================================
     */
+    existeCurpAlum = async () => {
+        let validacion = {
+            curpAlum: this.state.curp_Alumno,
+        }
+        if (validacion.curpAlum === "") {
+            var msg ='El campo curp  esta vacio';
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops..',
+                text: msg ,
+            })
+        }else {
+            const respuesta= await axios.post('http://localhost:5000/Api/ExisteCurp', {
+                validacion,
+            }).then(function(response){
+                return  response.data.mensaje;
+            }).catch(function(error){
+                console.log(error.message)
+            })
+            if (respuesta == 0){
+                this.validarCamposVacion();
+                console.log("No existe la curp y si podemos agregar")
+            }else{
+                console.log("Si existe , no podemos agregar");
+            }
+        }
+    }
+    validarCamposVacion(){
+        let validacion = {
+            //Datos de entrada del alumno
+            n_max_estudios: this.state.n_max_estudios,
+            modalidad: this.state.modalidad,
+            file_fotografia: this.state.file_fotografia,
+            email_Alumno: this.state.email_Alumno,
+            curp_Alumno: this.state.curp_Alumno,
+            fileCurp_Alumno: this.state.fileCurp_Alumno,
+            genero: this.state.genero,
+            nombre_Alumno: this.state.nombre_Alumno,
+            appPat_Alumno: this.state.appPat_Alumno,
+            appMat_Alumno: this.state.appMat_Alumno,
+            fechaNac_Alumno: this.state.fechaNac_Alumno,
+            edad_Alumno: this.state.edad_Alumno,
+            telPar_Alumno: this.state.telPar_Alumno,
+            telCel_Alumno: this.state.telCel_Alumno,
+            //Variables para el domicilio del alumno
+            calle_Alumno: this.state.calle_Alumno,
+            num_Alumno: this.state.num_Alumno,
+            col_Alumno: this.state.col_Alumno,
+            cp_Alumno: this.state.cp_Alumno,
+            municipio_Alumno: this.state.municipio_Alumno,
+            //Contacto de emergencia
+            nombre_Emerge: this.state.nombre_Emerge,
+            appPat_Emerge: this.state.appPat_Emerge,
+            appMat_Emerge: this.state.appMat_Emerge,
+            telContacto_Emerge: this.state.telContacto_Emerge,
+            email_Emerge: this.state.email_Emerge
+        };
+        console.log("Vamos a validar que la informacion si este");
+        if (validacion.registro === "") {
+           
+        }else if (validacion.evento === "") {
+           
+        }else if (validacion.nombre === "") {
+        }
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops..',
+            text: 'El camppo Nombre del programa academico esta vacio',
+        })
+    }
     SendDatos() {
         console.log("Esta funcion deberia de mandar la informacion al api");
         console.log(this.state.curp_Alumno);
@@ -97,7 +169,6 @@ class FormularioC extends React.Component {
             appMat_Emerge: this.state.appMat_Emerge,
             telContacto_Emerge: this.state.telContacto_Emerge,
             email_Emerge: this.state.email_Emerge
-
         };
         for (var i = 0; i < data.length; i++) {
             console.log(data[i]);
@@ -113,11 +184,44 @@ class FormularioC extends React.Component {
         //         console.log(res.data);
         //     }).catch(function (error) {
         //     });
+
         var url =  "http://localhost:5000/createRegistro";
         var bodyFormData = new FormData();
+        bodyFormData.append('fileImg', this.state.file_fotografia);
+        bodyFormData.append('emailAlum', this.state.email_Alumno);
         bodyFormData.append('curp', this.state.curp_Alumno);
-        bodyFormData.append('file', this.state.fileCurp_Alumno);
-        bodyFormData.append('file', this.state.file_fotografia);
+        bodyFormData.append('fileCurp', this.state.fileCurp_Alumno);
+
+        bodyFormData.append('genero', this.state.fileCurp_Alumno);
+        bodyFormData.append('nombreAlum', this.state.file_fotografia);
+        bodyFormData.append('appPatAlum', this.state.curp_Alumno);
+        bodyFormData.append('appMatAlum', this.state.fileCurp_Alumno);
+        bodyFormData.append('fechaNacimiento', this.state.file_fotografia);
+        bodyFormData.append('edad', this.state.curp_Alumno);
+        bodyFormData.append('telParticularAlum', this.state.fileCurp_Alumno);
+        bodyFormData.append('telCelularAlum', this.state.file_fotografia);
+        bodyFormData.append('calle', this.state.curp_Alumno);
+        bodyFormData.append('NumeroDom', this.state.fileCurp_Alumno);
+        bodyFormData.append('colonia', this.state.file_fotografia);
+        bodyFormData.append('codigoPostal', this.state.curp_Alumno);
+        bodyFormData.append('municipio', this.state.fileCurp_Alumno);
+        //Datos del contacto de emergencia
+        bodyFormData.append('nombreEmergencia', this.state.file_fotografia);
+        bodyFormData.append('appPatEmergencia', this.state.curp_Alumno);
+        bodyFormData.append('appMatEmergencia', this.state.fileCurp_Alumno);
+        bodyFormData.append('telEmergencia', this.state.file_fotografia);
+        //Formacion academica
+        bodyFormData.append('nivMaxStudy', this.state.curp_Alumno);
+        bodyFormData.append('acadSituacion', this.state.fileCurp_Alumno);
+        bodyFormData.append('insEducativa', this.state.file_fotografia);
+        bodyFormData.append('anioEgreso', this.state.curp_Alumno);
+        bodyFormData.append('evidenciaPoli', this.state.fileCurp_Alumno);
+        //Datos laborales 
+        bodyFormData.append('nombreInst', this.state.file_fotografia);
+        bodyFormData.append('domicilioInst', this.state.curp_Alumno);
+        bodyFormData.append('puestoInst', this.state.fileCurp_Alumno);
+        bodyFormData.append('telefonoInst', this.state.file_fotografia);
+
         axios({
             method : 'POST',
             url : url,
@@ -485,7 +589,7 @@ class FormularioC extends React.Component {
                             </section>
                             <Row>
                                 <Col sm>
-                                    <Button type="button" className=" mt- 3 mb-3 col-4" style={{ background: '#A90101', color: '#FFFFFF' }} onClick={() => this.SendDatos()}>
+                                    <Button type="button" className=" mt- 3 mb-3 col-4" style={{ background: '#A90101', color: '#FFFFFF' }} onClick={() => this.existeCurpAlum()}>
                                         Enviar
                                     </Button>
                                     {/* <Button  type="button" className=" mt- 3 mb-3 col-4" style={{background: '#A90101', color: '#FFFFFF' }}  onClick={() => this.setState({ show: true })}>

@@ -197,6 +197,7 @@ class Servicios extends React.Component {
                         timer: 1500
                     })
                 }).catch(function (error) {
+                    
                 });
                 
             }
@@ -244,8 +245,8 @@ class Servicios extends React.Component {
             this.setState({ evento: evento });
             this.setState({ programaAcademico: programaAcademico });
             this.setState({ habilitado: habilitado });
-            this.setState({ modalidad: modalidadArray });
-            this.setState({ cuota: cuotaArray });
+            this.setState({ modalidadArray: modalidadArray });
+            this.setState({ cuotaArray: cuotaArray });
         } catch (e) {
             console.log(e);
         }
