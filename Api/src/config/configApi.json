@@ -10,7 +10,7 @@
     ],
     "rutas":[
         {
-            "images":"/resource/images/",
+            "images":"/resource/image/",
             "upload":"/resource/upload/"
         }
     ]
