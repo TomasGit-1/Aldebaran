@@ -99,3 +99,24 @@ CREATE TABLE PAGOS(
 -- WHERE idServiciosEdu = 23 ;
 
 -- select * from SERVICIOEDUCATIVO;
+
+
+-- INSERT INTO personas 
+-- 		(curp , nombre , apppat , appmat, fotografia ,  sexo , fechanacimiento , edad , telpar , telcel , calle , colonia , codigopostal , municipio) 
+-- 		VALUES (
+-- 				'LOPT980219HOCPRM07'
+-- 				, 'Tomas'
+-- 				, 'Lopez'
+-- 				, 'Perez'
+-- 				, 'pathde la fotografia'
+-- 				, 'hombre'
+-- 				, TO_DATE('06/05/2015', 'DD/MM/YYYY') ,
+-- 				23, 
+-- 				'951233323',
+-- 				'951232132',
+-- 				'calle',
+-- 				'colonia',
+-- 				68263,
+-- 				'municipio');
+				
+-- SELECT * FROM PERSONAS;
