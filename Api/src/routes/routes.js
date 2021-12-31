@@ -20,6 +20,14 @@ routes.get('/Servicios',  (req, res )=> {
         console.log(error);
     })
 });
+routes.get('/Alumnos',  (req, res )=> {
+    db.getAlumnos().then(respuesta =>{
+        // res.json({ "status": 200 , "Servicios":respuesta});
+        res.json(respuesta['Info']);
+    }).catch(error =>{
+        console.log(error);
+    })
+});
 
 routes.post('/updateHabilitado' , (req, res)=> {
     db.updateHabilitado(req).then(respuesta =>{

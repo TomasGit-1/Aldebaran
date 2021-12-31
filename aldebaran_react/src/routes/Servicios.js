@@ -9,6 +9,7 @@ class Servicios extends React.Component {
         super(props)
         this.state = {
             msg: "Primera aplicacion React",
+            url:"",
             id: [
             ],
             registro: [

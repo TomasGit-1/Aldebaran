@@ -15,7 +15,7 @@ const config = {
     password:conexion[0]['password'],
     database:conexion[0]['database'],
     port:conexion[0]['port'],
-    max: 5,
+    max: 10,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 2000,
 }
@@ -25,7 +25,7 @@ const Home = async () =>{
     // console.log("Hola Bd");
     return 200;
 };
-const getServicios = async (valor) => {
+const getServicios = async () => {
     const response = await pool.query('SELECT * FROM SERVICIOEDUCATIVO');
     var data = response.rows;
     let id =[]
@@ -45,6 +45,15 @@ const getServicios = async (valor) => {
         cuota.push(row['cuota']);
     })
     return {"id":id, "registro":registro , "evento":evento , "programaAcademico":programaAcademico, "habilitado":habilitado , "modalidad":modalidad,"cuota":cuota };
+};
+const getAlumnos = async () => {
+    const response = await pool.query('SELECT * FROM personas');
+    var data = response.rows;
+    var bdAlumnos = []
+    for (let index = 0; index < data.length; index++) {
+        bdAlumnos.push(data[index]);
+    }
+    return {"Info":bdAlumnos};
 };
 const updateHabilitado = async (req) => {
     let datos = req.body;
@@ -82,6 +91,7 @@ const createServicio = async (req) => {
 module.exports = {
     Home,
     getServicios,
+    getAlumnos,
     updateHabilitado,
     getCurp,
     createServicio
