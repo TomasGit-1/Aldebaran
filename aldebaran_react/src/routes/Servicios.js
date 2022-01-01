@@ -1,8 +1,10 @@
 import React from 'react';
 import NavbarMain from '../Components/NavbarS';
-import { Table, Container, Col, Row, Form, Button, Dropdown , ButtonGroup } from 'react-bootstrap';
+import { Table, Container, Col, Row, Form, Button, Dropdown , ButtonGroup  , InputGroup , FormControl} from 'react-bootstrap';
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import $ from 'jquery';
+
 
 class Servicios extends React.Component {
     constructor(props) {
@@ -39,6 +41,18 @@ class Servicios extends React.Component {
         this.editar = this.editar.bind(this);
         this.ShowForm = this.ShowForm.bind(this);
         this.onSeleccion = this.onSeleccion.bind(this);
+        this.filterInput = this.filterInput.bind(this);
+
+    }
+    filterInput(){
+        $(document).ready(function () {
+            $("#myInput").on("keyup" , function () {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value)> -1)
+                })
+            })
+        })
     }
     ShowForm (num) {
         if (num === 1) {
@@ -267,7 +281,6 @@ class Servicios extends React.Component {
         return (
             <main>
                 <NavbarMain />
-               
 
                 { showForm ? 
                     <section>
@@ -320,9 +333,12 @@ class Servicios extends React.Component {
 
                                 <Col sm >
                                     <Form.Group >
-                                    <Form.Label className="h5">CUOTA POR PARTICIPANTE</Form.Label>
-                                        <Form.Control type="text" placeholder="CUOTA POR PARTICIPANTE" onChange={(evt) => this.dataForm0(evt, "cuota")}/>
+                                        <Form.Label className="h5">CUOTA POR PARTICIPANTE</Form.Label>
                                     </Form.Group>
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Text id="basic-addon1">$</InputGroup.Text>
+                                        <Form.Control type="text" placeholder="CUOTA POR PARTICIPANTE" onChange={(evt) => this.dataForm0(evt, "cuota")}/>
+                                    </InputGroup>
                                 </Col>
                             </Row>
                           
@@ -353,11 +369,19 @@ class Servicios extends React.Component {
                             </Container>
                         </section>
                         <Container className="border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2" >
-                            <ButtonGroup aria-label="Basic example" className="mt-3 mb-3"> 
-                                <Button variant="secondary" onClick={() => this.ShowForm(1)}>  
-                                    Nuevo servicio &nbsp;&nbsp;<i className="bi bi-plus-circle-fill "></i>
-                                </Button>
-                            </ButtonGroup>
+                            <Row className="mt-3 mb-3">
+                                <Col >
+                                    <ButtonGroup aria-label="Basic example" > 
+                                        <Button variant="secondary" onClick={() => this.ShowForm(1)}>  
+                                            Nuevo servicio &nbsp;&nbsp;<i className="bi bi-plus-circle-fill "></i>
+                                        </Button>
+                                    </ButtonGroup>
+                                </Col>
+                                <Col >
+                                    <input className='form-control' type="text" placeholder='Buscar' id="myInput" onChange={this.filterInput}></input>
+                                </Col>
+                            </Row>
+
                             {
                                 id.length === 0 ?
                                     <Container className="mb-3"  >
@@ -368,7 +392,7 @@ class Servicios extends React.Component {
                                 : null
                             }
                             <div className="table-responsive " style={{ height: "500px" }}>
-                                <Table  className="table-hover">
+                                <Table  className="table-hover" id ="myTable" striped bordered hover>
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -398,14 +422,16 @@ class Servicios extends React.Component {
                                                             <i className="bi bi-three-dots-vertical"></i>
                                                         </Dropdown.Toggle>
                                                         <Dropdown.Menu>
-                                                            <Dropdown.Item ><Button onClick={() => this.editar(index)}>Editar</Button></Dropdown.Item>
-                                                            
+                                                            <Dropdown.Item onClick={() => this.editar(index)} >
+                                                                {/* <Button onClick={() => this.editar(index)}><i className="bi bi-pencil"></i></Button> */}
+                                                                 <i className="bi bi-pencil"></i> &nbsp;&nbsp;Editar
+                                                            </Dropdown.Item>
                                                             <Dropdown.Item onClick={() => this.editar(index)}>
                                                                 
                                                                     {
                                                                         habilitado[index]==="Habilitado" ?
-                                                                            <small>desabilitar</small>
-                                                                        :  <p>Habilitar</p>
+                                                                        <label><i className="bi bi-toggle-off"></i>&nbsp;&nbsp;Desabilitar</label>
+                                                                        :  <label><i className="bi bi-toggle-on"></i>&nbsp;&nbsp;Habilitar</label>
                                                                     }
 
                                                             </Dropdown.Item>

@@ -26,7 +26,7 @@ const Home = async () =>{
     return 200;
 };
 const getServicios = async () => {
-    const response = await pool.query('SELECT * FROM SERVICIOEDUCATIVO');
+    const response = await pool.query('SELECT * FROM SERVICIOEDUCATIVO ORDER BY idServiciosEdu ASC');
     var data = response.rows;
     let id =[]
     let registro = []
@@ -47,7 +47,7 @@ const getServicios = async () => {
     return {"id":id, "registro":registro , "evento":evento , "programaAcademico":programaAcademico, "habilitado":habilitado , "modalidad":modalidad,"cuota":cuota };
 };
 const getAlumnos = async () => {
-    const response = await pool.query('SELECT * FROM personas');
+    const response = await pool.query('SELECT * FROM personas  ORDER BY idPersona ASC');
     var data = response.rows;
     var bdAlumnos = []
     for (let index = 0; index < data.length; index++) {
@@ -67,7 +67,7 @@ const updateHabilitado = async (req) => {
 };
 const getCurp = async (req)  => {
     let datos = req.body;
-    let curp = datos.curpAlum;
+    let curp = datos.validacion.curpAlum;
     const response = await pool.query('SELECT * FROM personas WHERE curp = $1' ,[curp]);
     if(response.rowCount == 0){
         return 0

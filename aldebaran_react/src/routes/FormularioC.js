@@ -1,9 +1,10 @@
 import React from 'react'
 import axios from 'axios'
-import { Button, Form, Container, Row, Col, Alert , ButtonGroup , Table , Dropdown} from 'react-bootstrap'
+import { Button, Form, Container, Row, Col, Alert , ButtonGroup , Table , Dropdown , InputGroup } from 'react-bootstrap'
 import Swal from 'sweetalert2'
 import Moment from 'moment'
 import NavbarMain from '../Components/NavbarS'
+import $ from 'jquery';
 
 class FormularioC extends React.Component {
     constructor(props) {
@@ -67,6 +68,8 @@ class FormularioC extends React.Component {
         this.ShowForm = this.ShowForm.bind(this);
         this.ver = this.ver.bind(this);
         this.editar = this.editar.bind(this);
+        this.filterInput = this.filterInput.bind(this);
+        
     }
     /*  
         ===========================================================================
@@ -150,7 +153,18 @@ class FormularioC extends React.Component {
             }
         }
     }
+    filterInput(){
+        $(document).ready(function () {
+            $("#myInput").on("keyup" , function () {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value)> -1)
+                })
+            })
+        })
+    }
     validarCamposVacion() {
+        
         let validacion = {
             //Datos de entrada del alumno
             n_max_estudios: this.state.n_max_estudios,
@@ -193,6 +207,7 @@ class FormularioC extends React.Component {
             text: 'El camppo Nombre del programa academico esta vacio',
         })
     }
+  
     SendDatos() {
         console.log("Esta funcion deberia de mandar la informacion al api");
         console.log(this.state.curp_Alumno);
@@ -653,6 +668,20 @@ class FormularioC extends React.Component {
                                         </Button> */}
                                     </Col>
                                 </Row>
+                                <Row className="mt-3 mb-3">
+                                <Col sm >
+                                    <Form.Group >
+                                        <Button variant="outline-primary" onClick={() => this.existeCurpAlum()}>
+                                            <i className="bi bi-plus-circle-fill "></i>
+                                            &nbsp;&nbsp;Agregar
+                                        </Button>&nbsp;&nbsp;
+                                        <Button variant="outline-danger" onClick={() => this.ShowForm(0)}>
+                                            <i className="bi bi-plus-circle-fill "></i>
+                                            &nbsp;&nbsp;Cancelar
+                                        </Button>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
                             </Form>
                         </Container>
 
@@ -667,22 +696,31 @@ class FormularioC extends React.Component {
                             </Container>
                         </section>
                         <Container className="border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2" >
-                            <ButtonGroup aria-label="Basic example" className="mt-3 mb-3">
-                                <Button variant="secondary" onClick={() => this.ShowForm(1)}>
-                                    Nuevo servicio &nbsp;&nbsp;<i className="bi bi-plus-circle-fill "></i>
-                                </Button>
-                            </ButtonGroup>
-                            {/* {
-                                id.length === 0 ?
+                        <Row className="mt-3 mb-3">
+                            <Col sm>
+                                <ButtonGroup aria-label="Basic example" >
+                                    <Button variant="secondary" onClick={() => this.ShowForm(1)}>
+                                        Nuevo servicio &nbsp;&nbsp;<i className="bi bi-plus-circle-fill "></i>
+                                    </Button>
+                                </ButtonGroup>
+                            </Col>  
+                            <Col >
+                                <input className='form-control' type="text" placeholder='Buscar' id="myInput" onChange={this.filterInput}></input>
+                            </Col>
+                      
+                        </Row>
+
+                            {
+                                informacion.length === 0 ?
                                     <Container className="mb-3"  >
                                         <div className="alert alert-danger mt-2" role="alert">
-                                            No hay servicios en la base de datos
+                                            No hay alumnos en la base de datos
                                         </div>
                                     </Container>
                                     : null
-                            } */}
+                            }
                             <div className="table-responsive " style={{ height: "500px" }}>
-                                <Table className="table-hover">
+                                <Table className="table-hover" id ="myTable" striped bordered hover>
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -714,11 +752,14 @@ class FormularioC extends React.Component {
                                                         <Dropdown.Menu>
                                                             <Dropdown.Item onClick={() => this.editar(index[1])} >
                                                                 {/* <Button onClick={() => this.editar(index)}><i className="bi bi-pencil"></i></Button> */}
-                                                                 <i className="bi bi-pencil"></i>Editar
+                                                                 <i className="bi bi-pencil"></i> &nbsp;&nbsp;Editar
                                                             </Dropdown.Item>
 
                                                             <Dropdown.Item onClick={() => this.ver(index[1])}>
-                                                                 <i className="bi bi-eye"></i>Ver
+                                                                 <i className="bi bi-eye"></i> &nbsp;&nbsp;Ver
+                                                            </Dropdown.Item>
+                                                            <Dropdown.Item onClick={() => this.ver(index[1])}>
+                                                                 <i className="bi bi-cloud-download"></i>&nbsp;&nbsp;Files
                                                             </Dropdown.Item>
                                                         </Dropdown.Menu>
                                                     </Dropdown>
