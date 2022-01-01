@@ -1,6 +1,6 @@
 import React from 'react';
 import NavbarMain from '../Components/NavbarS';
-import { Table, Container, Col, Row, Form, Button, Dropdown , ButtonGroup  , InputGroup , FormControl} from 'react-bootstrap';
+import { Table, Container, Col, Row, Form, Button, Dropdown , ButtonGroup  , InputGroup } from 'react-bootstrap';
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import $ from 'jquery';
@@ -341,20 +341,19 @@ class Servicios extends React.Component {
                                     </InputGroup>
                                 </Col>
                             </Row>
-                          
-                            <Row className="mt-3 mb-3">
+                            <Row   className="mt-3 ">
+                                <Col sm> 
+                                    <Button className="col-12" variant="outline-primary" onClick={() => this.SendDatos()}>
+                                        <i className="bi bi-plus-circle-fill "></i>
+                                        &nbsp;&nbsp;Agregar
+                                    </Button>&nbsp;&nbsp;
+                                </Col>        
                                 <Col sm >
-                                    <Form.Group >
-                                        <Button variant="outline-primary" onClick={() => this.SendDatos()}>
-                                            <i className="bi bi-plus-circle-fill "></i>
-                                            &nbsp;&nbsp;Agregar
-                                        </Button>&nbsp;&nbsp;
-                                        <Button variant="outline-danger" onClick={() => this.ShowForm(0)}>
-                                            <i className="bi bi-plus-circle-fill "></i>
-                                            &nbsp;&nbsp;Cancelar
-                                        </Button>
-                                    </Form.Group>
-                                </Col>
+                                    <Button className="col-12" variant="outline-danger" onClick={() => this.ShowForm(0)}>
+                                        <i className="bi bi-plus-circle-fill "></i>
+                                        &nbsp;&nbsp;Cancelar
+                                    </Button>
+                                </Col>        
                             </Row>
                         </Container>
                     </section>
@@ -369,6 +368,8 @@ class Servicios extends React.Component {
                             </Container>
                         </section>
                         <Container className="border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2" >
+                        <h3>Servicios educativos</h3>
+
                             <Row className="mt-3 mb-3">
                                 <Col >
                                     <ButtonGroup aria-label="Basic example" > 
