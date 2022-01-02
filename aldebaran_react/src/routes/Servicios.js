@@ -4,6 +4,7 @@ import { Table, Container, Col, Row, Form, Button, Dropdown , ButtonGroup  , Inp
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import $ from 'jquery';
+import config from '../config/config.json';
 
 
 class Servicios extends React.Component {
@@ -142,7 +143,7 @@ class Servicios extends React.Component {
                     // let data = {
                     //     servicioNew: this.state.servicioNew,
                     // }
-                    axios.post('http://localhost:5000/api/createServicio', {
+                    axios.post(config.general[0].url+config.general[0].puerto_api+'/api/createServicio', {
                         validacion,
                     })
                         .then(res => {
@@ -197,7 +198,7 @@ class Servicios extends React.Component {
                     "id":validacion['id'][b],
                     "habilitado":opcion
                 }
-                axios.post('http://localhost:5000/api/updateHabilitado', {
+                axios.post(config.general[0].url+config.general[0].puerto_api+'/api/updateHabilitado', {
                     data,
                 })
                 .then(res => {
@@ -232,7 +233,7 @@ class Servicios extends React.Component {
             let habilitado =[]
             let modalidadArray =[]
             let cuotaArray =[]
-            const response = await fetch("http://localhost:5000/api/Servicios")
+            const response = await fetch(config.general[0].url+config.general[0].puerto_api+"/api/Servicios")
             var responseJson = await response.json();
             console.log("Estamos obnteniedo los ")
             // console.log(responseJson.Servicios.length);
@@ -246,8 +247,8 @@ class Servicios extends React.Component {
                     console.log("Habilitado");
                     habilitado.push("Habilitado");
                 }else{
-                    console.log("Desabilidato");
-                    habilitado.push("Desabilidato");
+                    console.log("Deshabilidato");
+                    habilitado.push("Deshabilidato");
                 }
                 modalidadArray.push(responseJson.modalidad[i]);
                 cuotaArray.push(responseJson.cuota[i]);
@@ -431,7 +432,7 @@ class Servicios extends React.Component {
                                                                 
                                                                     {
                                                                         habilitado[index]==="Habilitado" ?
-                                                                        <label><i className="bi bi-toggle-off"></i>&nbsp;&nbsp;Desabilitar</label>
+                                                                        <label><i className="bi bi-toggle-off"></i>&nbsp;&nbsp;Deshabilitar</label>
                                                                         :  <label><i className="bi bi-toggle-on"></i>&nbsp;&nbsp;Habilitar</label>
                                                                     }
 

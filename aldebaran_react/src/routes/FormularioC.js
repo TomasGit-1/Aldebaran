@@ -7,6 +7,7 @@ import Moment from 'moment'
 import NavbarMain from '../Components/NavbarS'
 import PDFAlumno from './PDFalumno'
 import $ from 'jquery';
+import config from '../config/config.json';
 
 class FormularioC extends React.Component {
     constructor(props) {
@@ -19,18 +20,18 @@ class FormularioC extends React.Component {
                 { value: 2, text: "Datos laborales" },
                 { value: 3, text: "Información Adicional" }
             ],
+
+            //Variables para el puerto apu
             urlApi: "",
+            
             puertoApi: "",
 
-            show: false,
             //Mensajes que aparecen en la ionterfaz
             msgServicio: "Sólo aparecen los servicios educativos disponibles a la fecha de registro. No podrás registrarse a alguno diferente al aprobado por la Coordinación.",
             msg: "Primera aplicacion React",
             inputValue: "Bienvenido",
 
             //Datos de entrada del alumno
-            n_max_estudios: "",
-            modalidad: "",
             file_fotografia: null,
             email_Alumno: "",
             curp_Alumno: "",
@@ -43,20 +44,34 @@ class FormularioC extends React.Component {
             edad_Alumno: 0,
             telPar_Alumno: "",
             telCel_Alumno: "",
+
             //Variables para el domicilio del alumno
             calle_Alumno: "",
             num_Alumno: "",
             col_Alumno: "",
             cp_Alumno: 0,
             municipio_Alumno: "",
+
             //Contacto de emergencia
             nombre_Emerge: "",
             appPat_Emerge: "",
             appMat_Emerge: "",
             telContacto_Emerge: "",
             email_Emerge: "",
-            validacionCurp: "",
-            howForm: false,
+
+            //Formacion academica
+            n_max_estudios: "",
+            sitAcademico:"",
+            instEducativa:"",
+            anioEgresoi:"",
+            fileEvideciaIPN:"",
+
+            //Datos laborales
+
+
+
+            show: false,
+            showForm: false,
             showTable: true,
             modalShow: false
 
@@ -83,12 +98,14 @@ class FormularioC extends React.Component {
     */
 
     componentDidMount() {
+        console.log(config.general[0].puerto_api);
+        console.log(config.general[0].url);
         this.apiAlumnos();
     }
     apiAlumnos = async () => {
         try {
-
-            const response = await fetch("http://localhost:5000/api/Alumnos")
+            // const response = await fetch("http://localhost:5000/api/Alumnos")
+            const response = await fetch(config.general[0].url+config.general[0].puerto_api+"/api/Alumnos")
             var responseJson = await response.json();
             let arrayInfo = []
             for (let index = 0; index < responseJson.length; index++) {
@@ -155,7 +172,7 @@ class FormularioC extends React.Component {
                 text: msg,
             })
         } else {
-            const respuesta = await axios.post('http://localhost:5000/Api/ExisteCurp', {
+            const respuesta = await axios.post(config.general[0].url+config.general[0].puerto_api+'/Api/ExisteCurp', {
                 validacion,
             }).then(function (response) {
                 return response.data.mensaje;
@@ -184,12 +201,10 @@ class FormularioC extends React.Component {
 
         let validacion = {
             //Datos de entrada del alumno
-            n_max_estudios: this.state.n_max_estudios,
-            modalidad: this.state.modalidad,
-            file_fotografia: this.state.file_fotografia,
+            fileImg: this.state.file_fotografia,
             email_Alumno: this.state.email_Alumno,
             curp_Alumno: this.state.curp_Alumno,
-            fileCurp_Alumno: this.state.fileCurp_Alumno,
+            fileCurp: this.state.fileCurp_Alumno,
             genero: this.state.genero,
             nombre_Alumno: this.state.nombre_Alumno,
             appPat_Alumno: this.state.appPat_Alumno,
@@ -198,18 +213,22 @@ class FormularioC extends React.Component {
             edad_Alumno: this.state.edad_Alumno,
             telPar_Alumno: this.state.telPar_Alumno,
             telCel_Alumno: this.state.telCel_Alumno,
+            
             //Variables para el domicilio del alumno
             calle_Alumno: this.state.calle_Alumno,
             num_Alumno: this.state.num_Alumno,
             col_Alumno: this.state.col_Alumno,
             cp_Alumno: this.state.cp_Alumno,
             municipio_Alumno: this.state.municipio_Alumno,
+
             //Contacto de emergencia
             nombre_Emerge: this.state.nombre_Emerge,
             appPat_Emerge: this.state.appPat_Emerge,
             appMat_Emerge: this.state.appMat_Emerge,
             telContacto_Emerge: this.state.telContacto_Emerge,
-            email_Emerge: this.state.email_Emerge
+            email_Emerge: this.state.email_Emerge,
+            
+            n_max_estudios: this.state.n_max_estudios,
         };
         console.log("Vamos a validar que la informacion si este");
         if (validacion.registro === "") {
@@ -272,7 +291,7 @@ class FormularioC extends React.Component {
         //     }).catch(function (error) {
         //     });
 
-        var url = "http://localhost:5000/createRegistro";
+        var url = config.general[0].url+config.general[0].puerto_api+"/createRegistro";
         var bodyFormData = new FormData();
         bodyFormData.append('fileImg', this.state.file_fotografia);
         bodyFormData.append('emailAlum', this.state.email_Alumno);

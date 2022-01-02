@@ -34,7 +34,7 @@ CREATE TABLE Personas(
 	TelCel varchar,
 	Calle varchar,
 	Colonia varchar,
-	CodigoPostal int,
+	CodigoPostal varchar,
 	Municipio varchar
 );
 
