@@ -14,6 +14,10 @@ app.use((req, res, next) => {
 	res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
 	res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
 	res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
+	res.header("Content-Type", "application/json");
+	// res.writeHeader(200, { 'Content-Type': 'application/json' });
+	// res.write(JSON.stringify(object));
+	// res.end()
 	next();
 });
 app.use('/api' , routes)

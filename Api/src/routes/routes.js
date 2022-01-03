@@ -65,18 +65,27 @@ routes.post('/createRegistro',  (req, res )=> {
         let datos = req.body;
         let sampleFile;
         const curp = datos.curp;
-    
+        
         //En esta ruta se guardan los archivos pdf 
         var dirpdf = __dirname +  rutas[0]['upload'] + curp+'/';
         sampleFile = req.files.fileCurp;
         save(req , dirpdf , sampleFile);
-    
+        
         //En esta ruta se guardan las fotografias 
         var dirimg = __dirname +  rutas[0]['images'] + curp+'/';
         sampleFile = req.files.fileImg;
         let respuesta = save(req , dirimg , sampleFile);
+        console.log(datos);
+
+
+
+
+
+
+
+
+        
         res.json({ "status": respuesta});
-                
         // db.Home().then(respuesta =>{
         //     console.log(db.Home());
         //     let datos = req.body;
@@ -98,10 +107,7 @@ routes.post('/createRegistro',  (req, res )=> {
         // })
     } catch (error) {
         res.json({ "error": error.message});
-
     }
-    
-
 });
 
 const save = ( req , dir , sampleFile) =>{
