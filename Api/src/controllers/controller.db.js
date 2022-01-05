@@ -88,6 +88,13 @@ const createServicio = async (req) => {
     return {"mensaje" :'Servicio agregado'};
 };
 
+
+const createIngreso = async (req) => {
+    let datos = req.body;
+
+    return {"mensaje" :'Servicio agregado'};
+}
+
 module.exports = {
     Home,
     getServicios,
