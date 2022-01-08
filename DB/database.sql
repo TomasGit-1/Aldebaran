@@ -25,6 +25,7 @@ CREATE TABLE SERVICIOEDUCATIVO(
 CREATE TABLE Personas(
 	idPersona  serial,
 	Curp varchar Primary Key,
+	email varchar, 
 	Nombre varchar,
 	AppPat varchar,
 	AppMat varchar,
