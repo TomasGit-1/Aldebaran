@@ -27,6 +27,10 @@ class Servicios extends React.Component {
             ],
             cuotaArray: [
             ],
+            moduloArray:[   
+            ],
+            HorasArray:[   
+            ],
             servicioNew: "",
             show: false,
             showForm: false,
@@ -35,7 +39,9 @@ class Servicios extends React.Component {
             tipoEvento:"",
             nombreServicio:"",
             modalidad:"",
-            cuota : ""   
+            cuota : "",
+            numModulo:1,
+            numHoras:1
         }
         this.SendDatos = this.SendDatos.bind(this);
         this.dataForm0 = this.dataForm0.bind(this);
@@ -81,6 +87,10 @@ class Servicios extends React.Component {
             this.setState({ nombreServicio: event.target.value });
         }else if (data ==="cuota"){
             this.setState({ cuota: event.target.value });
+        }else if (data ==="numModulo"){
+            this.setState({ numModulo: event.target.value });
+        }else if (data ==="numHoras"){
+            this.setState({ numHoras: event.target.value });
         }
     }
 
@@ -90,7 +100,9 @@ class Servicios extends React.Component {
             evento:    this.state.tipoEvento,
             nombre:    this.state.nombreServicio,
             cuota:     this.state.cuota,
-            modalidad :this.state.modalidad
+            modalidad :this.state.modalidad,
+            numModulo :this.state.numModulo,
+            numHoras :this.state.numHoras
         }
         console.log(validacion);
         console.log(validacion.registro);
@@ -233,9 +245,11 @@ class Servicios extends React.Component {
             let habilitado =[]
             let modalidadArray =[]
             let cuotaArray =[]
+            let moduloArray =[]
+            let HorasArray =[]
             const response = await fetch(config.general[0].url+config.general[0].puerto_api+"/api/Servicios")
             var responseJson = await response.json();
-            console.log("Estamos obnteniedo los ")
+            console.log("Estamos obnteniedo los ");
             // console.log(responseJson.Servicios.length);
             // console.log(responseJson.habilitado);
             for (var i = 0; i < responseJson.id.length; i++) {
@@ -252,6 +266,8 @@ class Servicios extends React.Component {
                 }
                 modalidadArray.push(responseJson.modalidad[i]);
                 cuotaArray.push(responseJson.cuota[i]);
+                moduloArray.push(responseJson.numModulo[i]);
+                HorasArray.push(responseJson.numHoras[i]);
             }
             // console.log(responseJson['id']);
             // console.log(responseJson['Servicios']);
@@ -263,6 +279,8 @@ class Servicios extends React.Component {
             this.setState({ habilitado: habilitado });
             this.setState({ modalidadArray: modalidadArray });
             this.setState({ cuotaArray: cuotaArray });
+            this.setState({ moduloArray: moduloArray });
+            this.setState({ HorasArray: HorasArray });
         } catch (e) {
             console.log(e);
         }
@@ -276,6 +294,8 @@ class Servicios extends React.Component {
         let {habilitado} =this.state
         let {modalidadArray} =this.state
         let {cuotaArray} =this.state
+        let {moduloArray} =this.state
+        let {HorasArray} =this.state
         let { showForm } = this.state
         let { showTable } = this.state
 
@@ -286,14 +306,25 @@ class Servicios extends React.Component {
                 { showForm ? 
                     <section>
                         <Container className="mt-3 mb-3 border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2" >
-                        <Row className="mt-3 mb-3">
+                            <Row className="mt-3 mb-3">
                                 <Col sm >
                                     <Form.Group >
                                     <Form.Label className="h5">Registro academico</Form.Label>
                                         <Form.Control type="text" placeholder="Registro academico" onChange={(evt) => this.dataForm0(evt , "resgitroid")}/>
                                     </Form.Group>
                                 </Col>
-
+                                <Col sm >
+                                    <Form.Group >
+                                    <Form.Label className="h5">Numero de Modulos (1, 2, 3...)</Form.Label>
+                                        <Form.Control type="number" placeholder="Numero de modulos" onChange={(evt) => this.dataForm0(evt ,"numModulo")} min={1}  />
+                                    </Form.Group>
+                                </Col>
+                                <Col sm >
+                                    <Form.Group >
+                                    <Form.Label className="h5">Numero de horas </Form.Label>
+                                        <Form.Control type="number" placeholder="Numero de horas" onChange={(evt) => this.dataForm0(evt ,"numHoras")} min={1}/>
+                                    </Form.Group>
+                                </Col>
                             </Row>
                             <Row >
                                 <Col sm >
@@ -304,8 +335,8 @@ class Servicios extends React.Component {
                                 </Col>
                                 <Col sm >
                                     <Form.Group >
-                                    <Form.Label className="h5">NOMBRE DEL PROGRAMA ACADÉMICO</Form.Label>
-                                        <Form.Control type="text" placeholder="servicio" onChange={(evt) => this.dataForm0(evt , "nombre")}/>
+                                    <Form.Label className="h5">Nombre del programa academico</Form.Label>
+                                        <Form.Control type="text" placeholder="Programa academico" onChange={(evt) => this.dataForm0(evt , "nombre")}/>
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -334,11 +365,11 @@ class Servicios extends React.Component {
 
                                 <Col sm >
                                     <Form.Group >
-                                        <Form.Label className="h5">CUOTA POR PARTICIPANTE</Form.Label>
+                                        <Form.Label className="h5">Cuota por participante</Form.Label>
                                     </Form.Group>
                                     <InputGroup className="mb-3">
                                         <InputGroup.Text id="basic-addon1">$</InputGroup.Text>
-                                        <Form.Control type="text" placeholder="CUOTA POR PARTICIPANTE" onChange={(evt) => this.dataForm0(evt, "cuota")}/>
+                                        <Form.Control type="text" placeholder="Cuota por participante" onChange={(evt) => this.dataForm0(evt, "cuota")}/>
                                     </InputGroup>
                                 </Col>
                             </Row>
@@ -404,6 +435,8 @@ class Servicios extends React.Component {
                                             <th>Modalidad</th>
                                             <th>Cuota</th>
                                             <th>Estatus</th>
+                                            <th>Numero de modulos</th>
+                                            <th>Numero de horas</th>
                                             <th>Opciones</th>
                                         </tr>
                                     </thead>
@@ -418,6 +451,8 @@ class Servicios extends React.Component {
                                                 <td>{modalidadArray[index]}</td>
                                                 <td>{cuotaArray[index]}</td>
                                                 <td>{habilitado[index]}</td>
+                                                <td>{moduloArray[index]}</td>
+                                                <td>{HorasArray[index]}</td>
                                                 <td>
                                                     <Dropdown>
                                                         <Dropdown.Toggle id="dropdown-basic">

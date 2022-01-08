@@ -20,7 +20,6 @@ class FormularioC extends React.Component {
                 { value: 2, text: "Datos laborales" },
                 { value: 3, text: "Información Adicional" }
             ],
-
             //Variables para el puerto apu
             urlApi: "",
 
@@ -98,7 +97,7 @@ class FormularioC extends React.Component {
         this.closeOpenModal = this.closeOpenModal.bind(this);
         this.SeleccMaxEstudios = this.SeleccMaxEstudios.bind(this);
         this.SeleccSituacionAcademina = this.SeleccSituacionAcademina.bind(this);
-
+        this.uploadFileEvidencia = this.uploadFileEvidencia.bind(this);
 
     }
     /*
@@ -383,40 +382,40 @@ class FormularioC extends React.Component {
         bodyFormData.append('curp', this.state.curp_Alumno);
         bodyFormData.append('fileCurp', this.state.fileCurp_Alumno);
 
-        // bodyFormData.append('genero', this.state.genero);
-        // bodyFormData.append('nombreAlum', this.state.nombre_Alumno);
-        // bodyFormData.append('appPatAlum', this.state.appPat_Alumno);
-        // bodyFormData.append('appMatAlum', this.state.appMat_Alumno);
-        // bodyFormData.append('fechaNacimiento', this.state.fechaNac_Alumno);
-        // bodyFormData.append('edad', this.state.edad_Alumno);
-        // bodyFormData.append('telParticularAlum', this.state.telPar_Alumno);
-        // bodyFormData.append('telCelularAlum', this.state.telCel_Alumno);
+        bodyFormData.append('genero', this.state.genero);
+        bodyFormData.append('nombreAlum', this.state.nombre_Alumno);
+        bodyFormData.append('appPatAlum', this.state.appPat_Alumno);
+        bodyFormData.append('appMatAlum', this.state.appMat_Alumno);
+        bodyFormData.append('fechaNacimiento', this.state.fechaNac_Alumno);
+        bodyFormData.append('edad', this.state.edad_Alumno);
+        bodyFormData.append('telParticularAlum', this.state.telPar_Alumno);
+        bodyFormData.append('telCelularAlum', this.state.telCel_Alumno);
 
-        // bodyFormData.append('calle', this.state.calle_Alumno);
-        // bodyFormData.append('NumeroDom', this.state.num_Alumno);
-        // bodyFormData.append('colonia', this.state.col_Alumno);
-        // bodyFormData.append('codigoPostal', this.state.cp_Alumno);
-        // bodyFormData.append('municipio', this.state.municipio_Alumno);
+        bodyFormData.append('calle', this.state.calle_Alumno);
+        bodyFormData.append('NumeroDom', this.state.num_Alumno);
+        bodyFormData.append('colonia', this.state.col_Alumno);
+        bodyFormData.append('codigoPostal', this.state.cp_Alumno);
+        bodyFormData.append('municipio', this.state.municipio_Alumno);
 
-        // //Datos del contacto de emergencia
-        // bodyFormData.append('nombreEmergencia', this.state.nombre_Emerge);
-        // bodyFormData.append('appPatEmergencia', this.state.appPat_Emerge);
-        // bodyFormData.append('appMatEmergencia', this.state.appMat_Emerge);
-        // bodyFormData.append('telEmergencia', this.state.telContacto_Emerge);
-        // bodyFormData.append('emailEmergencia', this.state.email_Emerge);
+        //Datos del contacto de emergencia
+        bodyFormData.append('nombreEmergencia', this.state.nombre_Emerge);
+        bodyFormData.append('appPatEmergencia', this.state.appPat_Emerge);
+        bodyFormData.append('appMatEmergencia', this.state.appMat_Emerge);
+        bodyFormData.append('telEmergencia', this.state.telContacto_Emerge);
+        bodyFormData.append('emailEmergencia', this.state.email_Emerge);
 
-        // //Formacion academica
-        // bodyFormData.append('nivMaxStudy', this.state.n_max_estudios);
-        // bodyFormData.append('acadSituacion', this.state.sitAcademico);
-        // bodyFormData.append('insEducativa', this.state.instEducativa);
-        // bodyFormData.append('anioEgreso', this.state.anioEgresoi);
-        // bodyFormData.append('fileEvidencia', this.state.fileEvideciaIPN);
+        //Formacion academica
+        bodyFormData.append('nivMaxStudy', this.state.n_max_estudios);
+        bodyFormData.append('acadSituacion', this.state.sitAcademico);
+        bodyFormData.append('insEducativa', this.state.instEducativa);
+        bodyFormData.append('anioEgreso', this.state.anioEgresoi);
+        bodyFormData.append('fileEvidencia', this.state.fileEvideciaIPN);
         
-        // //Datos laborales
-        // bodyFormData.append('nombreInst', this.state.nombInstLaboral);
-        // bodyFormData.append('domicilioInst', this.state.domicilioLaboral);
-        // bodyFormData.append('puestoInst', this.state.puesto);
-        // bodyFormData.append('telefonoInst', this.state.telefonoTra);
+        //Datos laborales
+        bodyFormData.append('nombreInst', this.state.nombInstLaboral);
+        bodyFormData.append('domicilioInst', this.state.domicilioLaboral);
+        bodyFormData.append('puestoInst', this.state.puesto);
+        bodyFormData.append('telefonoInst', this.state.telefonoTra);
         // headers: { 'Content-Type': 'application/json' }
 
         axios({
@@ -487,9 +486,10 @@ class FormularioC extends React.Component {
 
         if (evidencia === "") {
             console.log("No se ha cargado ninguna archivo");
+            this.setState({ fileEvideciaIPN:"false"});
         } else {
             console.log("Curp crgada");
-            this.setState({ fileEvideciaIPN:event.target.files[0] });
+            this.setState({ fileEvideciaIPN:event.target.files[0]});
         }
     }
     dataForm0(event, data) {

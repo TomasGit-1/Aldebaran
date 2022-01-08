@@ -17,7 +17,9 @@ CREATE TABLE SERVICIOEDUCATIVO(
 	Programa_Academico varchar,
 	Modalidad varchar,
 	cuota varchar,
-	Habilitado bool
+	Habilitado bool,
+	numModulo varchar,
+	numHoras varchar
 );
 
 CREATE TABLE Personas(
@@ -26,7 +28,6 @@ CREATE TABLE Personas(
 	Nombre varchar,
 	AppPat varchar,
 	AppMat varchar,
-	Fotografia varchar,
 	Sexo varchar,
 	FechaNacimiento Date,
 	Edad int,
@@ -35,7 +36,16 @@ CREATE TABLE Personas(
 	Calle varchar,
 	Colonia varchar,
 	CodigoPostal varchar,
-	Municipio varchar
+	Municipio varchar,
+	numDomicilio varchar
+);
+
+CREATE TABLE FilesPersona(
+	idFile  serial,
+	idCurpFK varchar references Personas(Curp),
+	FotografiaImg varchar,
+	CurpPdf varchar,
+	EvidenciaipnPdf varchar
 );
 
 CREATE TABLE ContactoEmergencia(
@@ -54,8 +64,7 @@ CREATE TABLE FormacionAcademica(
 	N_Max_Estudios varchar,
 	S_Academica_Actual varchar,
 	InstEducativa varchar,
-	AnioEgreso varchar,
-	ComunidadIPN varchar 
+	AnioEgreso varchar
 );
 
 CREATE TABLE DATOSLABORALES(
@@ -67,7 +76,6 @@ CREATE TABLE DATOSLABORALES(
 	Telefono varchar
 );
 
-
 CREATE TABLE PAGOS(
 	idPAgos serial primary key ,
 	idServiciosEduFk int references SERVICIOEDUCATIVO(idServiciosEdu),
@@ -76,7 +84,9 @@ CREATE TABLE PAGOS(
 	modalidad varchar(30),
 	referencia varchar,
 	FechaHoraTicket  timestamp,
-	fechaHoraRegistro timestamp
+	fechaHoraRegistro timestamp,
+	FECHA_INICIO timestamp,
+	FECHA_TÉRMINO timestamp
 );
 
 
