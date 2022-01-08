@@ -97,26 +97,48 @@ const createServicio = async (req) => {
 
 
 const createIngreso = async (req) => {
-    let data = req;
-    const response = await pool.query('INSERT INTO personas  (Curp , Nombre , AppPat ,AppMat , Fotografia , Sexo ,  FechaNacimiento , Edad , TelPar , TelCel , Calle , Colonia , CodigoPostal ,Municipio , numDomicilio ) VALUES ($1, $2 , $3 , $4 , $5 , $6 ,$7 , $8 , $9 , $10 , $11 , $12 , $13 , $14, $15)',
-        [   
-            datos[2],datos[5],datos[6],datos[7],datos[0],datos[3],datos[8],datos[9],datos[10],datos[11],,datos[12],datos[14],datos[15],datos[16] , datos[13] 
-        ]);
-
-    const response2 = await pool.query('INSERT INTO contactoemergencia  (idcurpfk , Nombre , AppPat ,AppMat , telefono_contacto ,email) VALUES ($1, $2 , $3 , $4 , $5 , $6 )',
-        [   
-            datos[2],datos[17],datos[18],datos[19],datos[20],datos[21]
+    let datos = req;
+    
+    const persona = await pool.query('INSERT INTO personas  (Curp , email, Nombre , AppPat ,AppMat  , Sexo ,  FechaNacimiento , Edad , TelPar , TelCel , Calle , Colonia , CodigoPostal ,Municipio , numDomicilio ) VALUES ($1, $2 , $3 , $4 , $5 , $6 ,$7 , $8 , $9 , $10 , $11 , $12 , $13 , $14, $15)',
+    [   
+        datos[0],
+        datos[1],
+        datos[2],
+        datos[3],
+        datos[4],
+        datos[5],
+        datos[6],
+        datos[7],
+        datos[8],
+        datos[9],
+        datos[10],
+        datos[11],
+        datos[12],
+        datos[13],
+        datos[14],
     ]);
-
-    const response3 = await pool.query('INSERT INTO formacionacademica  (idcurpfk , n_max_estudios , s_academica_actual ,insteducativa , anioegreso) VALUES ($1, $2 , $3 , $4 , $5 )',
+    
+    const files = await pool.query('INSERT INTO FilesPersona  (idcurpfk , FotografiaImg , CurpPdf ,EvidenciaipnPdf) VALUES ($1, $2 , $3 , $4 )',
         [   
-            datos[2],datos[22],datos[23],datos[24],datos[25]
+            datos[0],datos[15],datos[16],datos[17]
         ]
     );
-    const response4 = await pool.query('INSERT INTO datoslaborales  (idcurpfk , nombre_institucion , direccion ,puesto , telefono) VALUES ($1, $2 , $3 , $4 , $5 )',
+
+    const contacto = await pool.query('INSERT INTO contactoemergencia  (idcurpfk , Nombre , AppPat ,AppMat , telefono_contacto ,email) VALUES ($1, $2 , $3 , $4 , $5 , $6 )',
     [   
-        datos[2],datos[22],datos[23],datos[24],datos[25]
-    ]
+            datos[0],datos[18],datos[19],datos[20],datos[21],datos[22]
+    ]);
+
+
+    const formacion = await pool.query('INSERT INTO formacionacademica  (idcurpfk , n_max_estudios , s_academica_actual ,insteducativa , anioegreso) VALUES ($1, $2 , $3 , $4 , $5 )',
+        [   
+            datos[0],datos[23],datos[24],datos[25],datos[26]
+        ]
+    );
+    const datoslaborales = await pool.query('INSERT INTO datoslaborales  (idcurpfk , nombre_institucion , direccion ,puesto , telefono) VALUES ($1, $2 , $3 , $4 , $5 )',
+        [   
+            datos[0],datos[27],datos[28],datos[29],datos[30]
+        ]
     );
 
 
