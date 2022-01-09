@@ -61,87 +61,89 @@ routes.post('/ExisteCurp',  (req, res )=> {
 
 
 routes.post('/createRegistro',  (req, res )=> {
-    try {
-        let datos = req.body;
-        let sampleFile;
-        const curp = datos.curp;
-        let resp;
-        //En esta ruta se guardan los archivos pdf 
-        var dirpdf = __dirname +  rutas[0]['upload'] + curp+'/';
-        sampleFile = req.files.fileCurp;
-        dirpdf =save(req , dirpdf , sampleFile);
-        console.log("Se guardo el archivo pdf ");
-        
-        //En esta ruta se guardan las fotografias 
-        var dirimg = __dirname +  rutas[0]['images'] + curp+'/';
-        sampleFile = req.files.fileImg;
-        dirimg = resp = save(req , dirimg , sampleFile);
-        console.log("Se guardo el archivo img ");
-
-        //En esta ruta se guardan las fotografias 
-        var dirpdfEvidencia = __dirname +  rutas[0]['upload'] + curp+'/';
-        sampleFile = req.files.fileEvidencia;
-        if (sampleFile == undefined) {
-            dirpdfEvidencia=""
-        } else {
-            dirpdfEvidencia = save(req , dirpdfEvidencia , sampleFile);
-        }
+    // try {
+    let datos = req.body;
+    let sampleFile;
+    const curp = datos.curp;
+    let resp;
+    //En esta ruta se guardan los archivos pdf 
+    var dirpdf = __dirname +  rutas[0]['upload'] + curp+'/';
+    sampleFile = req.files.fileCurp;
+    dirpdf =save(req , dirpdf , sampleFile);
+    console.log("Se guardo el archivo pdf ");
     
-        //Datos personales
-        let arrayBD = [
-            
+    //En esta ruta se guardan las fotografias 
+    var dirimg = __dirname +  rutas[0]['images'] + curp+'/';
+    sampleFile = req.files.fileImg;
+    dirimg = resp = save(req , dirimg , sampleFile);
+    console.log("Se guardo el archivo img ");
 
-            dirimg,
-            datos.emailAlum,
-            curp,
-            dirpdf,
-            //3
-            datos.genero,
-            datos.nombreAlum,
-            datos.appPatAlum,
-            datos.appMatAlum,
-            datos.fechaNacimiento,
-            datos.edad,
-            datos.telParticularAlum,
-            datos.telCelularAlum,
-            //11
-    
-            
-            datos.calle,
-            datos.NumeroDom,
-            datos.colonia,
-            datos.codigoPostal,
-            datos.municipio,
-            //16
-
-            datos.nombreEmergencia,
-            datos.appPatEmergencia,
-            datos.appMatEmergencia,
-            datos.telEmergencia,
-            datos.emailEmergencia,
-            //21
-
-            datos.nivMaxStudy,
-            datos.acadSituacion,
-            datos.insEducativa,
-            datos.anioEgreso,
-            dirpdfEvidencia,
-            //27
-            datos.nombreInst,
-            datos.domicilioInst,
-            datos.puestoInst,
-            datos.telefonoInst
-            //31
-        ]
-        db.createIngreso(arrayBD).then(respuesta =>{
-           
-            res.json({ "status": respuesta});
-        }).catch(error =>{
-            console.log(error)
-        })
-    } catch (error) {
-        res.json({ "error": error.message});
+    //En esta ruta se guardan las fotografias 
+    var dirpdfEvidencia = __dirname +  rutas[0]['upload'] + curp+'/';
+    sampleFile = req.files.fileEvidencia;
+    if (sampleFile == undefined) {
+        dirpdfEvidencia=""
+    } else {
+        dirpdfEvidencia = save(req , dirpdfEvidencia , sampleFile);
     }
+    //Datos personales
+    let arrayBD = [
+        //tabla persona
+        curp,
+        datos.emailAlum,
+        datos.nombreAlum,
+        datos.appPatAlum,
+        datos.appMatAlum,
+        datos.genero,
+        datos.fechaNacimiento,
+        datos.edad,
+        datos.telParticularAlum,
+        datos.telCelularAlum,
+        datos.calle,
+        datos.colonia,
+        datos.codigoPostal,
+        datos.municipio,
+        datos.NumeroDom,
+        
+        //TablaFilePerson
+        dirimg,
+        dirpdfEvidencia,
+        dirpdf,
+        //17
+        
+        //Tabla constacto emergencia
+        datos.nombreEmergencia,
+        datos.appPatEmergencia,
+        datos.appMatEmergencia,
+        datos.telEmergencia,
+        datos.emailEmergencia,
+        //22
+        
+
+        //Tabla formacion academica
+        datos.nivMaxStudy,
+        datos.acadSituacion,
+        datos.insEducativa,
+        datos.anioEgreso,
+        //26
+        
+        //Tabla datos laborales
+        datos.nombreInst,
+        datos.domicilioInst,
+        datos.puestoInst,
+        datos.telefonoInst
+
+        
+    ]
+    db.createIngreso(arrayBD).then(respuesta =>{
+        
+        res.json({ "status": respuesta});
+    }).catch(error =>{
+        console.log(error);
+    })
+    // } catch (error) {
+    //     res.json({ "error": error.message});
+    // }
 });
 
 const save = ( req , dir , sampleFile) =>{
