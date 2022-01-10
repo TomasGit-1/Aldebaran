@@ -144,6 +144,11 @@ const createIngreso = async (req) => {
 
     return {"mensaje" :'Servicio agregado'};
 }
+const getPathFile = async ( data ) => {
+    var curp = data;
+    const response = await pool.query('SELECT * FROM filespersona WHERE idcurpfk = $1' ,[curp]);
+    return {"Info":response.rows};
+};
 
 module.exports = {
     Home,
@@ -152,5 +157,6 @@ module.exports = {
     updateHabilitado,
     getCurp,
     createServicio,
-    createIngreso
+    createIngreso,
+    getPathFile
 };

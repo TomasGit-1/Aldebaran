@@ -170,5 +170,17 @@ const save = ( req , dir , sampleFile) =>{
 
 }
 
+routes.post('/downloadFile',  (req, res )=> {
+    var curp = req.body.curp;
+    db.getPathFile(curp).then(respuesta =>{
+        console.log(respuesta);
+        res.json({ "status": respuesta});
+        // const file = '/home/tomas/Documentos/Aldebaran/Aldebaran/Api/src/routes/resource/image/curpalumno/2xz1k0at7124279eeecnw9índice.jpeg';
+        // res.download(file); // Set disposition and send it.
+    }).catch(error =>{
+        console.log(error);
+    })
+});
+
 
 module.exports = routes;

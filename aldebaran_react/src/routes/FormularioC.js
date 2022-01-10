@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import { Button, Form, Container, Row, Col, Alert, ButtonGroup, Table, Dropdown, Modal } from 'react-bootstrap'
+import { Button, Form, Container, Row, Col, ButtonGroup, Table, Dropdown, Modal  } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2'
 import Moment from 'moment'
@@ -8,7 +8,7 @@ import NavbarMain from '../Components/NavbarS'
 import PDFAlumno from './PDFalumno'
 import $ from 'jquery';
 import config from '../config/config.json';
-
+import download from 'downloadjs';
 class FormularioC extends React.Component {
     constructor(props) {
         super(props);
@@ -27,9 +27,8 @@ class FormularioC extends React.Component {
 
             //Mensajes que aparecen en la ionterfaz
             msgServicio: "Sólo aparecen los servicios educativos disponibles a la fecha de registro. No podrás registrarse a alguno diferente al aprobado por la Coordinación.",
-            msg: "Primera aplicacion React",
             inputValue: "Bienvenido",
-
+            msg:"",
             //Datos de entrada del alumno
             file_fotografia: null,
             email_Alumno: "",
@@ -98,6 +97,7 @@ class FormularioC extends React.Component {
         this.SeleccMaxEstudios = this.SeleccMaxEstudios.bind(this);
         this.SeleccSituacionAcademina = this.SeleccSituacionAcademina.bind(this);
         this.uploadFileEvidencia = this.uploadFileEvidencia.bind(this);
+        this.getDownloadFile = this.getDownloadFile.bind(this);
 
     }
     /*
@@ -107,14 +107,12 @@ class FormularioC extends React.Component {
     */
 
     componentDidMount() {
-        console.log(config.general[0].puerto_api);
-        console.log(config.general[0].url);
         this.apiAlumnos();
     }
     apiAlumnos = async () => {
         try {
             // const response = await fetch("http://localhost:5000/api/Alumnos")
-            const response = await fetch(config.general[0].url + config.general[0].puerto_api + "/api/Alumnos")
+            const response = await fetch(config.general[0].url + config.general[0].puerto_api + "/api/Alumnos");
             var responseJson = await response.json();
             let arrayInfo = []
             for (let index = 0; index < responseJson.length; index++) {
@@ -129,6 +127,9 @@ class FormularioC extends React.Component {
                 arrayRow.push(dateNacimiento);
                 arrayRow.push(responseJson[index].telpar);
                 arrayRow.push(responseJson[index].telcel);
+
+                arrayRow.push(responseJson[index].email);
+
                 arrayInfo.push(arrayRow);
             }
             this.setState({ informacion: arrayInfo })
@@ -143,7 +144,6 @@ class FormularioC extends React.Component {
     editar(item) {
         console.log("Se presiono el boton de editar");
         console.log(item);
-
     }
     ShowForm(num) {
         if (num === 1) {
@@ -151,7 +151,7 @@ class FormularioC extends React.Component {
                 showForm: true,
                 showTable: false,
             });
-        } else if (num === 0) {
+        } else if (num === 0) { 
             this.setState({
                 showForm: false,
                 showTable: true,
@@ -545,6 +545,21 @@ class FormularioC extends React.Component {
             this.setState({ telefonoTra: event.target.value });
         } 
     }
+    getDownloadFile  = async (curp) => {
+        console.log("Decargar archivos");
+        console.log(curp);
+        var formData = new FormData();
+        formData.append('curp', curp);
+        const res = await fetch(
+            config.general[0].url + config.general[0].puerto_api + "/api/downloadFile",
+            {
+                method: 'POST', // or 'PUT'
+                body: formData, // data can be `string` or {object}!
+            }
+        );
+        const blob = await res.blob();
+        download(blob, 'imagenDescarga.jpeg');
+    }
 
     /*
         ===========================================================================
@@ -910,6 +925,7 @@ class FormularioC extends React.Component {
                                             <th>#</th>
                                             <th>Curp</th>
                                             <th>Nombre</th>
+                                            <th>Email</th>
                                             <th>Sexo</th>
                                             <th>Fecha de nacimiento</th>
                                             <th>Telefono particular</th>
@@ -923,6 +939,7 @@ class FormularioC extends React.Component {
                                                     <td >{index[0]}</td>
                                                     <td >{index[1]}</td>
                                                     <td >{index[2] + ' ' + index[3] + ' ' + index[4]}</td>
+                                                    <td >{index[9]}</td>
                                                     <td >{index[5]}</td>
                                                     <td >{index[6]}</td>
                                                     <td >{index[7]}</td>
@@ -935,19 +952,46 @@ class FormularioC extends React.Component {
                                                             </Dropdown.Toggle>
                                                             <Dropdown.Menu>
                                                                 <Dropdown.Item onClick={() => this.editar(index[1])} >
-                                                                    {/* <Button onClick={() => this.editar(index)}><i className="bi bi-pencil"></i></Button> */}
                                                                     <i className="bi bi-pencil"></i> &nbsp;&nbsp;Editar
                                                                 </Dropdown.Item>
+                                                                <Dropdown.Divider />
+                                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i className="bi bi-cloud-download"></i>&nbsp;&nbsp;Download
+                                                                <Dropdown.Divider />
+                                                                <Dropdown.Item onClick={() => this.getDownloadFile(index[1] , "fotografia")}                                                                >
+                                                                    <i className="bi bi-images"></i>&nbsp;&nbsp;Fotografia
+                                                                </Dropdown.Item>
+                                                                
+                                                                <Dropdown.Item onClick={() => this.getDownloadFile(index[1] , "curp")}                                                                >
+                                                                    <i className="bi bi-file-earmark-pdf"></i>&nbsp;&nbsp;Curp
+                                                                </Dropdown.Item>
 
+                                                                <Dropdown.Item onClick={() => this.getDownloadFile(index[1] , "evidencia")}                                                                >
+                                                                    <i className="bi bi-file-earmark-pdf"></i>&nbsp;&nbsp;Evidencia IPN
+                                                                </Dropdown.Item>
+                                                                <Dropdown.Item as={Link} to={`/PDFalumno/${index[1]}`} target="_blank" > 
+                                                                    <i className="bi bi-cloud-download"></i>&nbsp;&nbsp;PDF
+                                                                </Dropdown.Item>
+                                                               
+                                                               
+                                                                {/* 
                                                                 <Dropdown.Item onClick={() => this.closeOpenModal(1)}>
                                                                     <i className="bi bi-eye"></i> &nbsp;&nbsp;Ver
-                                                                </Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => this.ver(index[1])}>
-                                                                    <i className="bi bi-cloud-download"></i>&nbsp;&nbsp;Files
-                                                                </Dropdown.Item>
+                                                                </Dropdown.Item> */}
+
+                                                                {/* <Dropdown.Item 
+                                                                    onClick={async () => {
+                                                                        const res = await fetch('http://localhost:5000/api/downloadFile');
+                                                                        const blob = await res.blob();
+                                                                        download(blob, 'imagenDescarga.jpeg');
+                                                                    }}
+                                                                >
+                                                                    <i className="bi bi-cloud-download"></i>&nbsp;&nbsp;Curp
+                                                                </Dropdown.Item> */}
+                                                                
 
                                                                 {/* <Dropdown.Item as={Link} to="/PDFalumno" target="_blank" > <i className="bi bi-cloud-download"></i>&nbsp;&nbsp;PDf</Dropdown.Item> */}
-                                                                <Dropdown.Item as={Link} to={`/PDFalumno/${index[1]}`} target="_blank" > <i className="bi bi-cloud-download"></i>&nbsp;&nbsp;PDf</Dropdown.Item>
+                                                            
+                                                            
                                                             </Dropdown.Menu>
                                                         </Dropdown>
                                                     </td>
@@ -957,6 +1001,16 @@ class FormularioC extends React.Component {
 
                                     </tbody>
                                 </Table>
+                                {/* <button
+                                    type="button"
+                                    onClick={async () => {
+                                        const res = await fetch('http://localhost:5000/api/downloadFile');
+                                        const blob = await res.blob();
+                                        download(blob, 'imagenDescarga.jpeg');
+                                    }}
+                                >
+                                Download
+                            </button> */}
                             </div>
                         </Container>
                     </section>
