@@ -9,6 +9,7 @@ import PDFAlumno from './PDFalumno'
 import $ from 'jquery';
 import config from '../config/config.json';
 import download from 'downloadjs';
+
 class FormularioC extends React.Component {
     constructor(props) {
         super(props);
@@ -127,8 +128,11 @@ class FormularioC extends React.Component {
                 arrayRow.push(dateNacimiento);
                 arrayRow.push(responseJson[index].telpar);
                 arrayRow.push(responseJson[index].telcel);
-
                 arrayRow.push(responseJson[index].email);
+
+
+
+                arrayRow.push(responseJson[index]);
 
                 arrayInfo.push(arrayRow);
             }
@@ -545,20 +549,27 @@ class FormularioC extends React.Component {
             this.setState({ telefonoTra: event.target.value });
         } 
     }
-    getDownloadFile  = async (curp) => {
-        console.log("Decargar archivos");
-        console.log(curp);
+    getDownloadFile  = async (curp , tipo) => {
         var formData = new FormData();
         formData.append('curp', curp);
+        formData.append('tipo', tipo);
         const res = await fetch(
             config.general[0].url + config.general[0].puerto_api + "/api/downloadFile",
             {
                 method: 'POST', // or 'PUT'
                 body: formData, // data can be `string` or {object}!
             }
-        );
-        const blob = await res.blob();
-        download(blob, 'imagenDescarga.jpeg');
+        )
+        .catch(function(error){
+            console.log(Error);
+        });
+        console.log(res.ok);
+        if(res.ok){
+            const blob = await res.blob();
+            download(blob);
+        }else{
+            console.log("No se encontro el archivo");
+        }
     }
 
     /*
@@ -957,15 +968,15 @@ class FormularioC extends React.Component {
                                                                 <Dropdown.Divider />
                                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i className="bi bi-cloud-download"></i>&nbsp;&nbsp;Download
                                                                 <Dropdown.Divider />
-                                                                <Dropdown.Item onClick={() => this.getDownloadFile(index[1] , "fotografia")}                                                                >
+                                                                <Dropdown.Item onClick={() => this.getDownloadFile(index[1] , 0)}                                                                >
                                                                     <i className="bi bi-images"></i>&nbsp;&nbsp;Fotografia
                                                                 </Dropdown.Item>
                                                                 
-                                                                <Dropdown.Item onClick={() => this.getDownloadFile(index[1] , "curp")}                                                                >
+                                                                <Dropdown.Item onClick={() => this.getDownloadFile(index[1] , 1)}                                                                >
                                                                     <i className="bi bi-file-earmark-pdf"></i>&nbsp;&nbsp;Curp
                                                                 </Dropdown.Item>
 
-                                                                <Dropdown.Item onClick={() => this.getDownloadFile(index[1] , "evidencia")}                                                                >
+                                                                <Dropdown.Item onClick={() => this.getDownloadFile(index[1] , 2)}                                                                >
                                                                     <i className="bi bi-file-earmark-pdf"></i>&nbsp;&nbsp;Evidencia IPN
                                                                 </Dropdown.Item>
                                                                 <Dropdown.Item as={Link} to={`/PDFalumno/${index[1]}`} target="_blank" > 

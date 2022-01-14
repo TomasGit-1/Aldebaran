@@ -107,8 +107,8 @@ routes.post('/createRegistro',  (req, res )=> {
         
         //TablaFilePerson
         dirimg,
-        dirpdfEvidencia,
         dirpdf,
+        dirpdfEvidencia,
         //17
         
         //Tabla constacto emergencia
@@ -136,7 +136,6 @@ routes.post('/createRegistro',  (req, res )=> {
         
     ]
     db.createIngreso(arrayBD).then(respuesta =>{
-        
         res.json({ "status": respuesta});
     }).catch(error =>{
         console.log(error);
@@ -172,15 +171,29 @@ const save = ( req , dir , sampleFile) =>{
 
 routes.post('/downloadFile',  (req, res )=> {
     var curp = req.body.curp;
+    var tipo = parseInt(req.body.tipo);
     db.getPathFile(curp).then(respuesta =>{
-        console.log(respuesta);
-        res.json({ "status": respuesta});
+        let file_path = "";
+        if(tipo == 0){
+            file_path = respuesta['Info'][0].fotografiaimg
+        }else if (tipo == 1){
+            file_path = respuesta['Info'][0].curppdf
+        }else{
+            file_path = respuesta['Info'][0].evidenciaipnpdf
+        }
+        var file_name = file_path.replace(/^.*[\\\/]/, '');
+        var extension = file_name.split('.').pop();
+        file_name = curp+'.'+extension;
+        if(file_path === ''){
+            // res.status(404);
+            res.status(404).send("Not found");
+        }else{
+            res.download(file_path , file_name); // Set disposition and send it.
+        }
         // const file = '/home/tomas/Documentos/Aldebaran/Aldebaran/Api/src/routes/resource/image/curpalumno/2xz1k0at7124279eeecnw9índice.jpeg';
-        // res.download(file); // Set disposition and send it.
     }).catch(error =>{
         console.log(error);
     })
 });
-
 
 module.exports = routes;
