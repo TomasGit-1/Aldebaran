@@ -38,7 +38,6 @@ const getServicios = async () => {
     let numModulo =[]
     let numHoras =[]
     data.map(row =>{
-        console.log(row);
         id.push(row['idserviciosedu']);
         registro.push(row['registro_academico']);
         evento.push(row['tipo_evento']);
@@ -149,6 +148,14 @@ const getPathFile = async ( data ) => {
     const response = await pool.query('SELECT * FROM filespersona WHERE idcurpfk = $1' ,[curp]);
     return {"Info":response.rows};
 };
+const getDataUsers = async ( curp ) => {
+    var curp = curp;
+    const response = await pool.query('SELECT * FROM personas FULL JOIN formacionacademica ON personas.curp = formacionacademica.idcurpfk FULL JOIN filespersona ON  personas.curp =  filespersona.idcurpfk FULL JOIN datoslaborales ON personas.curp = datoslaborales.idcurpfk FULL JOIN contactoemergencia ON personas.curp = contactoemergencia.idcurpfk WHERE personas.curp = $1',[curp]);
+    var data = response.rows;
+    return {
+        "data":data
+    }
+}
 
 module.exports = {
     Home,
@@ -158,5 +165,6 @@ module.exports = {
     getCurp,
     createServicio,
     createIngreso,
-    getPathFile
+    getPathFile,
+    getDataUsers
 };

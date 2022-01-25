@@ -1,5 +1,5 @@
 import React from 'react';
-import {  Image , Card , Row , Col , Container} from 'react-bootstrap'
+import {  Image , Card } from 'react-bootstrap'
 import { Page, Text, View, Document, StyleSheet , PDFViewer , Font } from '@react-pdf/renderer';
 import {useParams} from 'react-router-dom'
 import config from '../config/config.json';
@@ -13,8 +13,7 @@ class PDFAlumno extends React.Component {
         this.state = {
             curp:"",
             msg: "Primera aplicacion React",
-            imagen_base64:"",
-            informacion:[]
+            imagen_base64:""
         }
     }
     componentDidMount() {
@@ -39,16 +38,9 @@ class PDFAlumno extends React.Component {
             console.log(error.message)
         })
 
-        console.log("Data");
-        console.log(respuesta);
+        // console.log("Data");
+        // console.log(respuesta);
 
-        let arrayInfo = []
-
-        arrayInfo.push(respuesta.nombre);
-        arrayInfo.push(respuesta.appmat);
-        arrayInfo.push(respuesta.apppat);
-
-        console.log(arrayInfo);
         url = config.general[0].url + config.general[0].puerto_api + "/Api/imagen64";
         const imagen = await  axios({
             method: 'POST',
@@ -65,18 +57,15 @@ class PDFAlumno extends React.Component {
         // console.log("Imagen");
         // console.log(imagen.message);
         this.setState({ imagen_base64: imagen.message });
-        this.setState({ informacion:  arrayInfo});
     }
     render() {
         let { curp } = this.state
         let { imagen_base64 } = this.state
         const data = `lorem <b onmouseover="alert('mouseover');">ipsum</b>`;
-        let { informacion } = this.state
-
         const styles = StyleSheet.create({
             page: {
               flexDirection: 'row',
-              backgroundColor: 'white'
+              backgroundColor: '#E4E4E4'
             },
             section: {
               margin: 10,
@@ -89,85 +78,116 @@ class PDFAlumno extends React.Component {
             PDFDocument :{
                 width: "100%",
                 height: "100vh"
+                
             },
-            row: {
-                flexGrow: 1,
-                flexDirection: 'row',
-            },
-            container: {
-                flex: 200,
-                flexDirection: 'row',
-                alignItems: 'flex-start', //replace with flex-end or center,
-                // marginBottom:20  
+            header: {
+                textAlign: 'center', // <-- the magic
+                fontWeight: 'bold',
+                fontSize: 18,
+                marginTop: 0,
+                width: "100%",
+                backgroundColor: 'yellow',
+                height:20,
             },
             title: {
-                margin: 0,
-                fontSize: 15,
+                margin: 20,
+                fontSize: 25,
                 textAlign: 'center',
                 backgroundColor: 'red',
                 textTransform: 'uppercase',
                 fontFamily: 'Oswald',
                 alignItems: 'center',
-            },
-            text_1:{
-                fontSize: 11,
-                marginTop:0,
-            },
-            bordertext:{
-                borderBottom : 2,
-                marginLeft:18,
-                marginTop:2
-                // border: 2,
-            },  
-            text_0:{
-                fontSize: 14,
-            }
-           
+              },
+
+              headline: {
+                textAlign: 'center', // <-- the magic
+                fontWeight: 'bold',
+                fontSize: 18,
+                marginTop: 0,
+                width: "100%",
+                backgroundColor: 'yellow',
+                height:20,
+              },
+              row: {
+                flexGrow: 1,
+                flexDirection: 'row',
+              },
+
+              wrapper: {
+                flex: 1
+              },
+              container: {
+                flex: .5,
+                flexDirection: 'row',
+                justifyContent: 'flex-start', //replace with flex-end or center
+                borderBottomWidth: 1,
+                borderBottomColor: '#000'
+              },
+              container2: {
+                flex: .5,
+                flexDirection: 'row',
+                alignItems: 'flex-start',
+                height: 20,
+              },
+              box: {
+                width: 100,
+                height: 100
+              },
+              box1: {
+                backgroundColor: '#2196F3'
+              },
+              box2: {
+                backgroundColor: '#8BC34A'
+              },
+              box3: {
+                backgroundColor: '#e3aa1a'
+              }
+
         });
+       
         Font.register({
             family: 'Oswald',
             src: 'https://fonts.gstatic.com/s/oswald/v13/Y_TKV6o8WovbUd3m_X9aAA.ttf',
         });
         return (
             <div>
-                  <PDFViewer style={styles.PDFDocument}>
+                  {/* <PDFViewer style={styles.body}>
                     <Document>
                         <Page size="A4" style={styles.page}>
                             <View style={styles.section}>
-                                
-                                <View style={styles.wrapper}>
-                                    <Text style={styles.title}>Imagenes</Text>
+                                <Text>Section #1</Text>
+                            </View>
+                            <View style={styles.section}>
+                                <Text>Section #2</Text>
+                            </View>
+                        </Page>
+                    </Document>
+                  </PDFViewer> */}
 
-                                    <Text style={styles.title}>*Datos personales</Text>
-                            
-                                    <View style={styles.container}>
-                                        <Text style={styles.row ,styles.text_0}>Nombre completo:{" "} </Text>
-                                        <div style={styles.row, styles.bordertext}>
-                                            <Text style={styles.text_1}>{ " "+informacion[0] +" "+ informacion[1] +" "+ informacion[2]}</Text>
-                                        </div>   
-                                    </View>
-                                    <Text>{"\n"}</Text>
-                                    <View style={styles.container}>
-                                        <Text style={styles.row ,styles.text_0}>Nombre completo:{" "} </Text>
-                                        <div style={styles.row, styles.bordertext}>
-                                            <Text style={styles.text_1}>{ " "+informacion[0] +" "+ informacion[1] +" "+ informacion[2]}</Text>
-                                        </div>   
-                                    </View>
-                                    <Text>{"\n"}</Text>
-                                    <View style={styles.container}>
-                                        <Text style={styles.row}>Section #4</Text>
-                                        <Text style={styles.row}>Section #4</Text>
-                                        <Text style={styles.row}>Section #5</Text>
-                                        <Text style={styles.row}>Section #5</Text>
-                                    </View>
+                  <PDFViewer style={styles.PDFDocument} >
+                    <Document>
+                        <Page size="A4" style={styles.page}>
+                            {/* <View style={styles.header}>
+                                <Text style={styles.headline}>*Datos personales</Text>
+                            </View>
+                         */}
+                            <View style={styles.wrapper}>
+                                <View style={styles.container}>
+                                    <View style={[styles.box, styles.box1]}></View>
+                                    <View style={[styles.box, styles.box2]}></View>
+                                    <View style={[styles.box, styles.box3]}></View>
                                 </View>
+                                <View style={styles.container2}>
+                                    <View style={[styles.box, styles.box1]}></View>
+                                    <View style={[styles.box, styles.box2]}></View>
+                                    <View style={[styles.box, styles.box3]}></View>
+                                </View>
+                            </View>
 
-                            </View>    
+                          
                         </Page>
                     </Document>
                   </PDFViewer>
-
-            
            </div>
 
         )

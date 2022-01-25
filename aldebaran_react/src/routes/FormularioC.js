@@ -23,7 +23,12 @@ class FormularioC extends React.Component {
             ],
             //Variables para el puerto apu
             urlApi: "",
-
+            titles: [
+                { value: 0, text: "Datos personales" },
+                { value: 1, text: "Formacion Academica" },
+                { value: 2, text: "Datos laborales" },
+                { value: 3, text: "Información Adicional" }
+            ],
             puertoApi: "",
 
             //Mensajes que aparecen en la ionterfaz
@@ -129,9 +134,6 @@ class FormularioC extends React.Component {
                 arrayRow.push(responseJson[index].telpar);
                 arrayRow.push(responseJson[index].telcel);
                 arrayRow.push(responseJson[index].email);
-
-
-
                 arrayRow.push(responseJson[index]);
 
                 arrayInfo.push(arrayRow);
@@ -563,10 +565,12 @@ class FormularioC extends React.Component {
         .catch(function(error){
             console.log(Error);
         });
-        console.log(res.ok);
+        console.log(res);
+        console.log(res.body);
         if(res.ok){
             const blob = await res.blob();
-            download(blob);
+            // download(blob , 'dlText.jpeg' , "image/jpeg");
+            download(blob );
         }else{
             console.log("No se encontro el archivo");
         }

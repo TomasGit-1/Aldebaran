@@ -7,7 +7,9 @@ let rutas = json['rutas'];
 const routes = express.Router();
 const db = require('../controllers/controller.db.js');
 const { error } = require('console');
-const objUtil  = require('../utilities/util.js')
+const objUtil  = require('../utilities/util.js');
+const imageToBase64 = require('image-to-base64');
+
 routes.get('/one' , (req, res)=> {
     res.send({ "name":"Testing Api"});
 });
@@ -20,6 +22,7 @@ routes.get('/Servicios',  (req, res )=> {
         console.log(error);
     })
 });
+
 routes.get('/Alumnos',  (req, res )=> {
     db.getAlumnos().then(respuesta =>{
         // res.json({ "status": 200 , "Servicios":respuesta});
@@ -48,7 +51,7 @@ routes.post('/createServicio' , (req, res)=> {
 routes.post('/ExisteCurp',  (req, res )=> {
     db.getCurp(req).then(respuesta =>{
         if(respuesta == 0){
-        res.json({"mensaje":respuesta});
+            res.json({"mensaje":respuesta});
         }else{
             res.json({"mensaje":respuesta});
         }
@@ -58,7 +61,6 @@ routes.post('/ExisteCurp',  (req, res )=> {
         console.log(error);
     })
 });
-
 
 routes.post('/createRegistro',  (req, res )=> {
     // try {
@@ -168,7 +170,6 @@ const save = ( req , dir , sampleFile) =>{
     }
 
 }
-
 routes.post('/downloadFile',  (req, res )=> {
     var curp = req.body.curp;
     var tipo = parseInt(req.body.tipo);
@@ -188,12 +189,53 @@ routes.post('/downloadFile',  (req, res )=> {
             // res.status(404);
             res.status(404).send("Not found");
         }else{
-            res.download(file_path , file_name); // Set disposition and send it.
+            // res.download(file_path , file_name); // Set disposition and send it.
+            res.download(file_path, 'report.pdf', (err) => {
+                if (err) {
+                  res.status(500).send({
+                    message: "Could not download the file. " + err,
+                  });
+                }
+            });
         }
         // const file = '/home/tomas/Documentos/Aldebaran/Aldebaran/Api/src/routes/resource/image/curpalumno/2xz1k0at7124279eeecnw9índice.jpeg';
     }).catch(error =>{
         console.log(error);
     })
 });
+
+routes.post('/imagen64' ,  (req, res) =>{
+    var curp = req.body.curp;
+    let file_path = "";
+    db.getPathFile(curp).then(respuesta =>{
+        file_path = respuesta['Info'][0].fotografiaimg
+        // const file = '/home/tomas/Documentos/Aldebaran/Aldebaran/Api/src/routes/resource/image/curpalumno/2xz1k0at7124279eeecnw9índice.jpeg';
+        imageToBase64(file_path) // Path to the image
+        .then((response) => {
+            res.status(200).send({
+                message:"data:image/png;base64,"+response,
+            });
+            // res.status(200).send({
+            //         message: "<img src='data:image/png;base64,'"+response+"class='img-thumbnail rounded mx-auto d-block' style='height:400px'>"
+            //     });
+        })
+    }).catch(error =>{
+        console.log(error);
+    })
+});
+
+
+routes.post('/AlumnoJoin',  (req, res )=> {
+    var curp = req.body.curp;
+
+    db.getDataUsers(curp).then(respuesta =>{
+        // res.json({ "status": 200 , "Servicios":respuesta});
+        res.json(respuesta['data'][0]);
+    }).catch(error =>{
+        console.log(error);
+    })
+});
+
+
 
 module.exports = routes;
