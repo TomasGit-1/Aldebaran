@@ -90,7 +90,7 @@ class PDFAlumno extends React.Component {
                 width: "100%",
                 height: "100vh"
             },
-            row: {
+            text_2row: {
                 flexGrow: 1,
                 flexDirection: 'row',
             },
@@ -102,6 +102,7 @@ class PDFAlumno extends React.Component {
             },
             title: {
                 margin: 0,
+                marginBottom:2,
                 fontSize: 15,
                 textAlign: 'center',
                 backgroundColor: 'red',
@@ -109,18 +110,57 @@ class PDFAlumno extends React.Component {
                 fontFamily: 'Oswald',
                 alignItems: 'center',
             },
-            text_1:{
-                fontSize: 11,
-                marginTop:0,
-            },
             bordertext:{
-                borderBottom : 2,
+                borderBottom : 0.8,
                 marginLeft:18,
-                marginTop:2
+                marginTop:1,
+                marginBottom:0,
+
                 // border: 2,
             },  
             text_0:{
-                fontSize: 14,
+                fontSize: 12,
+                marginTop:1,
+            },
+            text_1:{
+                fontSize: 10,
+            },
+            text_2:{
+                fontSize: 8,
+                marginTop:0,
+                textAlign: 'center',
+                width: 120
+            },
+            textCentered: {
+                width: 100,
+                fontSize: 8,
+                margin:-2
+            },
+            bordertext_1: {
+                borderBottom : 1,
+                marginLeft:4,
+                marginTop:1,
+                marginBottom:0,
+                width:190
+            },
+            bordertext_2: {
+                borderBottom : 1,
+                marginLeft:4,
+                marginTop:1,
+                marginBottom:0,
+                width:100
+            },
+            bordertext_3: {
+                borderBottom : 1,
+                marginLeft:4,
+                marginTop:1,
+                marginBottom:0,
+                width:336
+
+            },
+            marginLeft:{
+                fontSize: 10,
+                margin:10
             }
            
         });
@@ -140,26 +180,113 @@ class PDFAlumno extends React.Component {
 
                                     <Text style={styles.title}>*Datos personales</Text>
                             
+
                                     <View style={styles.container}>
-                                        <Text style={styles.row ,styles.text_0}>Nombre completo:{" "} </Text>
-                                        <div style={styles.row, styles.bordertext}>
+                                        <Text style={styles.text_0}>Nombre completo:</Text>
+                                        <div style={styles.bordertext}>
                                             <Text style={styles.text_1}>{ " "+informacion[0] +" "+ informacion[1] +" "+ informacion[2]}</Text>
                                         </div>   
                                     </View>
                                     <Text>{"\n"}</Text>
                                     <View style={styles.container}>
-                                        <Text style={styles.row ,styles.text_0}>Nombre completo:{" "} </Text>
-                                        <div style={styles.row, styles.bordertext}>
+                                        <Text style={ styles.text_2}>(Segun acta de nacimineto)</Text>
+                                        <Text style={styles.textCentered}>Apellido Paterno</Text>
+                                        <Text style={styles.textCentered}>Apellido Materno</Text>
+                                        <Text style={styles.textCentered}>Nombre</Text>
+                                    </View>
+                                    <Text>{"\n"}</Text>
+
+
+
+                                    <View style={styles.container}>
+                                        <Text style={styles.text_0}>Domicilio:</Text>
+                                        <div style={styles.bordertext}>
                                             <Text style={styles.text_1}>{ " "+informacion[0] +" "+ informacion[1] +" "+ informacion[2]}</Text>
                                         </div>   
                                     </View>
                                     <Text>{"\n"}</Text>
                                     <View style={styles.container}>
-                                        <Text style={styles.row}>Section #4</Text>
-                                        <Text style={styles.row}>Section #4</Text>
-                                        <Text style={styles.row}>Section #5</Text>
-                                        <Text style={styles.row}>Section #5</Text>
+                                        <Text style={styles.text_2}></Text>
+                                        <Text style={styles.textCentered}>Calle</Text>
+                                        <Text style={styles.textCentered}>num. Int/ext</Text>
+                                        <Text style={styles.textCentered}>Colonia o fracc</Text>
+                                        <Text style={styles.textCentered}>C.P</Text>
                                     </View>
+                                    <Text>{"\n"}</Text>
+
+                                    <View style={styles.container}>
+                                        <Text style={styles.text_0}>Municipio:</Text>
+                                        <div style={styles.bordertext_1}>
+                                            <Text style={styles.text_1}>{ " "+informacion[0]}</Text>
+                                        </div>  
+                                        <Text style={styles.text_0}>Lugar de nacimiento:{"\n"}</Text>
+                                        <div style={styles.bordertext_1}>
+                                            <Text style={styles.text_1}>{ " "+informacion[0] }</Text>
+                                        </div>   
+                                    </View>
+                                    <Text>{"\n"}</Text>
+
+                                    <View style={styles.container}>
+                                        <Text style={styles.text_0}>Fecha de nacimiento:</Text>
+                                        <div style={styles.bordertext_2}>
+                                            <Text style={styles.text_1}>{ " "+informacion[0]}</Text>
+                                        </div>  
+                                        <Text style={styles.text_0}>Edad:{"\n"}</Text>
+                                        <div style={styles.bordertext_2}>
+                                            <Text style={styles.text_1}>{ " "+informacion[0] }</Text>
+                                        </div>
+                                        <Text style={styles.text_0}>Genero:{"\n"}</Text>
+                                        <div style={styles.bordertext_2}>
+                                            <Text style={styles.text_1}>{ " "+informacion[0] }</Text>
+                                        </div>      
+                                    </View>
+                                    <Text>{"\n"}</Text>
+
+                                    <View style={styles.container}>
+                                        <Text style={styles.text_0}>CURP:</Text>
+                                        <div style={styles.bordertext_1}>
+                                            <Text style={styles.text_1}>{ " "+informacion[0]}</Text>
+                                        </div>  
+                                        <Text style={styles.text_0}>Telefono cel:{"\n"}</Text>
+                                        <div style={styles.bordertext_1}>
+                                            <Text style={styles.text_1}>{ " "+informacion[0] }</Text>
+                                        </div>   
+                                    </View>
+                                    <Text>{"\n"}</Text>
+
+                                    <View style={styles.container}>
+                                        <Text style={styles.text_0}>Telefono casa:</Text>
+                                        <div style={styles.bordertext_1}>
+                                            <Text style={styles.text_1}>{ " "+informacion[0]}</Text>
+                                        </div>  
+                                        <Text style={styles.text_0}>Correo Electronico:{"\n"}</Text>
+                                        <div style={styles.bordertext_1}>
+                                            <Text style={styles.text_1}>{ " "+informacion[0] }</Text>
+                                        </div>   
+                                    </View>
+                                    <Text>{"\n"}</Text>
+
+                                    <View style={styles.container}>
+                                        <Text style={styles.text_0}>En caso de emergencia comunicarse con:</Text>
+                                        <div style={styles.bordertext_3 }>
+                                            <Text style={styles.text_1}>{ " "+informacion[0]}</Text>
+                                        </div>  
+                                    </View>
+
+                                    <Text>{"\n"}</Text>
+
+                                    <View style={styles.container}>
+                                        <Text style={styles.text_0}>Telefono cel:</Text>
+                                        <div style={styles.bordertext}>
+                                            <Text style={styles.text_1}>{" "+informacion[0] }</Text>
+                                        </div>   
+                                    </View>
+                                    <Text>{"\n"}</Text>
+                                    <Text style={styles.title}>*Formacion Academica</Text>
+
+                                    
+                                   
+
                                 </View>
 
                             </View>    
