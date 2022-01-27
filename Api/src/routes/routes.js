@@ -212,8 +212,10 @@ routes.post('/imagen64' ,  (req, res) =>{
         // const file = '/home/tomas/Documentos/Aldebaran/Aldebaran/Api/src/routes/resource/image/curpalumno/2xz1k0at7124279eeecnw9índice.jpeg';
         imageToBase64(file_path) // Path to the image
         .then((response) => {
+            var file_name = file_path.replace(/^.*[\\\/]/, '');
+            var extension = file_name.split('.').pop();
             res.status(200).send({
-                message:"data:image/png;base64,"+response,
+                message:"data:image/"+extension+";base64,"+response,
             });
             // res.status(200).send({
             //         message: "<img src='data:image/png;base64,'"+response+"class='img-thumbnail rounded mx-auto d-block' style='height:400px'>"

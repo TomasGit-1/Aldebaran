@@ -1,10 +1,12 @@
 import React from 'react';
-import {  Image , Card , Row , Col , Container} from 'react-bootstrap'
-import { Page, Text, View, Document, StyleSheet , PDFViewer , Font } from '@react-pdf/renderer';
+import {   Card , Row , Col , Container} from 'react-bootstrap'
+import { Page, Text, View, Document, StyleSheet , PDFViewer , Font , Image } from '@react-pdf/renderer';
 import {useParams} from 'react-router-dom'
 import config from '../config/config.json';
 import axios from 'axios'
-import imgAlum from "../static/alumno.png";
+import logo from "../static/LogoBN.jpg";
+import imgTitulo from "../static/titulo.png";
+import imgFotografia from "../static/titulo.png";
 
 // import styled from 'styled-components'
 class PDFAlumno extends React.Component {
@@ -48,7 +50,6 @@ class PDFAlumno extends React.Component {
         arrayInfo.push(respuesta.appmat);
         arrayInfo.push(respuesta.apppat);
 
-        console.log(arrayInfo);
         url = config.general[0].url + config.general[0].puerto_api + "/Api/imagen64";
         const imagen = await  axios({
             method: 'POST',
@@ -76,7 +77,6 @@ class PDFAlumno extends React.Component {
         const styles = StyleSheet.create({
             page: {
               flexDirection: 'row',
-              backgroundColor: 'white'
             },
             section: {
               margin: 10,
@@ -105,11 +105,33 @@ class PDFAlumno extends React.Component {
                 marginBottom:2,
                 fontSize: 15,
                 textAlign: 'center',
-                backgroundColor: 'red',
+                // backgroundColor: 'red',
                 textTransform: 'uppercase',
                 fontFamily: 'Oswald',
                 alignItems: 'center',
             },
+            title_2: {
+                margin: -10,
+                marginBottom:2,
+                fontSize: 10,
+                textAlign: 'center',
+                // backgroundColor: 'red',
+                textTransform: 'uppercase',
+                fontFamily: 'Oswald',
+                alignItems: 'center',
+            },
+            title_3: {
+                textDecoration: 'underline',
+                margin: -5,
+                marginBottom:30,
+                fontSize: 12,
+                textAlign: 'center',
+                // backgroundColor: 'red',
+                textTransform: 'uppercase',
+                fontFamily: 'Oswald',
+                alignItems: 'center',
+            },
+
             bordertext:{
                 borderBottom : 0.8,
                 marginLeft:18,
@@ -121,6 +143,8 @@ class PDFAlumno extends React.Component {
             text_0:{
                 fontSize: 12,
                 marginTop:1,
+                marginLeft:2,
+                marginRight:2
             },
             text_1:{
                 fontSize: 10,
@@ -150,18 +174,45 @@ class PDFAlumno extends React.Component {
                 marginBottom:0,
                 width:100
             },
+            bordertext_genero: {
+                marginLeft:8,
+                marginTop:1,
+                marginBottom:0,
+                width:100
+            },
             bordertext_3: {
                 borderBottom : 1,
                 marginLeft:4,
                 marginTop:1,
                 marginBottom:0,
                 width:336
-
             },
             marginLeft:{
                 fontSize: 10,
                 margin:10
+            },
+            images_color:{
+                width:70,
+                height:70
+            },
+            container_Header:{
+                width:"100%",
+                backgroundColor: 'red',
+                flexDirection: 'row',
+                alignItems: 'flex-start', //replace with flex-end or center,
+            },
+            left_Header:{
+                float:"left",
+                width:40,
+                alignItems: 'flex-center', //replace with flex-end or center,
+            },
+            right_Header:{
+                textAlign:"left",
+                width:40,
             }
+
+
+            
            
         });
         Font.register({
@@ -174,13 +225,53 @@ class PDFAlumno extends React.Component {
                     <Document>
                         <Page size="A4" style={styles.page}>
                             <View style={styles.section}>
+                                <View style={{flexDirection: 'row'}}>
+
+                                    <Image 
+                                        style={{alignSelf: 'flex-start' , width:50 , height:70}}
+                                        src={logo}
+                                    />
+                                    <Image 
+                                        style={{marginLeft: 'auto' , width:"80%" , height:60 , marginLeft:10 , marginRight:5}}
+                                        src={imgTitulo}
+                                    />
+                                    <View style={{flexDirection: 'row'  , border:0.9 , width:180}}>
+                                        <View style={{alignItems: 'flex-start'  ,  color: 'black' ,fontSize: 10  , padding:4 }} >
+                                            <Text>Nivel:</Text>
+                                            <Text style={{ borderBottom : 0.8, width:"140%" }}> </Text>
+                                            <Text>{"\n"}</Text>
+                                            <Text>Módulo:</Text>
+                                            <Text style={{ borderBottom : 0.8, width:"140%"}}> </Text>
+
+                                        </View>
+                                        <Image 
+                                            style={{marginLeft: 'auto' , width:80 , height:70 , backgroundColor:"red"}}
+                                            source={{uri: imagen_base64}}
+                                        />
+                                    </View>
+
+                                </View>
+                             
+
+                                 {/* <Image
+                                    style={styles.images_color} 
+                                    src={{imgAlum}}
+                                /> */}
+                                {/* <Text>{"\n"}</Text>
+                                <Text>{"********"}</Text>
+
+                                <Image src={{uri:"https://image.shutterstock.com/image-photo/tiny-floating-house-on-lake-600w-1980476267.jpg" , method: 'POST', headers:{'Access-Control-Allow-Origin': '*'}}}/>
+                                <Text>{"********"}</Text>
                                 
+                                <Text>{"\n"}</Text> */}
+                                <Text style={styles.title_2}>Solicitud de inscripción</Text>
+                                <Text style={styles.title_3}>{informacion[0]}</Text>
+
+
                                 <View style={styles.wrapper}>
-                                    <Text style={styles.title}>Imagenes</Text>
 
                                     <Text style={styles.title}>*Datos personales</Text>
-                            
-
+                        
                                     <View style={styles.container}>
                                         <Text style={styles.text_0}>Nombre completo:</Text>
                                         <div style={styles.bordertext}>
@@ -236,9 +327,12 @@ class PDFAlumno extends React.Component {
                                             <Text style={styles.text_1}>{ " "+informacion[0] }</Text>
                                         </div>
                                         <Text style={styles.text_0}>Genero:{"\n"}</Text>
-                                        <div style={styles.bordertext_2}>
-                                            <Text style={styles.text_1}>{ " "+informacion[0] }</Text>
-                                        </div>      
+                                        <div style={styles.bordertext_genero}>
+                                            <Text style={styles.text_1}>{"Masculino(x)"}</Text>
+                                        </div>
+                                        <div style={styles.bordertext_genero}>
+                                            <Text style={styles.text_1}>{"Femenino(x)"}</Text>
+                                        </div>        
                                     </View>
                                     <Text>{"\n"}</Text>
 
@@ -283,10 +377,6 @@ class PDFAlumno extends React.Component {
                                     </View>
                                     <Text>{"\n"}</Text>
                                     <Text style={styles.title}>*Formacion Academica</Text>
-
-                                    
-                                   
-
                                 </View>
 
                             </View>    
