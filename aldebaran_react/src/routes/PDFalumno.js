@@ -26,7 +26,6 @@ class PDFAlumno extends React.Component {
         this.getInfoAlmno_join(curpid.value);
     }
     getInfoAlmno_join = async (curp) => {
-        
         var url = config.general[0].url + config.general[0].puerto_api + "/Api/AlumnoJoin";
         var bodyFormData = new FormData();
         bodyFormData.append('curp', curp);
@@ -94,122 +93,46 @@ class PDFAlumno extends React.Component {
                 flexGrow: 1,
                 flexDirection: 'row',
             },
+            mainContainer:{
+               height: "100%" , marginTop:5
+            },
             container: {
-                flex: 200,
                 flexDirection: 'row',
                 alignItems: 'flex-start', //replace with flex-end or center,
+                // backgroundColor: 'blue',
+                marginBottom:5
                 // marginBottom:20  
             },
             title: {
                 margin: 0,
                 marginBottom:2,
-                fontSize: 15,
+                fontSize: 14,
                 textAlign: 'center',
                 // backgroundColor: 'red',
                 textTransform: 'uppercase',
                 fontFamily: 'Oswald',
                 alignItems: 'center',
             },
-            title_2: {
-                margin: -10,
-                marginBottom:2,
+            text1: {             
                 fontSize: 10,
                 textAlign: 'center',
-                // backgroundColor: 'red',
-                textTransform: 'uppercase',
-                fontFamily: 'Oswald',
                 alignItems: 'center',
             },
-            title_3: {
+            text2: {             
+                fontSize: 10,
+            },
+            text3: {
+                fontSize: 8,
+                textAlign: 'center',
+                fontFamily: 'Oswald',
+                alignItems: 'center',
                 textDecoration: 'underline',
-                margin: -5,
-                marginBottom:30,
-                fontSize: 12,
-                textAlign: 'center',
-                // backgroundColor: 'red',
-                textTransform: 'uppercase',
-                fontFamily: 'Oswald',
-                alignItems: 'center',
             },
-
-            bordertext:{
-                borderBottom : 0.8,
-                marginLeft:18,
-                marginTop:1,
-                marginBottom:0,
-
-                // border: 2,
-            },  
-            text_0:{
-                fontSize: 12,
-                marginTop:1,
-                marginLeft:2,
-                marginRight:2
-            },
-            text_1:{
-                fontSize: 10,
-            },
-            text_2:{
-                fontSize: 8,
-                marginTop:0,
-                textAlign: 'center',
-                width: 120
-            },
-            textCentered: {
-                width: 100,
-                fontSize: 8,
-                margin:-2
-            },
-            bordertext_1: {
-                borderBottom : 1,
-                marginLeft:4,
-                marginTop:1,
-                marginBottom:0,
-                width:190
-            },
-            bordertext_2: {
-                borderBottom : 1,
-                marginLeft:4,
-                marginTop:1,
-                marginBottom:0,
-                width:100
-            },
-            bordertext_genero: {
-                marginLeft:8,
-                marginTop:1,
-                marginBottom:0,
-                width:100
-            },
-            bordertext_3: {
-                borderBottom : 1,
-                marginLeft:4,
-                marginTop:1,
-                marginBottom:0,
-                width:336
-            },
-            marginLeft:{
-                fontSize: 10,
-                margin:10
-            },
-            images_color:{
-                width:70,
-                height:70
-            },
-            container_Header:{
-                width:"100%",
-                backgroundColor: 'red',
-                flexDirection: 'row',
-                alignItems: 'flex-start', //replace with flex-end or center,
-            },
-            left_Header:{
-                float:"left",
-                width:40,
-                alignItems: 'flex-center', //replace with flex-end or center,
-            },
-            right_Header:{
-                textAlign:"left",
-                width:40,
+            text4:{
+                width: 120 ,  marginRight:20,
+                fontSize:8, textAlign: 'center'
             }
+           
 
 
             
@@ -225,10 +148,10 @@ class PDFAlumno extends React.Component {
                     <Document>
                         <Page size="A4" style={styles.page}>
                             <View style={styles.section}>
-                                <View style={{flexDirection: 'row'}}>
 
+                                <View style={{flexDirection: 'row' }}>
                                     <Image 
-                                        style={{alignSelf: 'flex-start' , width:50 , height:70}}
+                                        style={{alignSelf: 'flex-start' , width:60 , height:70}}
                                         src={logo}
                                     />
                                     <Image 
@@ -239,144 +162,331 @@ class PDFAlumno extends React.Component {
                                         <View style={{alignItems: 'flex-start'  ,  color: 'black' ,fontSize: 10  , padding:4 }} >
                                             <Text>Nivel:</Text>
                                             <Text style={{ borderBottom : 0.8, width:"140%" }}> </Text>
-                                            <Text>{"\n"}</Text>
+                                            
                                             <Text>Módulo:</Text>
                                             <Text style={{ borderBottom : 0.8, width:"140%"}}> </Text>
 
                                         </View>
                                         <Image 
-                                            style={{marginLeft: 'auto' , width:80 , height:70 , backgroundColor:"red"}}
+                                            style={{marginLeft: 'auto' , width:70 , height:60}}
                                             source={{uri: imagen_base64}}
                                         />
                                     </View>
-
                                 </View>
-                             
-
-                                 {/* <Image
-                                    style={styles.images_color} 
-                                    src={{imgAlum}}
-                                /> */}
-                                {/* <Text>{"\n"}</Text>
-                                <Text>{"********"}</Text>
-
-                                <Image src={{uri:"https://image.shutterstock.com/image-photo/tiny-floating-house-on-lake-600w-1980476267.jpg" , method: 'POST', headers:{'Access-Control-Allow-Origin': '*'}}}/>
-                                <Text>{"********"}</Text>
                                 
-                                <Text>{"\n"}</Text> */}
-                                <Text style={styles.title_2}>Solicitud de inscripción</Text>
-                                <Text style={styles.title_3}>{informacion[0]}</Text>
-
-
-                                <View style={styles.wrapper}>
+                                <Text style={styles.title}>Solicitud de inscripción</Text>
+                                <Text style={styles.title}>{informacion[0]}</Text>
+                                <View style={styles.mainContainer}>
 
                                     <Text style={styles.title}>*Datos personales</Text>
-                        
                                     <View style={styles.container}>
-                                        <Text style={styles.text_0}>Nombre completo:</Text>
-                                        <div style={styles.bordertext}>
-                                            <Text style={styles.text_1}>{ " "+informacion[0] +" "+ informacion[1] +" "+ informacion[2]}</Text>
+                                        <Text style={styles.text1}>Nombre completo:</Text>
+                                        <div style={{borderBottom : 1,marginLeft:20,width:"100%"}}>
+                                            <Text style={styles.text2}>{ " "+informacion[0] +" "+ informacion[1] +" "+ informacion[2]}</Text>
+                                        </div>   
+
+                                    </View>
+                                    <View style = {styles.container}>
+                                        <Text style ={styles.text4}>(Segun acta de nacimineto)</Text>
+                                        <Text style ={styles.text4}>Apellido Paterno</Text>
+                                        <Text style ={styles.text4} >Apellido Materno</Text>
+                                        <Text style ={styles.text4}>Nombre</Text>
+                                    </View>
+
+
+                                    <View style = {styles.container }>
+                                    <Text style={styles.text1}>Domicilio:</Text>
+                                        <div style={{borderBottom : 1,marginLeft:10,width:"100%"}}>
+                                            <Text style={styles.text2}>{ " "+informacion[0] +" "+ informacion[1] +" "+ informacion[2]}</Text>
                                         </div>   
                                     </View>
-                                    <Text>{"\n"}</Text>
-                                    <View style={styles.container}>
-                                        <Text style={ styles.text_2}>(Segun acta de nacimineto)</Text>
-                                        <Text style={styles.textCentered}>Apellido Paterno</Text>
-                                        <Text style={styles.textCentered}>Apellido Materno</Text>
-                                        <Text style={styles.textCentered}>Nombre</Text>
-                                    </View>
-                                    <Text>{"\n"}</Text>
-
-
+                                    <View style = {styles.container }>
+                                        <Text style={{marginLeft:10}}></Text>
+                                        <Text style={styles.text4}>Calle</Text>
+                                        <Text style={styles.text4}>num. Int/ext</Text>
+                                        <Text style={styles.text4}>Colonia o fracc</Text>
+                                        <Text style={styles.text4}>C.P</Text>
+                                    </View> 
 
                                     <View style={styles.container}>
-                                        <Text style={styles.text_0}>Domicilio:</Text>
-                                        <div style={styles.bordertext}>
-                                            <Text style={styles.text_1}>{ " "+informacion[0] +" "+ informacion[1] +" "+ informacion[2]}</Text>
-                                        </div>   
-                                    </View>
-                                    <Text>{"\n"}</Text>
-                                    <View style={styles.container}>
-                                        <Text style={styles.text_2}></Text>
-                                        <Text style={styles.textCentered}>Calle</Text>
-                                        <Text style={styles.textCentered}>num. Int/ext</Text>
-                                        <Text style={styles.textCentered}>Colonia o fracc</Text>
-                                        <Text style={styles.textCentered}>C.P</Text>
-                                    </View>
-                                    <Text>{"\n"}</Text>
-
-                                    <View style={styles.container}>
-                                        <Text style={styles.text_0}>Municipio:</Text>
-                                        <div style={styles.bordertext_1}>
-                                            <Text style={styles.text_1}>{ " "+informacion[0]}</Text>
+                                        <Text style={styles.text1}>Municipio:</Text>
+                                        <div style={{borderBottom : 1,marginLeft:23,width:"60%"}}>
+                                            <Text style={styles.text2}>{ "sdsads "+informacion[0]}</Text>
                                         </div>  
-                                        <Text style={styles.text_0}>Lugar de nacimiento:{"\n"}</Text>
-                                        <div style={styles.bordertext_1}>
-                                            <Text style={styles.text_1}>{ " "+informacion[0] }</Text>
+                                        <Text style={styles.text1}>Lugar de nacimiento:</Text>
+                                        <div style={{borderBottom : 1,marginLeft:45,width:"80%"}}>
+                                            <Text style={styles.text2}>{ "cascascascascascascasc "+informacion[0] }</Text>
                                         </div>   
-                                    </View>
-                                    <Text>{"\n"}</Text>
+                                    </View> 
 
                                     <View style={styles.container}>
-                                        <Text style={styles.text_0}>Fecha de nacimiento:</Text>
-                                        <div style={styles.bordertext_2}>
-                                            <Text style={styles.text_1}>{ " "+informacion[0]}</Text>
+                                        <Text style={styles.text1}>Fecha de nacimiento:</Text>
+                                        <div style={{borderBottom : 1,marginLeft:10,width:180}}>
+                                            <Text style={styles.text2}>{ " "+informacion[0]}</Text>
                                         </div>  
-                                        <Text style={styles.text_0}>Edad:{"\n"}</Text>
-                                        <div style={styles.bordertext_2}>
-                                            <Text style={styles.text_1}>{ " "+informacion[0] }</Text>
+                                        <Text style={styles.text1}>{" "}Edad:</Text>
+                                        <div style={{borderBottom : 1,marginLeft:2,width:25}}>
+                                            <Text style={styles.text2}>{ "12" }</Text>
                                         </div>
-                                        <Text style={styles.text_0}>Genero:{"\n"}</Text>
-                                        <div style={styles.bordertext_genero}>
-                                            <Text style={styles.text_1}>{"Masculino(x)"}</Text>
+                                        <Text style={styles.text1}>{" "}Genero:</Text>
+
+                                        <div style={{marginLeft:10 , width:100}}>
+                                            <Text style={{fontSize: 10, marginLeft:5}}>{"Masculino(x)"}</Text>
                                         </div>
-                                        <div style={styles.bordertext_genero}>
-                                            <Text style={styles.text_1}>{"Femenino(x)"}</Text>
-                                        </div>        
+                                        <div style={{marginLeft:10,width:100}}>
+                                            <Text style={{fontSize: 10, marginLeft:-25}}>{"Femenino(x)"}</Text>
+                                        </div>  
+
                                     </View>
-                                    <Text>{"\n"}</Text>
 
                                     <View style={styles.container}>
-                                        <Text style={styles.text_0}>CURP:</Text>
-                                        <div style={styles.bordertext_1}>
-                                            <Text style={styles.text_1}>{ " "+informacion[0]}</Text>
+                                        <Text style={styles.text1}>CURP:</Text>
+                                        <div style={{borderBottom : 1,marginLeft:23,width:"60%"}}>
+                                            <Text style={styles.text2}>{ " "+informacion[0]}</Text>
                                         </div>  
-                                        <Text style={styles.text_0}>Telefono cel:{"\n"}</Text>
-                                        <div style={styles.bordertext_1}>
-                                            <Text style={styles.text_1}>{ " "+informacion[0] }</Text>
+                                        <Text style={styles.text1}>Telefono cel:</Text>
+                                        <div style={{borderBottom : 1,marginLeft:45,width:"80%"}}>
+                                            <Text style={styles.text2}>{ " "+informacion[0] }</Text>
                                         </div>   
                                     </View>
-                                    <Text>{"\n"}</Text>
 
                                     <View style={styles.container}>
-                                        <Text style={styles.text_0}>Telefono casa:</Text>
-                                        <div style={styles.bordertext_1}>
-                                            <Text style={styles.text_1}>{ " "+informacion[0]}</Text>
+                                        <Text style={styles.text1}>Telefono casa:</Text>
+                                        <div style={{borderBottom : 1,marginLeft:28,width:"60%"}}>
+                                            <Text style={styles.text2}>{ " "+informacion[0]}</Text>
                                         </div>  
-                                        <Text style={styles.text_0}>Correo Electronico:{"\n"}</Text>
-                                        <div style={styles.bordertext_1}>
-                                            <Text style={styles.text_1}>{ " "+informacion[0] }</Text>
+                                        <Text style={styles.text1}>Correo Electronico:</Text>
+                                        <div style={{borderBottom : 1,marginLeft:35,width:"60%"}}>
+                                            <Text style={styles.text2}>{ " "+informacion[0] }</Text>
                                         </div>   
                                     </View>
-                                    <Text>{"\n"}</Text>
 
                                     <View style={styles.container}>
-                                        <Text style={styles.text_0}>En caso de emergencia comunicarse con:</Text>
-                                        <div style={styles.bordertext_3 }>
-                                            <Text style={styles.text_1}>{ " "+informacion[0]}</Text>
+                                        <Text style={styles.text1}>En caso de emergencia comunicarse con:</Text>
+                                        <div style={{borderBottom : 1,marginLeft:65,width:"100%"}}>
+                                            <Text style={styles.text2}>{ " "+informacion[0]}</Text>
                                         </div>  
                                     </View>
 
-                                    <Text>{"\n"}</Text>
-
                                     <View style={styles.container}>
-                                        <Text style={styles.text_0}>Telefono cel:</Text>
-                                        <div style={styles.bordertext}>
-                                            <Text style={styles.text_1}>{" "+informacion[0] }</Text>
+                                        <Text style={styles.text1}>Telefono cel:</Text>
+                                        <div style={{borderBottom : 1,marginLeft:5,width:"100%"}}>
+                                            <Text style={styles.text2}>{" "+informacion[0] }</Text>
                                         </div>   
                                     </View>
-                                    <Text>{"\n"}</Text>
+
+
                                     <Text style={styles.title}>*Formacion Academica</Text>
+                                    <View style={styles.container}>
+                                        <Text style={styles.text1}>Último grado de estudios:</Text>
+                                        <div style={{   borderBottom : 1,marginLeft:5,width:230}}>
+                                            <Text style={styles.text2}>{ " "+informacion[0]}</Text>
+                                        </div>  
+
+
+                                        <div>
+                                            <Text style={{fontSize: 10, marginLeft:5}}>{"Estudiante (x)"}</Text>
+                                        </div>
+                                        <div>
+                                            <Text style={{fontSize: 10, marginLeft:5}}>{"Pasante (x)"}</Text>
+                                        </div>
+                                        <div>
+                                            <Text style={{fontSize: 10,marginLeft:5}}>{"Titulado(x)"}</Text>
+                                        </div>  
+
+                                    </View>
+
+                                    <View style={styles.container}>
+                                        <Text style={styles.text1}>Institución educativa y/o de egreso :</Text>
+                                        <div style={{borderBottom : 1,marginLeft:2,width:280}}>
+                                        <Text style={styles.text2}>{ "COLEGIO DE BACHILLERES DEL ESTADO DE OAXACA"}</Text>
+                                        </div>  
+                                        <Text style={styles.text1}>Año de egreso:</Text>
+                                        <div style={{borderBottom : 1,marginLeft:2,width:42}}>
+                                            <Text style={styles.text2}>{ "1234 " }</Text>
+                                        </div>
+                                    </View>
+
+
+                                      
+                                    <Text style={styles.title}>*Datos del tutor</Text>
+
+                                    <View style={styles.container}>
+                                        <Text  style={styles.text1}>Nombre del tutor:</Text>
+                                        <div style={{   borderBottom : 1,marginLeft:15,width:"100%"}}>
+                                            <Text style={styles.text2}>{ " "+informacion[0]}</Text>
+                                        </div>  
+                                    </View>
+                                    
+                                    <View style={styles.container}>
+                                        <Text  style={styles.text1}>Nombre de la institución donde labora y puesto:</Text>
+                                        <div style={{   borderBottom : 1,marginLeft:82,width:"100%"}}>
+                                            <Text style={styles.text2}>{ " xxx"+informacion[0]}</Text>
+                                        </div>  
+                                    </View>
+
+                                    <View style={styles.container}>
+                                        <Text style={styles.text1}>Correo electrónico:</Text>
+                                        <div style={{   borderBottom : 1,marginLeft:5,width:300}}>
+                                            <Text style={styles.text2}>{ " "+informacion[0]}</Text>
+                                        </div>  
+                                        <Text style={styles.text1}>Telefono cel:</Text>
+                                        <div style={{   borderBottom : 1,marginLeft:5 , width:110}}>
+                                            <Text style={styles.text2}>{ "1234567890111 " }</Text>
+                                        </div>   
+                                    </View>
+
+                                    <Text style={styles.title}>*Para accesso vehicular</Text>
+                                    <View style={styles.container}>
+                                        <Text style={styles.text1}>Marca y Modelo:</Text>
+                                        <div style={{   borderBottom : 1, marginTop:1,marginLeft:5,marginBottom:0,width:340}}>
+                                            <Text style={styles.text2}>{ " "+informacion[0]}</Text>
+                                        </div>  
+                                        <Text style={styles.text1}>Placas:</Text>
+                                        <div style={{   borderBottom : 1, marginTop:1,marginBottom:0,width:110}}>
+                                            <Text style={styles.text2}>{ "1234567890 " }</Text>
+                                        </div>   
+                                    </View>
+
+
+                                    <Text style={styles.title}>*DATOS PARA FACTURAR</Text>
+                                    <View style={styles.container}>
+                                        <Text style={styles.text1}>¿Requiere factura electronica?</Text>
+                                        <Text style={styles.text1}>No </Text>
+                                        <div style={{borderBottom : 1,marginLeft:5, width:30}}>
+                                            <Text style={styles.text1}>{" "}</Text>
+                                        </div>  
+                                        <Text style={styles.text1}>Si</Text>
+                                        <div style={{   borderBottom : 1,marginLeft:5 , width:30}}>
+                                            <Text style={styles.text1}>{ " " }</Text>
+                                        </div>  
+                                        <Text style={styles.text1}>Anexa Cedula Fiscal: </Text>
+                                        <Text style={styles.text1}>No </Text>
+                                        <div style={{borderBottom : 1,marginLeft:5, width:30}}>
+                                            <Text style={styles.text1}>{" "}</Text>
+                                        </div>  
+                                        <Text style={styles.text1}>Si</Text>
+                                        <div style={{   borderBottom : 1,marginLeft:5 , width:30}}>
+                                            <Text style={styles.text1}>{ " " }</Text>
+                                        </div>  
+                                    </View>
+
+                                    <Text style={styles.title}>*Informacion adicional</Text>
+                                    <View style={styles.container}>
+                                        <Text style={styles.text1}>Marca con una x la opcion que consideres correcta ¿Como se entero del curso? </Text>
+                                        <div>
+                                            <Text style={{fontSize: 10, marginLeft:10}}>{"Cartel( ) , "}</Text>
+                                        </div>
+                                       
+                                        <div>
+                                            <Text style={{fontSize: 10, marginLeft:5}}>{"Radio( ) , "}</Text>
+                                        </div>
+                                    </View>
+                                    <View style={styles.container}>
+                                    <Text style={styles.text1}>Redes sociales: </Text>
+                                        <div>
+                                            <Text style={{fontSize: 10, marginLeft:5}}>{"Facebook( ) ,"}</Text>
+                                        </div>
+                                        <div>
+                                            <Text style={{fontSize: 10, marginLeft:5}}>{"twitter( ) ,"}</Text>
+                                        </div>
+                                        <div>
+                                            <Text style={{fontSize: 10, marginLeft:5}}>{"Pagina web( ) , "}</Text>
+                                        </div>
+                                       
+                                        <div>
+                                            <Text style={{fontSize: 10, marginLeft:5}}>{"Visita en lugar de trabajo( ), "}</Text>
+                                        </div>
+                                        <div>
+                                            <Text style={{fontSize: 10, marginLeft:5}}>{"Familiar/res o amigos( ) ,"}</Text>
+                                        </div>
+                                        <div>
+                                            <Text style={{fontSize: 10, marginLeft:5}}>{"Stand o feria( ), "}</Text>
+                                        </div>
+                                       
+                                    </View>
+                                    <View style={styles.container}>
+                                        <div>
+                                            <Text style={{fontSize: 10, marginLeft:0}}>{"Periodico( ), "}</Text>
+                                        </div>
+                                        <div>
+                                            <Text style={{fontSize: 10, marginLeft:5}}>{"Llamada telefonica( ) ,"}</Text>
+                                        </div>
+                                        <div>
+                                            <Text style={{fontSize: 10, marginLeft:5}}>{"Correo electronico( ) ,"}</Text>
+                                        </div>   
+                                        <div>
+                                            <Text style={{fontSize: 10, marginLeft:5}}>{"En instalaciones del CEC( ) ,"}</Text>
+                                        </div>       
+                                        <div>
+                                            <Text style={{fontSize: 10, marginLeft:5}}>{"Engresado del CEC-IPN( ) ,"}</Text>
+                                        </div>
+                                    </View>
+                                    <View style={styles.container}>
+                                        <div>
+                                            <Text style={{fontSize: 10, marginLeft:0}}>{"Television( ) ,"}</Text>
+                                        </div>  
+                                        <div>
+                                            <Text style={{fontSize: 10, marginLeft:5}}>{"Otro medio , especificar"}</Text>
+                                        </div>         
+                                        <div style={{   borderBottom : 1,marginLeft:5 , width:400}}>
+                                            <Text style={styles.text1}>{ " " }</Text>
+                                        </div>  
+                                    </View>
+                                    <View style={styles.container}>
+                                        <Text style={styles.text1}> ¿A quien recomendaria este curso?  </Text>
+                                        <Text style={styles.text1}>Nombre: </Text>
+                                        <div style={{borderBottom : 1,marginLeft:0,width:"63%"}}>
+                                            <Text style={styles.text2}>{ " "+informacion[0] +" "+ informacion[1] +" "+ informacion[2]}</Text>
+                                        </div>   
+                                    </View>
+                                    <View style={styles.container}>
+                                        <Text style={styles.text1}>Correo electronico:</Text>
+                                        <div style={{   borderBottom : 1,marginLeft:5,width:330}}>
+                                            <Text style={styles.text2}>{ " "+informacion[0]}</Text>
+                                        </div>  
+                                        <Text style={styles.text1}>Tel. cel:</Text>
+                                        <div style={{   borderBottom : 1,width:110 , marginLeft:5}}>
+                                            <Text style={styles.text2}>{ "1234567890 " }</Text>
+                                        </div>   
+                                    </View>
+
+                                    <Text style={styles.title}>¡Importante!</Text>
+                                    <Text  style={{fontSize: 6 , textAlign:"justify"}}>
+                                        El Centro de Educación Continua Unidad Oaxaca se reserva el derecho de cancelar o posponer el programa académico si no se 
+                                        cumple con el mínimo de participantes a la fecha de inicio del programa. Por favor, lea lo siguiente y firme.
+                                        {"\n \n"}
+                                        En cumplimiento del Decimoséptimo de los Lineamientos de Protección de Datos Personales, publicados en el Diario Oficial de la Federación el 30 
+                                        de septiembre de 2005 se informa lo siguiente: Los datos personales recabados serán protegidos y serán incorporados y tratados en el Sistema de datos 
+                                        personales Datos del Participante, con fundamento en los artículos 20, 21 de la LFTAIPG; 16º, 17º, 27º, 28º, 29º , 30º, 31º, 32º, 33º, de los 
+                                        Lineamientos de Protección de Datos Personales; cuya finalidad es integrar los expedientes de los participantes a los servicios educativos del CEC Unidad Oaxaca,
+                                        mismo que fue registrado en el Listado de sistemas de datos personales ante el Instituto Federal de Acceso a la Información Pública (www.ifai.org.mx), y podrán ser 
+                                        transmitidos a la Dirección de Educación Continua o a la Escuela Superior del IPN de donde provenga el programa académico en el que fue inscrito, con la finalidad de 
+                                        que se elabore el documento definitivo que oficializa su participación en programas y eventos de educación continua y a distancia, además de otras transmisiones previas en la Ley. 
+                                        La Unidad Administrativa responsable del Sistema de datos personales es el Centro de Educación Continua Unidad Oaxaca y la dirección donde el interesado podrá ejercer los derechos de acceso 
+                                        y corrección ante la misma en calle Hornos No. 1003 Santa Cruz Xoxocotlán Oaxaca, Oax. Tel.(951) 51 727 45 y 533 53 47.
+                                    </Text>
+                                    <Text>{"\n"}</Text>
+
+                                    <View style={{
+                                          flexDirection: 'row',
+                                          // backgroundColor: 'blue',
+                                          marginBottom:5,
+                                          margin: 0,
+                                          // marginBottom:20  
+                                    }}>
+
+                                        <div style={{borderTop : 1  ,marginLeft:5, width:"32%"}}>
+                                            <Text style={{fontSize:8, textAlign: 'center',}}>Fecha</Text>
+                                        </div>   
+                                        <div style={{borderTop : 1 ,  marginLeft:5 ,  width:"32%" }}>
+                                            <Text style={{fontSize:8, textAlign: 'center'}}>Nombre y firma del solicitante</Text>
+                                        </div> 
+                                        <div style={{borderTop : 1 ,marginLeft:5,marginright:5,  width:"32%" }}>
+                                            <Text style={{ fontSize:8, textAlign: 'center'}}>Nombre y firma de quien recibe la solicitud</Text>                                        
+                                        </div>
+                                    </View>
+
                                 </View>
 
                             </View>    
