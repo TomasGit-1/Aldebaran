@@ -138,9 +138,13 @@ routes.post('/createRegistro',  (req, res )=> {
         
     ]
     db.createIngreso(arrayBD).then(respuesta =>{
-        res.json({ "status": respuesta});
+        // res.json({ "status": respuesta});
+        res.status(200).send({
+            message: "El registro fue creado" + err,
+        });
     }).catch(error =>{
         console.log(error);
+        res.status(404).send("Not found");
     })
     // } catch (error) {
     //     res.json({ "error": error.message});
@@ -232,7 +236,7 @@ routes.post('/AlumnoJoin',  (req, res )=> {
 
     db.getDataUsers(curp).then(respuesta =>{
         // res.json({ "status": 200 , "Servicios":respuesta});
-        res.json(respuesta['data'][0]);
+        res.json(respuesta['data']);
     }).catch(error =>{
         console.log(error);
     })

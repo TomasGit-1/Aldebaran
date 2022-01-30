@@ -150,10 +150,23 @@ const getPathFile = async ( data ) => {
 };
 const getDataUsers = async ( curp ) => {
     var curp = curp;
-    const response = await pool.query('SELECT * FROM personas FULL JOIN formacionacademica ON personas.curp = formacionacademica.idcurpfk FULL JOIN filespersona ON  personas.curp =  filespersona.idcurpfk FULL JOIN datoslaborales ON personas.curp = datoslaborales.idcurpfk FULL JOIN contactoemergencia ON personas.curp = contactoemergencia.idcurpfk WHERE personas.curp = $1',[curp]);
-    var data = response.rows;
+    // const response = await pool.query('SELECT * FROM personas FULL JOIN formacionacademica ON personas.curp = formacionacademica.idcurpfk FULL JOIN filespersona ON  personas.curp =  filespersona.idcurpfk FULL JOIN datoslaborales ON personas.curp = datoslaborales.idcurpfk FULL JOIN contactoemergencia ON personas.curp = contactoemergencia.idcurpfk WHERE personas.curp = $1',[curp]);
+    const response0 = await pool.query('SELECT * FROM personas WHERE curp = $1' ,[curp]);
+    var data_persona = response0.rows;
+    
+    const response1 = await pool.query('SELECT * FROM contactoemergencia WHERE idcurpfk = $1' ,[curp]);
+    var data_contacto = response1.rows;
+    
+    const response2 = await pool.query('SELECT * FROM formacionacademica WHERE idcurpfk = $1' ,[curp]);
+    var data_formacionacademicia = response2.rows;
+    
+    const response3 = await pool.query('SELECT * FROM datoslaborales WHERE idcurpfk = $1' ,[curp]);
+    var data_laborales = response3.rows;
+    
+    var data_Full =[data_persona,data_contacto,data_formacionacademicia,data_laborales]
+
     return {
-        "data":data
+        "data":data_Full
     }
 }
 

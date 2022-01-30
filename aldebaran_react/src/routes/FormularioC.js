@@ -15,19 +15,30 @@ class FormularioC extends React.Component {
         super(props);
         this.state = {
             informacion: [],
-            titles: [
-                { value: 0, text: "Datos personales" },
-                { value: 1, text: "Formacion Academica" },
-                { value: 2, text: "Datos laborales" },
-                { value: 3, text: "Información Adicional" }
-            ],
+            // titles: [
+            //     { value: 0, text: "Datos personales" },
+            //     { value: 1, text: "Formacion Academica" },
+            //     { value: 2, text: "Datos laborales" },
+            //     { value: 3, text: "Información Adicional" }
+            // ],
             //Variables para el puerto apu
             urlApi: "",
-            titles: [
-                { value: 0, text: "Datos personales" },
-                { value: 1, text: "Formacion Academica" },
-                { value: 2, text: "Datos laborales" },
-                { value: 3, text: "Información Adicional" }
+            // titles: [
+            //     { value: 0, text: "Datos personales" },
+            //     { value: 1, text: "Formacion Academica" },
+            //     { value: 2, text: "Datos laborales" },
+            //     { value: 3, text: "Información Adicional" }
+            // ],
+            situacionAcademica:[
+                "Estudiante (Cursando) ",
+                "Pasante",
+                 "Titulado" ,            
+            ],
+            MaxEstudiosOp: [
+                 "Basico",
+                "Medio Superior",
+                 "Superior" ,
+                 "Posgrado" 
             ],
             puertoApi: "",
 
@@ -230,7 +241,7 @@ class FormularioC extends React.Component {
             appPat_Alumno: this.state.appPat_Alumno,
             appMat_Alumno: this.state.appMat_Alumno,
             fechaNac_Alumno: this.state.fechaNac_Alumno,
-            edad_Alumno: this.state.edad_Alumno,
+            // edad_Alumno: this.state.edad_Alumno,
             telPar_Alumno: this.state.telPar_Alumno,
             telCel_Alumno: this.state.telCel_Alumno,
 
@@ -295,8 +306,6 @@ class FormularioC extends React.Component {
             msg = 'El campo apellido materno esta vacio';
         } else if (validacion.fechaNac_Alumno === "") {
             msg = 'Seleccione la fecha de nacimiento';
-        } else if (validacion.edad_Alumno === "") {
-            msg = 'El campo edad  esta vacio';
         } else if (validacion.telCel_Alumno === "") {
             msg = 'El campo telefono celular  esta vacio';
         } else if (validacion.calle_Alumno === "") {
@@ -380,7 +389,10 @@ class FormularioC extends React.Component {
         //         console.log(res.data);
         //     }).catch(function (error) {
         //     });
-
+        var nacimiento=Moment(this.state.fechaNac_Alumno);
+        var hoy=Moment();
+        var anios=hoy.diff(nacimiento,"years");
+        console.log();
         var url = config.general[0].url + config.general[0].puerto_api + "/Api/createRegistro";
         var bodyFormData = new FormData();
         bodyFormData.append('fileImg', this.state.file_fotografia);
@@ -393,7 +405,7 @@ class FormularioC extends React.Component {
         bodyFormData.append('appPatAlum', this.state.appPat_Alumno);
         bodyFormData.append('appMatAlum', this.state.appMat_Alumno);
         bodyFormData.append('fechaNacimiento', this.state.fechaNac_Alumno);
-        bodyFormData.append('edad', this.state.edad_Alumno);
+        bodyFormData.append('edad', "");
         bodyFormData.append('telParticularAlum', this.state.telPar_Alumno);
         bodyFormData.append('telCelularAlum', this.state.telCel_Alumno);
 
@@ -433,6 +445,7 @@ class FormularioC extends React.Component {
 
     }).then(function (response) {
             console.log("Aqui");
+           
         }).catch(function (error) {
             console.log(error.message)
         })
@@ -452,12 +465,14 @@ class FormularioC extends React.Component {
         this.setState({ genero: event.target.value });
     }
     SeleccMaxEstudios(event) {
-        console.log(event.target.value);
-        this.setState({ n_max_estudios: event.target.value });
+        if(event.target.value !== "Seleccione una opcion"){
+            this.setState({ n_max_estudios: event.target.value });
+        }
     }
     SeleccSituacionAcademina(event) {
-        console.log(event.target.value);
-        this.setState({ sitAcademico: event.target.value });
+        if(event.target.value !== "Seleccione una opcion"){
+            this.setState({ sitAcademico: event.target.value });
+        }
     }
     uploadPhoto(event) {
         var photoUser = event.target.value;
@@ -586,7 +601,8 @@ class FormularioC extends React.Component {
         let { showForm } = this.state
         let { showTable } = this.state
         let { informacion } = this.state
-
+        let { MaxEstudiosOp } = this.state
+        let {situacionAcademica} = this.state
         return (
             <main>
                 <section>
@@ -689,12 +705,12 @@ class FormularioC extends React.Component {
                                             <Form.Control type="date" onChange={(evt) => this.dataForm0(evt, "nacimiento")} />
                                         </Form.Group>
                                     </Col>
-                                    <Col sm>
+                                    {/* <Col sm>
                                         <Form.Group className="mb-3">
                                             <Form.Label className="h5">Edad</Form.Label>
                                             <Form.Control type="Number" placeholder="Edad" min="0" max="120" onChange={(evt) => this.dataForm0(evt, "edad")} />
                                         </Form.Group>
-                                    </Col>
+                                    </Col> */}
                                     <Col sm>
                                         <Form.Group className="mb-3">
                                             <Form.Label className="h5">Telefono particular</Form.Label>
@@ -718,7 +734,7 @@ class FormularioC extends React.Component {
                                     <Col sm>
                                         <Form.Group className="mb-3">
                                             <Form.Label className="h5">Numero</Form.Label>
-                                            <Form.Control type="Number" placeholder="Edad" min="0" onChange={(evt) => this.dataForm0(evt, "numero")} />
+                                            <Form.Control type="Number" placeholder="Numero" min="0" onChange={(evt) => this.dataForm0(evt, "numero")} />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
@@ -796,10 +812,13 @@ class FormularioC extends React.Component {
                                             <Form.Label className="h5">Nivel maximo de estudios</Form.Label>
                                             <Form.Select onChange={this.SeleccMaxEstudios}>
                                                 <option>Seleccione una opcion</option>
-                                                <option value="0">Basico</option>
-                                                <option value="1">Medio Superior</option>
-                                                <option value="2">Superior</option>
-                                                <option value="3">Posgrado</option>
+                                               
+                                                 {
+                                                    MaxEstudiosOp.map((index) => 
+                                                        <option value={index} key={index}>{index}</option>
+                                                    )
+                                                 }
+
                                             </Form.Select>
                                         </Form.Group>
                                     </Col>
@@ -808,9 +827,15 @@ class FormularioC extends React.Component {
                                             <Form.Label className="h5">Situacion academica</Form.Label>
                                             <Form.Select onChange={this.SeleccSituacionAcademina}>
                                                 <option>Seleccione una opcion</option>
-                                                <option value="0">Estudiante (Cursando)</option>
-                                                <option value="1">Pasante</option>
-                                                <option value="2">Titulado</option>
+                                                {/* <option value="0">Basico</option>
+                                                <option value="1">Medio Superior</option>
+                                                <option value="2">Superior</option>
+                                                <option value="3">Posgrado</option> */}
+                                                 {
+                                                    situacionAcademica.map((index) => 
+                                                        <option value={index} key={index}>{index}</option>
+                                                    )
+                                                 }
                                             </Form.Select>
                                         </Form.Group>
                                     </Col>
@@ -914,7 +939,7 @@ class FormularioC extends React.Component {
                                 <Col sm>
                                     <ButtonGroup aria-label="Basic example" >
                                         <Button variant="secondary" onClick={() => this.ShowForm(1)}>
-                                            Nuevo servicio &nbsp;&nbsp;<i className="bi bi-plus-circle-fill "></i>
+                                            Registrar &nbsp;&nbsp;<i className="bi bi-plus-circle-fill "></i>
                                         </Button>
                                     </ButtonGroup>
                                 </Col>
@@ -949,7 +974,7 @@ class FormularioC extends React.Component {
                                     </thead>
                                     <tbody>
                                         {
-                                            informacion.map((index) => (
+                                            informacion.map((index) => 
                                                 <tr key={index}>
                                                     <td >{index[0]}</td>
                                                     <td >{index[1]}</td>
@@ -1011,7 +1036,7 @@ class FormularioC extends React.Component {
                                                         </Dropdown>
                                                     </td>
                                                 </tr>
-                                            ))
+                                            )
                                         }
 
                                     </tbody>

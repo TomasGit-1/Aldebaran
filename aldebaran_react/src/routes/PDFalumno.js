@@ -1,12 +1,13 @@
 import React from 'react';
-import {   Card , Row , Col , Container} from 'react-bootstrap'
+import { Container} from 'react-bootstrap'
 import { Page, Text, View, Document, StyleSheet , PDFViewer , Font , Image } from '@react-pdf/renderer';
 import {useParams} from 'react-router-dom'
 import config from '../config/config.json';
 import axios from 'axios'
 import logo from "../static/LogoBN.jpg";
 import imgTitulo from "../static/titulo.png";
-import imgFotografia from "../static/titulo.png";
+import Moment from 'moment'
+
 
 // import styled from 'styled-components'
 class PDFAlumno extends React.Component {
@@ -16,7 +17,11 @@ class PDFAlumno extends React.Component {
             curp:"",
             msg: "Primera aplicacion React",
             imagen_base64:"",
-            informacion:[]
+            informacion:[],
+            datosPersonales:[],
+            datosContactoEmer:[],
+            datosLaborales:[],
+            datoFormacionAcademica:[],
         }
     }
     componentDidMount() {
@@ -39,15 +44,58 @@ class PDFAlumno extends React.Component {
         }).catch(function (error) {
             console.log(error.message)
         })
+        let arrayPersonales = [];
 
+        // var dateNacimiento = new Moment(respuesta[0][0].fechanacimiento).format('DD/MM/YYYY');
+        // var dateNacimiento = new Moment(respuesta[0][0].fechanacimiento).format('MM-DD-YYYY');
+        // var dateNacimiento = new Moment(respuesta[0][0].fechanacimiento).format('MM-DD-YYYY');
+
+        var dateNacimiento = Moment(respuesta[0][0].fechanacimiento, ["MM-DD-YYYY", "YYYY-MM-DD"]);
+
+        var nacimiento=Moment(dateNacimiento);
+        var hoy=Moment();
+        var anios=hoy.diff(nacimiento,"years");
+
+        arrayPersonales.push(respuesta[0][0].nombre);
+        arrayPersonales.push(respuesta[0][0].appmat);
+        arrayPersonales.push(respuesta[0][0].apppat);
+        arrayPersonales.push(respuesta[0][0].calle);
+        arrayPersonales.push(respuesta[0][0].numdomicilio);
+        arrayPersonales.push(respuesta[0][0].colonia);
+        arrayPersonales.push(respuesta[0][0].codigopostal);
+        arrayPersonales.push(respuesta[0][0].municipio);
+        arrayPersonales.push("Aqui va el lugar de nacimiento");
+        arrayPersonales.push(dateNacimiento);
+        arrayPersonales.push(anios);
+        arrayPersonales.push(respuesta[0][0].sexo);
+        arrayPersonales.push(respuesta[0][0].curp);
+        arrayPersonales.push(respuesta[0][0].telcel);
+        arrayPersonales.push(respuesta[0][0].telpar);
+        arrayPersonales.push(respuesta[0][0].email);
+
+        let datosContactoEmer = [];
+      
+        datosContactoEmer.push(respuesta[1][0].nombre);
+        datosContactoEmer.push(respuesta[1][0].appmat);
+        datosContactoEmer.push(respuesta[1][0].apppat);
+        datosContactoEmer.push(respuesta[1][0].email);
+        datosContactoEmer.push(respuesta[1][0].telefono_contacto);
+     
+        let datoFormacionAcademica = [];
         console.log("Data");
         console.log(respuesta);
+        console.log(respuesta[2][0]);
+        datoFormacionAcademica.push(respuesta[2][0].n_max_estudios);
+        datoFormacionAcademica.push(respuesta[2][0].s_academica_actual);
+        datoFormacionAcademica.push(respuesta[2][0].insteducativa);
+        datoFormacionAcademica.push(respuesta[2][0].anioegreso);
+        
 
-        let arrayInfo = []
 
-        arrayInfo.push(respuesta.nombre);
-        arrayInfo.push(respuesta.appmat);
-        arrayInfo.push(respuesta.apppat);
+        // this.setState({ datosContactoEmer:  arrayInfo});
+        // this.setState({ datosLaborales:  arrayInfo});
+        // this.setState({ datoFormacionAcademica:  arrayInfo});
+        
 
         url = config.general[0].url + config.general[0].puerto_api + "/Api/imagen64";
         const imagen = await  axios({
@@ -65,14 +113,17 @@ class PDFAlumno extends React.Component {
         // console.log("Imagen");
         // console.log(imagen.message);
         this.setState({ imagen_base64: imagen.message });
-        this.setState({ informacion:  arrayInfo});
+        this.setState({ datosPersonales:  arrayPersonales});
+        this.setState({ datosContactoEmer:  datosContactoEmer});
+        this.setState({ datoFormacionAcademica:  datoFormacionAcademica});
+
     }
     render() {
-        let { curp } = this.state
         let { imagen_base64 } = this.state
-        const data = `lorem <b onmouseover="alert('mouseover');">ipsum</b>`;
-        let { informacion } = this.state
-
+        let { datosPersonales } = this.state
+        let { datosContactoEmer } = this.state
+        let { datoFormacionAcademica } = this.state
+        
         const styles = StyleSheet.create({
             page: {
               flexDirection: 'row',
@@ -120,6 +171,7 @@ class PDFAlumno extends React.Component {
             },
             text2: {             
                 fontSize: 10,
+                color:"#303f9f"
             },
             text3: {
                 fontSize: 8,
@@ -132,10 +184,6 @@ class PDFAlumno extends React.Component {
                 width: 120 ,  marginRight:20,
                 fontSize:8, textAlign: 'center'
             }
-           
-
-
-            
            
         });
         Font.register({
@@ -155,7 +203,7 @@ class PDFAlumno extends React.Component {
                                         src={logo}
                                     />
                                     <Image 
-                                        style={{marginLeft: 'auto' , width:"80%" , height:60 , marginLeft:10 , marginRight:5}}
+                                        style={{width:"80%" , height:60 , marginLeft:10 , marginRight:5}}
                                         src={imgTitulo}
                                     />
                                     <View style={{flexDirection: 'row'  , border:0.9 , width:180}}>
@@ -175,14 +223,14 @@ class PDFAlumno extends React.Component {
                                 </View>
                                 
                                 <Text style={styles.title}>Solicitud de inscripción</Text>
-                                <Text style={styles.title}>{informacion[0]}</Text>
+                                <Text style={styles.title}>{"Falta agregar el Curso"}</Text>
                                 <View style={styles.mainContainer}>
 
                                     <Text style={styles.title}>*Datos personales</Text>
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>Nombre completo:</Text>
                                         <div style={{borderBottom : 1,marginLeft:20,width:"100%"}}>
-                                            <Text style={styles.text2}>{ " "+informacion[0] +" "+ informacion[1] +" "+ informacion[2]}</Text>
+                                            <Text style={styles.text2}>{ " "+datosPersonales[2] +" "+ datosPersonales[1] +" "+ datosPersonales[0]}</Text>
                                         </div>   
 
                                     </View>
@@ -197,7 +245,7 @@ class PDFAlumno extends React.Component {
                                     <View style = {styles.container }>
                                     <Text style={styles.text1}>Domicilio:</Text>
                                         <div style={{borderBottom : 1,marginLeft:10,width:"100%"}}>
-                                            <Text style={styles.text2}>{ " "+informacion[0] +" "+ informacion[1] +" "+ informacion[2]}</Text>
+                                            <Text style={styles.text2}>{ "  "+datosPersonales[3] +"  "+ datosPersonales[4] +" "+ datosPersonales[5] +"            "+ datosPersonales[6]}</Text>
                                         </div>   
                                     </View>
                                     <View style = {styles.container }>
@@ -211,67 +259,89 @@ class PDFAlumno extends React.Component {
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>Municipio:</Text>
                                         <div style={{borderBottom : 1,marginLeft:23,width:"60%"}}>
-                                            <Text style={styles.text2}>{ "sdsads "+informacion[0]}</Text>
+                                            <Text style={styles.text2}>{ " "+datosPersonales[7]}</Text>
                                         </div>  
                                         <Text style={styles.text1}>Lugar de nacimiento:</Text>
                                         <div style={{borderBottom : 1,marginLeft:45,width:"80%"}}>
-                                            <Text style={styles.text2}>{ "cascascascascascascasc "+informacion[0] }</Text>
+                                            <Text style={styles.text2}>{" "+datosPersonales[8] }</Text>
                                         </div>   
                                     </View> 
 
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>Fecha de nacimiento:</Text>
                                         <div style={{borderBottom : 1,marginLeft:10,width:180}}>
-                                            <Text style={styles.text2}>{ " "+informacion[0]}</Text>
+                                            <Text style={styles.text2}>{ " "+datosPersonales[9]}</Text>
                                         </div>  
                                         <Text style={styles.text1}>{" "}Edad:</Text>
                                         <div style={{borderBottom : 1,marginLeft:2,width:25}}>
-                                            <Text style={styles.text2}>{ "12" }</Text>
+                                            <Text style={styles.text2}>{ datosPersonales[10]}</Text>
                                         </div>
                                         <Text style={styles.text1}>{" "}Genero:</Text>
 
-                                        <div style={{marginLeft:10 , width:100}}>
+                                        { 
+                                            datosPersonales[11] === 'Hombre' ?
+                                                <Container style={styles.container}>
+                                                    <div style={{marginLeft:10 , width:100}}>
+                                                            <Text style={{fontSize: 10, marginLeft:5}}>{"Masculino(x)"}</Text>
+                                                    </div>
+                                                    <div style={{marginLeft:10,width:100}}>
+                                                        <Text style={{fontSize: 10, marginLeft:-25}}>{"Femenino( )"}</Text>
+                                                    </div>  
+                                                </Container>
+
+                                            :  
+                                                <Container style={styles.container} >
+                                                    <div style={{marginLeft:10 , width:100}}>
+                                                            <Text style={{fontSize: 10, marginLeft:5}}>{"Masculino( )"}</Text>
+                                                    </div>
+                                                    <div style={{marginLeft:10,width:100}}>
+                                                        <Text style={{fontSize: 10, marginLeft:-25}}>{"Femenino(x)"}</Text>
+                                                    </div>  
+                                                </Container>
+                                              
+                                        }
+                                        {/* <div style={{marginLeft:10 , width:100}}>
                                             <Text style={{fontSize: 10, marginLeft:5}}>{"Masculino(x)"}</Text>
                                         </div>
                                         <div style={{marginLeft:10,width:100}}>
                                             <Text style={{fontSize: 10, marginLeft:-25}}>{"Femenino(x)"}</Text>
-                                        </div>  
+                                        </div>   */}
 
                                     </View>
 
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>CURP:</Text>
                                         <div style={{borderBottom : 1,marginLeft:23,width:"60%"}}>
-                                            <Text style={styles.text2}>{ " "+informacion[0]}</Text>
+                                            <Text style={styles.text2}>{ " "+datosPersonales[12]}</Text>
                                         </div>  
                                         <Text style={styles.text1}>Telefono cel:</Text>
                                         <div style={{borderBottom : 1,marginLeft:45,width:"80%"}}>
-                                            <Text style={styles.text2}>{ " "+informacion[0] }</Text>
+                                            <Text style={styles.text2}>{ " "+datosPersonales[13] }</Text>
                                         </div>   
                                     </View>
 
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>Telefono casa:</Text>
-                                        <div style={{borderBottom : 1,marginLeft:28,width:"60%"}}>
-                                            <Text style={styles.text2}>{ " "+informacion[0]}</Text>
+                                        <div style={{borderBottom : 1,marginLeft:28,width:"40%"}}>
+                                            <Text style={styles.text2}>{ " "+datosPersonales[14]}</Text>
                                         </div>  
                                         <Text style={styles.text1}>Correo Electronico:</Text>
                                         <div style={{borderBottom : 1,marginLeft:35,width:"60%"}}>
-                                            <Text style={styles.text2}>{ " "+informacion[0] }</Text>
+                                            <Text style={styles.text2}>{ " "+datosPersonales[15] }</Text>
                                         </div>   
                                     </View>
 
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>En caso de emergencia comunicarse con:</Text>
                                         <div style={{borderBottom : 1,marginLeft:65,width:"100%"}}>
-                                            <Text style={styles.text2}>{ " "+informacion[0]}</Text>
+                                            <Text style={styles.text2}>{ " "+datosContactoEmer[0] +"  "+ datosContactoEmer[1] +" "+ datosContactoEmer[2]}</Text>
                                         </div>  
                                     </View>
 
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>Telefono cel:</Text>
-                                        <div style={{borderBottom : 1,marginLeft:5,width:"100%"}}>
-                                            <Text style={styles.text2}>{" "+informacion[0] }</Text>
+                                        <div style={{borderBottom : 1,marginLeft:10, width:"100%"}}>
+                                            <Text style={styles.text2}>{" "+datosContactoEmer[4] }</Text>
                                         </div>   
                                     </View>
 
@@ -280,11 +350,13 @@ class PDFAlumno extends React.Component {
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>Último grado de estudios:</Text>
                                         <div style={{   borderBottom : 1,marginLeft:5,width:230}}>
-                                            <Text style={styles.text2}>{ " "+informacion[0]}</Text>
+                                            <Text style={styles.text2}>{ " "+datoFormacionAcademica[0]}</Text>
                                         </div>  
 
-
                                         <div>
+                                            <Text style={styles.text2}>{ " "+datoFormacionAcademica[1]}</Text>
+                                        </div>
+                                        {/* <div>
                                             <Text style={{fontSize: 10, marginLeft:5}}>{"Estudiante (x)"}</Text>
                                         </div>
                                         <div>
@@ -292,18 +364,18 @@ class PDFAlumno extends React.Component {
                                         </div>
                                         <div>
                                             <Text style={{fontSize: 10,marginLeft:5}}>{"Titulado(x)"}</Text>
-                                        </div>  
+                                        </div>   */}
 
                                     </View>
 
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>Institución educativa y/o de egreso :</Text>
                                         <div style={{borderBottom : 1,marginLeft:2,width:280}}>
-                                        <Text style={styles.text2}>{ "COLEGIO DE BACHILLERES DEL ESTADO DE OAXACA"}</Text>
+                                        <Text style={styles.text2}>{" "+ datoFormacionAcademica[2]}</Text>
                                         </div>  
                                         <Text style={styles.text1}>Año de egreso:</Text>
                                         <div style={{borderBottom : 1,marginLeft:2,width:42}}>
-                                            <Text style={styles.text2}>{ "1234 " }</Text>
+                                            <Text style={styles.text2}>{ " "+datoFormacionAcademica[3] }</Text>
                                         </div>
                                     </View>
 
@@ -314,25 +386,25 @@ class PDFAlumno extends React.Component {
                                     <View style={styles.container}>
                                         <Text  style={styles.text1}>Nombre del tutor:</Text>
                                         <div style={{   borderBottom : 1,marginLeft:15,width:"100%"}}>
-                                            <Text style={styles.text2}>{ " "+informacion[0]}</Text>
+                                            <Text style={styles.text2}>{ " "}</Text>
                                         </div>  
                                     </View>
                                     
                                     <View style={styles.container}>
                                         <Text  style={styles.text1}>Nombre de la institución donde labora y puesto:</Text>
                                         <div style={{   borderBottom : 1,marginLeft:82,width:"100%"}}>
-                                            <Text style={styles.text2}>{ " xxx"+informacion[0]}</Text>
+                                            <Text style={styles.text2}>{ " "}</Text>
                                         </div>  
                                     </View>
 
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>Correo electrónico:</Text>
                                         <div style={{   borderBottom : 1,marginLeft:5,width:300}}>
-                                            <Text style={styles.text2}>{ " "+informacion[0]}</Text>
+                                            <Text style={styles.text2}>{ " "}</Text>
                                         </div>  
                                         <Text style={styles.text1}>Telefono cel:</Text>
                                         <div style={{   borderBottom : 1,marginLeft:5 , width:110}}>
-                                            <Text style={styles.text2}>{ "1234567890111 " }</Text>
+                                            <Text style={styles.text2}>{ " " }</Text>
                                         </div>   
                                     </View>
 
@@ -340,11 +412,11 @@ class PDFAlumno extends React.Component {
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>Marca y Modelo:</Text>
                                         <div style={{   borderBottom : 1, marginTop:1,marginLeft:5,marginBottom:0,width:340}}>
-                                            <Text style={styles.text2}>{ " "+informacion[0]}</Text>
+                                            <Text style={styles.text2}>{" "}</Text>
                                         </div>  
                                         <Text style={styles.text1}>Placas:</Text>
                                         <div style={{   borderBottom : 1, marginTop:1,marginBottom:0,width:110}}>
-                                            <Text style={styles.text2}>{ "1234567890 " }</Text>
+                                            <Text style={styles.text2}>{" "}</Text>
                                         </div>   
                                     </View>
 
@@ -437,17 +509,17 @@ class PDFAlumno extends React.Component {
                                         <Text style={styles.text1}> ¿A quien recomendaria este curso?  </Text>
                                         <Text style={styles.text1}>Nombre: </Text>
                                         <div style={{borderBottom : 1,marginLeft:0,width:"63%"}}>
-                                            <Text style={styles.text2}>{ " "+informacion[0] +" "+ informacion[1] +" "+ informacion[2]}</Text>
+                                            <Text style={styles.text2}>{" "}</Text>
                                         </div>   
                                     </View>
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>Correo electronico:</Text>
                                         <div style={{   borderBottom : 1,marginLeft:5,width:330}}>
-                                            <Text style={styles.text2}>{ " "+informacion[0]}</Text>
+                                            <Text style={styles.text2}>{" "}</Text>
                                         </div>  
                                         <Text style={styles.text1}>Tel. cel:</Text>
                                         <div style={{   borderBottom : 1,width:110 , marginLeft:5}}>
-                                            <Text style={styles.text2}>{ "1234567890 " }</Text>
+                                            <Text style={styles.text2}>{" "}</Text>
                                         </div>   
                                     </View>
 
