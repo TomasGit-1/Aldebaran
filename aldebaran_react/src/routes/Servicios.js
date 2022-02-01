@@ -249,40 +249,52 @@ class Servicios extends React.Component {
             let HorasArray =[]
             const response = await fetch(config.general[0].url+config.general[0].puerto_api+"/api/Servicios")
             var responseJson = await response.json();
-            console.log("Estamos obnteniedo los ");
-            // console.log(responseJson.Servicios.length);
-            // console.log(responseJson.habilitado);
-            for (var i = 0; i < responseJson.id.length; i++) {
-                id.push(responseJson.id[i]);
-                registro.push(responseJson.registro[i]);
-                evento.push(responseJson.evento[i]);
-                programaAcademico.push(responseJson.programaAcademico[i]);
-                if(responseJson.habilitado[i] === "true"){
-                    console.log("Habilitado");
-                    habilitado.push("Habilitado");
-                }else{
-                    console.log("Deshabilidato");
-                    habilitado.push("Deshabilidato");
+            var temp = responseJson;
+            console.log(temp);
+            if(temp['status'] == 200){
+                responseJson = responseJson['data'];
+                for (var i = 0; i < responseJson.id.length; i++) {
+                    id.push(responseJson.id[i]);
+                    registro.push(responseJson.registro[i]);
+                    evento.push(responseJson.evento[i]);
+                    programaAcademico.push(responseJson.programaAcademico[i]);
+                    if(responseJson.habilitado[i] === "true"){
+                        console.log("Habilitado");
+                        habilitado.push("Habilitado");
+                    }else{
+                        console.log("Deshabilidato");
+                        habilitado.push("Deshabilidato");
+                    }
+                    modalidadArray.push(responseJson.modalidad[i]);
+                    cuotaArray.push(responseJson.cuota[i]);
+                    moduloArray.push(responseJson.numModulo[i]);
+                    HorasArray.push(responseJson.numHoras[i]);
                 }
-                modalidadArray.push(responseJson.modalidad[i]);
-                cuotaArray.push(responseJson.cuota[i]);
-                moduloArray.push(responseJson.numModulo[i]);
-                HorasArray.push(responseJson.numHoras[i]);
+                // console.log(responseJson['id']);
+                // console.log(responseJson['Servicios']);
+                // console.log(responseJson['habilitado']);
+                this.setState({ id: id });
+                this.setState({ registro: registro });
+                this.setState({ evento: evento });
+                this.setState({ programaAcademico: programaAcademico });
+                this.setState({ habilitado: habilitado });
+                this.setState({ modalidadArray: modalidadArray });
+                this.setState({ cuotaArray: cuotaArray });
+                this.setState({ moduloArray: moduloArray });
+                this.setState({ HorasArray: HorasArray });
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops..',
+                    text: temp['data'] ,
+                })
             }
-            // console.log(responseJson['id']);
-            // console.log(responseJson['Servicios']);
-            // console.log(responseJson['habilitado']);
-            this.setState({ id: id });
-            this.setState({ registro: registro });
-            this.setState({ evento: evento });
-            this.setState({ programaAcademico: programaAcademico });
-            this.setState({ habilitado: habilitado });
-            this.setState({ modalidadArray: modalidadArray });
-            this.setState({ cuotaArray: cuotaArray });
-            this.setState({ moduloArray: moduloArray });
-            this.setState({ HorasArray: HorasArray });
         } catch (e) {
-            console.log(e);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops..',
+                text:e,
+            })
         }
 
     }
@@ -304,8 +316,8 @@ class Servicios extends React.Component {
                 <NavbarMain />
 
                 { showForm ? 
-                    <section>
-                        <Container className="mt-3 mb-3 border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2" >
+                    <section style={{ marginTop:80}} >
+                     <Container className="mt-3 mb-3 border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2" >
                             <Row className="mt-3 mb-3">
                                 <Col sm >
                                     <Form.Group >
@@ -394,7 +406,7 @@ class Servicios extends React.Component {
 
                 { showTable ? 
 
-                    <section>
+                    <section style={{ marginTop:80}} >
                         <section>
                             <Container className="mt-3 mb-3"> 
                             </Container>

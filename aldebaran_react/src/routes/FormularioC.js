@@ -131,27 +131,41 @@ class FormularioC extends React.Component {
             // const response = await fetch("http://localhost:5000/api/Alumnos")
             const response = await fetch(config.general[0].url + config.general[0].puerto_api + "/api/Alumnos");
             var responseJson = await response.json();
-            let arrayInfo = []
-            for (let index = 0; index < responseJson.length; index++) {
-                let arrayRow = [];
-                arrayRow.push(responseJson[index].idpersona);
-                arrayRow.push(responseJson[index].curp);
-                arrayRow.push(responseJson[index].nombre);
-                arrayRow.push(responseJson[index].appmat);
-                arrayRow.push(responseJson[index].apppat);
-                arrayRow.push(responseJson[index].sexo);
-                var dateNacimiento = new Moment(responseJson[index].fechanacimiento).format('DD/MM/YYYY');
-                arrayRow.push(dateNacimiento);
-                arrayRow.push(responseJson[index].telpar);
-                arrayRow.push(responseJson[index].telcel);
-                arrayRow.push(responseJson[index].email);
-                arrayRow.push(responseJson[index]);
+            var temp = responseJson;
+            if(temp['status'] == 200){
+                responseJson = responseJson['data']
+                let arrayInfo = []
+                for (let index = 0; index < responseJson.length; index++) {
+                    let arrayRow = [];
+                    arrayRow.push(responseJson[index].idpersona);
+                    arrayRow.push(responseJson[index].curp);
+                    arrayRow.push(responseJson[index].nombre);
+                    arrayRow.push(responseJson[index].appmat);
+                    arrayRow.push(responseJson[index].apppat);
+                    arrayRow.push(responseJson[index].sexo);
+                    var dateNacimiento = new Moment(responseJson[index].fechanacimiento).format('DD/MM/YYYY');
+                    arrayRow.push(dateNacimiento);
+                    arrayRow.push(responseJson[index].telpar);
+                    arrayRow.push(responseJson[index].telcel);
+                    arrayRow.push(responseJson[index].email);
+                    arrayRow.push(responseJson[index]);
 
-                arrayInfo.push(arrayRow);
+                    arrayInfo.push(arrayRow);
+                }
+                this.setState({ informacion: arrayInfo })
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops..',
+                    text: temp['data'] ,
+                })
             }
-            this.setState({ informacion: arrayInfo })
         } catch (e) {
-            console.log(e);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops..',
+                text:e,
+            })
         }
     }
     ver(item) {
@@ -349,46 +363,6 @@ class FormularioC extends React.Component {
 
     SendDatos() {
         console.log("Esta funcion deberia de mandar la informacion al api");
-
-        // let data = {
-        //     //Datos de entrada del alumno
-        //     n_max_estudios: this.state.n_max_estudios,
-        //     modalidad: this.state.modalidad,
-        //     file_fotografia: this.state.file_fotografia,
-        //     email_Alumno: this.state.email_Alumno,
-        //     curp_Alumno: this.state.curp_Alumno,
-        //     fileCurp_Alumno: this.state.fileCurp_Alumno,
-        //     genero: this.state.genero,
-        //     nombre_Alumno: this.state.nombre_Alumno,
-        //     appPat_Alumno: this.state.appPat_Alumno,
-        //     appMat_Alumno: this.state.appMat_Alumno,
-        //     fechaNac_Alumno: this.state.fechaNac_Alumno,
-        //     edad_Alumno: this.state.edad_Alumno,
-        //     telPar_Alumno: this.state.telPar_Alumno,
-        //     telCel_Alumno: this.state.telCel_Alumno,
-        //     //Variables para el domicilio del alumno
-        //     calle_Alumno: this.state.calle_Alumno,
-        //     num_Alumno: this.state.num_Alumno,
-        //     col_Alumno: this.state.col_Alumno,
-        //     cp_Alumno: this.state.cp_Alumno,
-        //     municipio_Alumno: this.state.municipio_Alumno,
-        //     //Contacto de emergencia
-        //     nombre_Emerge: this.state.nombre_Emerge,
-        //     appPat_Emerge: this.state.appPat_Emerge,
-        //     appMat_Emerge: this.state.appMat_Emerge,
-        //     telContacto_Emerge: this.state.telContacto_Emerge,
-        //     email_Emerge: this.state.email_Emerge
-        // };
-        // let formData = new FormData()
-        // formData.set('data', data);
-        // axios.post(url, {
-        //     data, headers: {'content-type': 'multipart/form-data'}
-        // })
-        //     .then(res => {
-        //         console.log(res);
-        //         console.log(res.data);
-        //     }).catch(function (error) {
-        //     });
         var nacimiento=Moment(this.state.fechaNac_Alumno);
         var hoy=Moment();
         var anios=hoy.diff(nacimiento,"years");
@@ -604,11 +578,12 @@ class FormularioC extends React.Component {
         let { MaxEstudiosOp } = this.state
         let {situacionAcademica} = this.state
         return (
-            <main>
-                <section>
-                    <NavbarMain />
-                </section>
-                <section>
+            <main >
+                <header>
+                    <NavbarMain  />
+                </header>
+
+                {/* <section >
                     <Modal show={this.state.modalShow} onHide={() => this.setState({ modalShow: false })}>
                         <Modal.Header closeButton>
                             <Modal.Title>Modal heading</Modal.Title>
@@ -626,10 +601,10 @@ class FormularioC extends React.Component {
                             </Button>
                         </Modal.Footer>
                     </Modal>
-                </section>
+                </section> */}
 
                 {showForm ?
-                    <section>
+                    <section style={{ marginTop:80}} >
                         <Container className="mt-3 mb-3 border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2">
                             <Form>
                                 {/* <Row>
@@ -929,15 +904,15 @@ class FormularioC extends React.Component {
                 }
                 {showTable ?
 
-                    <section>
+                    <section style={{ marginTop:80}} >
                         <section>
                             <Container className="mt-3 mb-3">
                             </Container>
                         </section>
                         <Container className="border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2" >
-                            <Row className="mt-3 mb-3">
-                                <Col sm>
-                                    <ButtonGroup aria-label="Basic example" >
+                            <Row className="mt-3 mb-3"   >
+                                <Col sm >
+                                    <ButtonGroup aria-label="Basic example"  >
                                         <Button variant="secondary" onClick={() => this.ShowForm(1)}>
                                             Registrar &nbsp;&nbsp;<i className="bi bi-plus-circle-fill "></i>
                                         </Button>

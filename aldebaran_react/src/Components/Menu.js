@@ -16,7 +16,7 @@ class MainApp extends React.Component {
     }
     render() {
         return (
-            <main>
+            <main style={{ marginTop:80}} >
                 <CardGroup>
                     <Card style={{ borderColor: "#A80000" }}>
                         <Card.Img

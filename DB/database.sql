@@ -87,7 +87,7 @@ CREATE TABLE PAGOS(
 	FechaHoraTicket  timestamp,
 	fechaHoraRegistro timestamp,
 	FECHA_INICIO timestamp,
-	FECHA_TÉRMINO timestamp
+	FECHA_TERMINO timestamp
 );
 
 

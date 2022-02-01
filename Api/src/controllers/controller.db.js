@@ -169,6 +169,18 @@ const getDataUsers = async ( curp ) => {
         "data":data_Full
     }
 }
+const getPagos = async () => {
+    // const response = await pool.query('SELECT * FROM pagos  ORDER BY idpagos DESC');
+    var querySQL ='SELECT * FROM pagos INNER JOIN ServicioEducativo ON   pagos.idserviciosedufk = ServicioEducativo.idserviciosedu ORDER BY idpagos DESC;';
+    const response = await pool.query(querySQL);
+
+    var data = response.rows;
+    var bdPagos = []
+    for (let index = 0; index < data.length; index++) {
+        bdPagos.push(data[index]);
+    }
+    return {"Info":bdPagos};
+};
 
 module.exports = {
     Home,
@@ -179,5 +191,6 @@ module.exports = {
     createServicio,
     createIngreso,
     getPathFile,
-    getDataUsers
+    getDataUsers,
+    getPagos
 };

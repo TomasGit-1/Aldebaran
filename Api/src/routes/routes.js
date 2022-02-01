@@ -16,19 +16,18 @@ routes.get('/one' , (req, res)=> {
 
 routes.get('/Servicios',  (req, res )=> {
     db.getServicios().then(respuesta =>{
-        // res.json({ "status": 200 , "Servicios":respuesta});
-        res.json(respuesta);
+        res.json({ "status": 200 , "data":respuesta});
     }).catch(error =>{
-        console.log(error);
+        res.json({ "status": 400 , "data":error.message});
     })
 });
 
 routes.get('/Alumnos',  (req, res )=> {
     db.getAlumnos().then(respuesta =>{
-        // res.json({ "status": 200 , "Servicios":respuesta});
-        res.json(respuesta['Info']);
+        res.json({ "status": 200 , "data":respuesta['Info']});
     }).catch(error =>{
-        console.log(error);
+        res.json({ "status": 400 , "data":error.message});
+
     })
 });
 
@@ -242,6 +241,15 @@ routes.post('/AlumnoJoin',  (req, res )=> {
     })
 });
 
+
+routes.get('/Pagos',  (req, res )=> {
+    db.getPagos().then(respuesta =>{
+        res.json({ "status": 200 , "data":respuesta['Info']});
+
+    }).catch(error =>{
+        res.json({ "status": 400 , "data":error.message});
+    })
+});
 
 
 module.exports = routes;
