@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import { Button, Form, Container, Row, Col, ButtonGroup, Table, Dropdown, Modal  } from 'react-bootstrap'
+import { Button, Form, Container, Row, Col, ButtonGroup, Table, Dropdown, Modal ,Accordion  } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2'
 import Moment from 'moment'
@@ -15,20 +15,8 @@ class FormularioC extends React.Component {
         super(props);
         this.state = {
             informacion: [],
-            // titles: [
-            //     { value: 0, text: "Datos personales" },
-            //     { value: 1, text: "Formacion Academica" },
-            //     { value: 2, text: "Datos laborales" },
-            //     { value: 3, text: "Información Adicional" }
-            // ],
-            //Variables para el puerto apu
+         
             urlApi: "",
-            // titles: [
-            //     { value: 0, text: "Datos personales" },
-            //     { value: 1, text: "Formacion Academica" },
-            //     { value: 2, text: "Datos laborales" },
-            //     { value: 3, text: "Información Adicional" }
-            // ],
             situacionAcademica:[
                 "Estudiante (Cursando) ",
                 "Pasante",
@@ -59,6 +47,8 @@ class FormularioC extends React.Component {
             edad_Alumno: 0,
             telPar_Alumno: "",
             telCel_Alumno: "",
+
+            lugarNacimiento:"",
 
             //Variables para el domicilio del alumno
             calle_Alumno: "",
@@ -419,10 +409,25 @@ class FormularioC extends React.Component {
 
     }).then(function (response) {
             console.log("Aqui");
-           
-        }).catch(function (error) {
-            console.log(error.message)
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Servicio Agregado',
+            showConfirmButton: false,
+            timer: 1500
         })
+        this.setState({
+            showForm: false,
+            showTable: true,
+        });
+    }).catch(function (e) {
+        console.log(e);
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops..',
+            text:e,
+        })
+    })
     }
     //Esta funcion nos ayuda a obtener todos los datos del formulario
     //Evetos onChange para obtener los datos con React Js
@@ -538,7 +543,9 @@ class FormularioC extends React.Component {
             this.setState({ puesto : event.target.value });
         } else if (data === "laboralTelefono") {
             this.setState({ telefonoTra: event.target.value });
-        } 
+        } else if(data === "lugarNacimiento"){
+            this.setState({ lugarNacimiento: event.target.value });
+        }
     }
     getDownloadFile  = async (curp , tipo) => {
         var formData = new FormData();
@@ -582,61 +589,76 @@ class FormularioC extends React.Component {
                 <header>
                     <NavbarMain  />
                 </header>
-
-                {/* <section >
-                    <Modal show={this.state.modalShow} onHide={() => this.setState({ modalShow: false })}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Modal heading</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <PDFAlumno />
-
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={() => this.setState({ modalShow: false })}>
-                                Close
-                            </Button>
-                            <Button variant="primary" onClick={() => this.setState({ modalShow: true })}>
-                                Save Changes
-                            </Button>
-                        </Modal.Footer>
-                    </Modal>
-                </section> */}
-
                 {showForm ?
                     <section style={{ marginTop:80}} >
                         <Container className="mt-3 mb-3 border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2">
+
+                             
                             <Form>
-                                {/* <Row>
-                                        <Alert className="mt-2 " variant={"info"} style={{ color: '#00' }}>
-                                            <h5>Datos personales</h5>
-                                        </Alert >
-                                    </Row> */}
-                                <div className="alert alert-info mt-2" role="alert">
-                                    Datos personales
+                                <Accordion>
+                                    <Accordion.Item eventKey="0">
+                                        <Accordion.Header>Accordion Item #1</Accordion.Header>
+                                        <Accordion.Body>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                                            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                                            commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+                                            velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+                                            cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                                            est laborum.
+                                        </Accordion.Body>
+                                    </Accordion.Item>
+                                    <Accordion.Item eventKey="1">
+                                        <Accordion.Header>Accordion Item #2</Accordion.Header>
+                                        <Accordion.Body>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                                        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+                                        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+                                        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                                        est laborum.
+                                        </Accordion.Body>
+                                    </Accordion.Item>
+                                    <Accordion.Item eventKey="1">
+                                        <Accordion.Header>Accordion Item #2</Accordion.Header>
+                                        <Accordion.Body>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                                        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+                                        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+                                        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                                        est laborum.
+                                        </Accordion.Body>
+                                    </Accordion.Item>
+                                </Accordion>
+                              
+                                <div className="alert mt-2" role="alert" style={{background: ' #ceac00' ,  color: '#000'}}> 
+                                    Datos personales del participante
                                 </div>
                                 <Row className="mt-3">
                                     <Col sm >
                                         <Form.Group controlId="formFile1" className="mb-3">
-                                            <Form.Label className="h5">Fotografía *</Form.Label>
+                                            <Form.Label className="h6">Fotografía <small style={{ color:"#600101" }}>*</small> </Form.Label>
                                             <Form.Control type="file" accept="image/*" onChange={this.uploadPhoto} />
                                         </Form.Group>
                                     </Col>
                                     <Col sm >
                                         <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Email</Form.Label>
+                                            <Form.Label className="h6">Email <small style={{ color:"#600101" }}>*</small>  </Form.Label>
                                             <Form.Control type="email" placeholder="Email" onChange={(evt) => this.dataForm0(evt, "email")} />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
                                         <Form.Group >
-                                            <Form.Label className="h5">Curp</Form.Label>
+                                            <Form.Label className="h6">Curp <small style={{ color:"#600101" }}>*</small>  </Form.Label>
                                             <Form.Control type="text" placeholder="Curp" onChange={(evt) => this.dataForm0(evt, "curp")} />
                                         </Form.Group>
                                     </Col>
                                     <Col sm >
                                         <Form.Group controlId="formFile2" className="mb-3">
-                                            <Form.Label className="h5">Archivo de curp *</Form.Label>
+                                            <Form.Label className="h6">Archivo de curp <small style={{ color:"#600101" }}>*</small> </Form.Label>
                                             <Form.Control type="file" accept=".pdf" onChange={this.uploadFileCurp} />
                                         </Form.Group>
                                     </Col>
@@ -644,7 +666,7 @@ class FormularioC extends React.Component {
                                 <Row>
                                     <Col sm>
                                         <Form.Group>
-                                            <Form.Label className="h5" >Genero</Form.Label>
+                                            <Form.Label className="h6" >Genero <small style={{ color:"#600101" }}>*</small> </Form.Label>
                                             {/* <Select   options={this.state.options}  /> */}
                                             <Form.Select aria-label="Default select example" onChange={this.SeleccGenero}>
                                                 <option>Seleccione una opcion</option>
@@ -656,19 +678,19 @@ class FormularioC extends React.Component {
                                     </Col>
                                     <Col sm>
                                         <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Nombre</Form.Label>
+                                            <Form.Label className="h6">Nombre <small style={{ color:"#600101" }}>*</small> </Form.Label>
                                             <Form.Control type="text" placeholder="Nombre" onChange={(evt) => this.dataForm0(evt, "nombre")} />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
                                         <Form.Group className="mb-3" >
-                                            <Form.Label className="h5">Apellido paterno</Form.Label>
+                                            <Form.Label className="h6">Apellido paterno <small style={{ color:"#600101" }}>*</small> </Form.Label>
                                             <Form.Control type="text" placeholder="Apellido paterno" onChange={(evt) => this.dataForm0(evt, "appPat")} />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
                                         <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Apellido Materno</Form.Label>
+                                            <Form.Label className="h6">Apellido Materno <small style={{ color:"#600101" }}>*</small> </Form.Label>
                                             <Form.Control type="text" placeholder="Apellido Materno" onChange={(evt) => this.dataForm0(evt, "appMat")} />
                                         </Form.Group>
                                     </Col>
@@ -676,83 +698,89 @@ class FormularioC extends React.Component {
                                 <Row>
                                     <Col sm>
                                         <Form.Group className="mb-3" >
-                                            <Form.Label className="h5">Fecha de nacimiento</Form.Label>
+                                            <Form.Label className="h6">Fecha de nacimiento <small style={{ color:"#600101" }}>*</small>  </Form.Label>
                                             <Form.Control type="date" onChange={(evt) => this.dataForm0(evt, "nacimiento")} />
                                         </Form.Group>
                                     </Col>
-                                    {/* <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Edad</Form.Label>
-                                            <Form.Control type="Number" placeholder="Edad" min="0" max="120" onChange={(evt) => this.dataForm0(evt, "edad")} />
-                                        </Form.Group>
-                                    </Col> */}
                                     <Col sm>
                                         <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Telefono particular</Form.Label>
+                                            <Form.Label className="h5">Lugar de nacimiento <small style={{ color:"#600101" }}>*</small> </Form.Label>
+                                            <Form.Control type="text" placeholder="LugarNacimineto" min="0" max="120" onChange={(evt) => this.dataForm0(evt, "lugarNacimiento")} />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col sm>
+                                        <Form.Group className="mb-3">
+                                            <Form.Label className="h5">Telefono particular </Form.Label>
                                             <Form.Control type="tel" placeholder="Telefono particular" onChange={(evt) => this.dataForm0(evt, "telpar")} />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
                                         <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Telefono celular</Form.Label>
+                                            <Form.Label className="h5">Telefono celular <small style={{ color:"#600101" }}>*</small> </Form.Label>
                                             <Form.Control type="tel" placeholder="Telefono celular" onChange={(evt) => this.dataForm0(evt, "telcel")} />
                                         </Form.Group>
                                     </Col>
                                 </Row>
+                                <div className="alert mt-2" role="alert" style={{background: ' #ceac00' ,  color: '#000'}}> 
+                                    Domicilio
+                                </div>
                                 <Row >
                                     <Col sm>
                                         <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Calle</Form.Label>
+                                            <Form.Label className="h5">Calle <small style={{ color:"#600101" }}>*</small></Form.Label>
                                             <Form.Control type="text" placeholder="Calle" onChange={(evt) => this.dataForm0(evt, "calle")} />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
                                         <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Numero</Form.Label>
+                                            <Form.Label className="h5">Numero <small style={{ color:"#600101" }}>*</small></Form.Label>
                                             <Form.Control type="Number" placeholder="Numero" min="0" onChange={(evt) => this.dataForm0(evt, "numero")} />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
                                         <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Colonia</Form.Label>
+                                            <Form.Label className="h5">Colonia <small style={{ color:"#600101" }}>*</small></Form.Label>
                                             <Form.Control type="text" placeholder="Colonia" onChange={(evt) => this.dataForm0(evt, "colonia")} />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
                                         <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Codigo postal</Form.Label>
+                                            <Form.Label className="h5">Codigo postal <small style={{ color:"#600101" }}>*</small></Form.Label>
                                             <Form.Control type="number" placeholder="Codigo postal" onChange={(evt) => this.dataForm0(evt, "cp")} />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
                                         <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Municipio</Form.Label>
+                                            <Form.Label className="h5">Municipio <small style={{ color:"#600101" }}>*</small></Form.Label>
                                             <Form.Control type="text" placeholder="Municipio" onChange={(evt) => this.dataForm0(evt, "municipio")} />
                                         </Form.Group>
                                     </Col>
                                 </Row>
-                                <div className="alert alert-info mt-2" role="alert">
+                                
+                                
+                                <div className="alert mt-2" role="alert" style={{background: ' #ceac00' ,  color: '#000'}}> 
                                     Contacto de emergencia
                                 </div>
+
                                 <Row>
                                     {/* <Alert className="mt-2 " variant={"info"} style={{ color: '#00' }}>
                                             <h5 >Contacto de emergencia</h5>
                                         </Alert> */}
                                     <Col sm>
                                         <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Nombre</Form.Label>
+                                            <Form.Label className="h5">Nombre <small style={{ color:"#600101" }}>*</small>  </Form.Label>
                                             <Form.Control type="text" placeholder="Nombre" onChange={(evt) => this.dataForm0(evt, "nombre_Emerge")} />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
                                         <Form.Group className="mb-3" >
-                                            <Form.Label className="h5">Apellido paterno</Form.Label>
+                                            <Form.Label className="h5">Apellido paterno <small style={{ color:"#600101" }}>*</small> </Form.Label>
                                             <Form.Control type="text" placeholder="Apellido paterno" onChange={(evt) => this.dataForm0(evt, "appPat_Emerge")} />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
                                         <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Apellido Materno</Form.Label>
+                                            <Form.Label className="h5">Apellido Materno <small style={{ color:"#600101" }}>*</small> </Form.Label>
                                             <Form.Control type="text" placeholder="Apellido Materno" onChange={(evt) => this.dataForm0(evt, "appMat_Emerge")} />
                                         </Form.Group>
                                     </Col>
@@ -760,26 +788,22 @@ class FormularioC extends React.Component {
                                 <Row>
                                     <Col sm>
                                         <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Telefono de contacto</Form.Label>
+                                            <Form.Label className="h5">Telefono de contacto <small style={{ color:"#600101" }}>*</small>  </Form.Label>
                                             <Form.Control type="tel" placeholder="Telefono de contacto" onChange={(evt) => this.dataForm0(evt, "telContacto_Emerge")} />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
                                         <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Email</Form.Label>
+                                            <Form.Label className="h5">Email <small style={{ color:"#600101" }}>*</small> </Form.Label>
                                             <Form.Control type="email" placeholder="Email" onChange={(evt) => this.dataForm0(evt, "email_Emerge")} />
                                         </Form.Group>
                                     </Col>
                                 </Row>
 
 
-                                {/* <Row>
-                                        <Alert className="mt-2 " variant={"info"} style={{ color: '#00' }}>
-                                            <h5>Formacion academica del alumno </h5>
-                                        </Alert >
-                                    </Row> */}
-                                <div className="alert alert-info mt-2" role="alert">
-                                    Formacion academica del alumno
+    
+                                <div className="alert mt-2" role="alert" style={{background: ' #ceac00' ,  color: '#000'}}> 
+                                   Formacion academica del alumno
                                 </div>
                                 <Row>
                                     <Col sm className="mt-3">
@@ -842,7 +866,7 @@ class FormularioC extends React.Component {
                                             <h5>Datos laborales</h5>
                                         </Alert >
                                     </Row> */}
-                                <div className="alert alert-info mt-2" role="alert">
+                                <div className="alert mt-2" role="alert" style={{background: ' #ceac00' ,  color: '#000'}}> 
                                     Datos laborales
                                 </div>
                                 <Row>

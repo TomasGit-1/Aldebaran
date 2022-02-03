@@ -173,7 +173,12 @@ class Servicios extends React.Component {
                                 showForm: false,
                                 showTable: true,
                             });
-                        }).catch(function (error) {
+                        }).catch(function (e) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops..',
+                                text:e,
+                            })
                         });
 
                 }
@@ -224,7 +229,12 @@ class Servicios extends React.Component {
                         showConfirmButton: false,
                         timer: 1500
                     })
-                }).catch(function (error) {
+                }).catch(function (e) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops..',
+                        text:e,
+                    })
                     
                 });
                 
