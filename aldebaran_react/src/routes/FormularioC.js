@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import { Button, Form, Container, Row, Col, ButtonGroup, Table, Dropdown, Modal ,Accordion  } from 'react-bootstrap'
+import { Button, Form, Container, Row, Col, ButtonGroup, Table, Dropdown, Modal, Accordion } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2'
 import Moment from 'moment'
@@ -14,41 +14,59 @@ class FormularioC extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            informacion: [],
-         
-            urlApi: "",
-            situacionAcademica:[
+            situacionAcademica: [
                 "Estudiante (Cursando) ",
                 "Pasante",
-                 "Titulado" ,            
+                "Titulado",
             ],
             MaxEstudiosOp: [
-                 "Basico",
+                "Basico",
                 "Medio Superior",
-                 "Superior" ,
-                 "Posgrado" 
+                "Superior",
+                "Posgrado"
             ],
-            puertoApi: "",
-
-            //Mensajes que aparecen en la ionterfaz
-            msgServicio: "Sólo aparecen los servicios educativos disponibles a la fecha de registro. No podrás registrarse a alguno diferente al aprobado por la Coordinación.",
-            inputValue: "Bienvenido",
-            msg:"",
-            //Datos de entrada del alumno
+            sistemaProcendencia: [
+                "Colegio de Bachilleres del Estado de Oaxaca",
+                "Colegio de Estudios Cientificos y Tecnológicos del Estado de Oaxaca",
+                "Centro de Bachillerato Tecnologico Industrial y Servicios ",
+                "Universidad Autónoma Benito Juárez de Oaxaca",
+                "Preparatorias Abiertas de Oaxaca",
+                "Otro"
+            ],
+            MedioInformacion: [
+                "Cartel",
+                "Radio",
+                "Redes sociales:Facebook",
+                "Página web",
+                "Visita en lugar de trabajo",
+                "Familiar/es o amigo/s",
+                "Stand o feria",
+                "Periódico",
+                "Llamda telefonica",
+                "Correo electronico",
+                "En instalaciones del CVDR Unidad Oaxaca",
+                "Egresado del CEC-CVDR-IPN",
+                "Otro"
+            ],
+            informacion: [],
+            data_form_uno: [],
+            data_form_dos: [],
+            //File load
             file_fotografia: null,
+            fileCurp_Alumno: null,
+
+
             email_Alumno: "",
             curp_Alumno: "",
-            fileCurp_Alumno: null,
             genero: "",
             nombre_Alumno: "",
             appPat_Alumno: "",
             appMat_Alumno: "",
             fechaNac_Alumno: "",
-            edad_Alumno: 0,
+            lugarNacimiento: "",
             telPar_Alumno: "",
             telCel_Alumno: "",
 
-            lugarNacimiento:"",
 
             //Variables para el domicilio del alumno
             calle_Alumno: "",
@@ -64,65 +82,75 @@ class FormularioC extends React.Component {
             telContacto_Emerge: "",
             email_Emerge: "",
 
-            //Formacion academica
-            n_max_estudios: "",
-            sitAcademico: "",
-            instEducativa: "",
-            anioEgresoi: "",
-            fileEvideciaIPN: null,
 
             //Datos laborales
             nombInstLaboral: "",
             domicilioLaboral: "",
             puesto: "",
             telefonoTra: "",
+
+            //Formacion academica
+            n_max_estudios: "",
+            sitAcademico: "",
+            instEducativa: "",
+            anioEgresoi: "",
+            fileEvideciaIPN: null,
+            sistemaProcendenciaOpcion: "",
+            sistemaProcendenciaOtro: "",
+            UniversidadAspira: "",
+            CarreraApira: "",
+
+
+            //Acesso Vehicular 
+            marca_modelo: "",
+            placas: "",
+
+            //Informacion Adicional
+            comoseenterodelcurso: "",
+            comoseenterodelcursoOtro: "",
+            recomendacionCurso: "",
+
+
+
+
+
+            //Show formularios
+            showForm: false,
+            showTable: true,
+            modalShow: false,
+            showF_uno: true,
+            showF_dos: false,
+            showF_tres: false,
+            showF_cuatro: false,
+
             //Validacion
             fileValCurp: false,
             fileValImg: false,
             fileValIpn: false,
 
-            //Show formularios
-            show: false,
-            showForm: false,
-            showTable: true,
-            modalShow: false
-
         };
-        this.SendDatos = this.SendDatos.bind(this);
-        this.handlechange = this.handlechange.bind(this);
-        this.onSeleccion = this.onSeleccion.bind(this);
-        this.uploadPhoto = this.uploadPhoto.bind(this)
-        this.dataForm0 = this.dataForm0.bind(this);
+        //Funciones para el primero formulario
+        this.uploadPhoto = this.uploadPhoto.bind(this);
         this.uploadFileCurp = this.uploadFileCurp.bind(this);
         this.SeleccGenero = this.SeleccGenero.bind(this);
         this.existeCurpAlum = this.existeCurpAlum.bind(this);
-        this.ShowForm = this.ShowForm.bind(this);
-        this.ver = this.ver.bind(this);
-        this.editar = this.editar.bind(this);
-        this.filterInput = this.filterInput.bind(this);
-        this.closeOpenModal = this.closeOpenModal.bind(this);
         this.SeleccMaxEstudios = this.SeleccMaxEstudios.bind(this);
         this.SeleccSituacionAcademina = this.SeleccSituacionAcademina.bind(this);
+        this.SeleccSistemEducativo = this.SeleccSistemEducativo.bind(this);
         this.uploadFileEvidencia = this.uploadFileEvidencia.bind(this);
-        this.getDownloadFile = this.getDownloadFile.bind(this);
+
 
     }
-    /*
-        ===========================================================================
-                Funciones que ayudan en la logica del proyecto
-        ===========================================================================
-    */
-
     componentDidMount() {
         this.apiAlumnos();
     }
+
     apiAlumnos = async () => {
         try {
-            // const response = await fetch("http://localhost:5000/api/Alumnos")
             const response = await fetch(config.general[0].url + config.general[0].puerto_api + "/api/Alumnos");
             var responseJson = await response.json();
             var temp = responseJson;
-            if(temp['status'] == 200){
+            if (temp['status'] == 200) {
                 responseJson = responseJson['data']
                 let arrayInfo = []
                 for (let index = 0; index < responseJson.length; index++) {
@@ -143,28 +171,20 @@ class FormularioC extends React.Component {
                     arrayInfo.push(arrayRow);
                 }
                 this.setState({ informacion: arrayInfo })
-            }else{
+            } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops..',
-                    text: temp['data'] ,
+                    text: temp['data'],
                 })
             }
         } catch (e) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops..',
-                text:e,
+                text: e,
             })
         }
-    }
-    ver(item) {
-        console.log("Se presiono el boton de ver");
-        console.log(item);
-    }
-    editar(item) {
-        console.log("Se presiono el boton de editar");
-        console.log(item);
     }
     ShowForm(num) {
         if (num === 1) {
@@ -172,25 +192,193 @@ class FormularioC extends React.Component {
                 showForm: true,
                 showTable: false,
             });
-        } else if (num === 0) { 
+        } else if (num === 0) {
             this.setState({
                 showForm: false,
                 showTable: true,
             });
         }
     }
-    closeOpenModal(num) {
-        if (num === 1) {
-            this.setState({
-                modalShow: true,
-            });
-        } else if (num === 0) {
-            this.setState({
-                modalShow: true,
-            });
+    dataForm_Uno(event, data) {
+        switch (data) {
+            case "email":
+                this.setState({ email_Alumno: event.target.value });
+                break;
+            case "curp":
+                this.setState({ curp_Alumno: event.target.value });
+                break;
+            case "nombre":
+                this.setState({ nombre_Alumno: event.target.value });
+                break;
+            case "appPat":
+                this.setState({ appPat_Alumno: event.target.value });
+                break;
+            case "appMat":
+                this.setState({ appMat_Alumno: event.target.value });
+                break;
+            case "nacimiento":
+                this.setState({ fechaNac_Alumno: event.target.value });
+                break;
+            case "lugarNacimiento":
+                this.setState({ lugarNacimiento: event.target.value });
+                break;
+            case "telpar":
+                this.setState({ telPar_Alumno: event.target.value });
+                break;
+            case "telcel":
+                this.setState({ telCel_Alumno: event.target.value });
+                break;
+            case "calle":
+                this.setState({ calle_Alumno: event.target.value });
+                break;
+            case "numero":
+                this.setState({ num_Alumno: event.target.value });
+                break;
+            case "colonia":
+                this.setState({ col_Alumno: event.target.value });
+                break;
+            case "cp":
+                this.setState({ cp_Alumno: event.target.value });
+                break;
+            case "municipio":
+                this.setState({ municipio_Alumno: event.target.value });
+                break;
+            default:
+                console.log("No se encuntra la opcion");
         }
     }
-    existeCurpAlum = async () => {
+
+    dataoFrm_Dos(event, data) {
+        switch (data) {
+            case "nombre_Emerge":
+                this.setState({ nombre_Emerge: event.target.value });
+                break;
+            case "appPat_Emerge":
+                this.setState({ appPat_Emerge: event.target.value });
+                break;
+            case "appMat_Emerge":
+                this.setState({ appMat_Emerge: event.target.value });
+                break;
+            case "telContacto_Emerge":
+                this.setState({ telContacto_Emerge: event.target.value });
+                break;
+            case "email_Emerge":
+                this.setState({ email_Emerge: event.target.value });
+                break;
+            case "laboralinstitucion":
+                this.setState({ nombInstLaboral: event.target.value });
+                break;
+            case "laboralDomicilio":
+                this.setState({ domicilioLaboral: event.target.value });
+                break;
+            case "laboralPuesto":
+                this.setState({ puesto: event.target.value });
+                break;
+            case "laboralTelefono":
+                this.setState({ telefonoTra: event.target.value });
+                break;
+            default:
+                console.log("No se encuntra la opcion");
+        }
+    }
+    dataoForm_tres(event, data) {
+        switch (data) {
+            case "sistemaEducativoOtro":
+                this.setState({ nombre_Emerge: event.target.value });
+                break;
+            case "InstitucionEducativa":
+                this.setState({ appPat_Emerge: event.target.value });
+                break;
+            case "anioegreso":
+                this.setState({ appMat_Emerge: event.target.value });
+                break;
+            case "universidadAspira":
+                this.setState({ telContacto_Emerge: event.target.value });
+                break;
+            case "carreraAspiras":
+                this.setState({ email_Emerge: event.target.value });
+                break;
+
+            default:
+                console.log("No se encuntra la opcion");
+        }
+    }
+    dataoForm_cuatro(event, data) {
+        switch (data) {
+            case "sistemaEducativoOtro":
+                this.setState({ nombre_Emerge: event.target.value });
+                break;
+            case "InstitucionEducativa":
+                this.setState({ appPat_Emerge: event.target.value });
+                break;
+            case "anioegreso":
+                this.setState({ appMat_Emerge: event.target.value });
+                break;
+            case "universidadAspira":
+                this.setState({ telContacto_Emerge: event.target.value });
+                break;
+            case "carreraAspiras":
+                this.setState({ email_Emerge: event.target.value });
+                break;
+
+            default:
+                console.log("No se encuntra la opcion");
+        }
+    }
+    uploadFileEvidencia(event) {
+        var evidencia = event.target.value;
+        if (evidencia === "") {
+            console.log("No se ha cargado ninguna archivo");
+            // this.setState({ fileEvideciaIPN: "false" });
+        } else {
+            console.log("Curp crgada");
+            this.setState({ fileEvideciaIPN: event.target.files[0] });
+        }
+    }
+    uploadPhoto(event) {
+        var photoUser = event.target.value;
+        if (photoUser === "") {
+            this.setState({ fileValImg: false });
+            console.log("No se ha cargado ninguna imagen");
+        } else {
+            console.log("Imagen cargada");
+            console.log(event.target.value);
+            this.setState({ fileValImg: true });
+            this.setState({ file_fotografia: event.target.files[0] });
+        }
+    }
+    uploadFileCurp(event) {
+        var curp = event.target.value;
+
+        if (curp === "") {
+            this.setState({ fileValCurp: false });
+            console.log("No se ha cargado ninguna archivo");
+        } else {
+            console.log("Curp crgada");
+            this.setState({ fileValCurp: true });
+            this.setState({ fileCurp_Alumno: event.target.files[0] });
+        }
+    }
+    SeleccGenero(event) {
+        console.log(event.target.value);
+        this.setState({ genero: event.target.value });
+    }
+    SeleccMaxEstudios(event) {
+        if (event.target.value !== "Seleccione una opcion") {
+            this.setState({ n_max_estudios: event.target.value });
+        }
+    }
+    SeleccSituacionAcademina(event) {
+        if (event.target.value !== "Seleccione una opcion") {
+            this.setState({ sitAcademico: event.target.value });
+        }
+    }
+    SeleccSistemEducativo(event) {
+        if (event.target.value !== "Seleccione una opcion") {
+            this.setState({ sitAcademico: event.target.value });
+        }
+    }
+    existeCurpAlum = async (pos) => {
         let validacion = {
             curpAlum: this.state.curp_Alumno,
         }
@@ -210,7 +398,24 @@ class FormularioC extends React.Component {
                 console.log(error.message)
             })
             if (respuesta === 0) {
-                this.validarCamposVacion();
+                var campos = new Map();
+                campos.set('Fotografia', this.state.file_fotografia);
+                campos.set('email', this.state.email_Alumno);
+                campos.set('Curp', this.state.curp_Alumno);
+                campos.set('Archivo Curp ', this.state.fileCurp_Alumno);
+                campos.set('Genero ', this.state.genero);
+                campos.set('Nombre ', this.state.nombre_Alumno);
+                campos.set('Apellido paterno ', this.state.appPat_Alumno);
+                campos.set('Apellido Materno ', this.state.appMat_Alumno);
+                campos.set('Fecha de nacimiento ', this.state.fechaNac_Alumno);
+                campos.set('Lugar de nacimiento', this.state.lugarNacimiento);
+                campos.set('Telefono celular', this.state.telCel_Alumno);
+                campos.set('Calle', this.state.calle_Alumno);
+                campos.set('Numero', this.state.num_Alumno);
+                campos.set('Colonia', this.state.col_Alumno);
+                campos.set('Codigo postal', this.state.cp_Alumno);
+                campos.set('Municipio', this.state.municipio_Alumno);
+                this.validarForm_Uno(campos, pos);
                 console.log("No existe la curp y si podemos agregar")
             } else {
                 var msg = 'la curp ya esta registrada';
@@ -222,127 +427,20 @@ class FormularioC extends React.Component {
             }
         }
     }
-    filterInput() {
-        $(document).ready(function () {
-            $("#myInput").on("keyup", function () {
-                var value = $(this).val().toLowerCase();
-                $("#myTable tr").filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                })
-            })
-        })
-    }
-    validarCamposVacion() {
-
-        let validacion = {
-            //Datos de entrada del alumno
-            fileImg: this.state.file_fotografia,
-            email_Alumno: this.state.email_Alumno,
-            curp_Alumno: this.state.curp_Alumno,
-            fileCurp: this.state.fileCurp_Alumno,
-            genero: this.state.genero,
-            nombre_Alumno: this.state.nombre_Alumno,
-            appPat_Alumno: this.state.appPat_Alumno,
-            appMat_Alumno: this.state.appMat_Alumno,
-            fechaNac_Alumno: this.state.fechaNac_Alumno,
-            // edad_Alumno: this.state.edad_Alumno,
-            telPar_Alumno: this.state.telPar_Alumno,
-            telCel_Alumno: this.state.telCel_Alumno,
-
-            //Variables para el domicilio del alumno
-            calle_Alumno: this.state.calle_Alumno,
-            num_Alumno: this.state.num_Alumno,
-            col_Alumno: this.state.col_Alumno,
-            cp_Alumno: this.state.cp_Alumno,
-            municipio_Alumno: this.state.municipio_Alumno,
-
-            //Contacto de emergencia
-            nombre_Emerge: this.state.nombre_Emerge,
-            appPat_Emerge: this.state.appPat_Emerge,
-            appMat_Emerge: this.state.appMat_Emerge,
-            telContacto_Emerge: this.state.telContacto_Emerge,
-            email_Emerge: this.state.email_Emerge,
-
-            //Formacion academica
-            n_max_estudios: this.state.n_max_estudios,
-            sitAcademico: this.state.sitAcademico,
-            instEducativa: this.state.instEducativa,
-            anioEgresoi: this.state.anioEgresoi,
-            fileEvideciaIPN: this.state.fileEvideciaIPN,
-
-            //Datos laborales
-            nombInstLaboral: this.state.nombInstLaboral,
-            domicilioLaboral: this.state.domicilioLaboral,
-            puesto: this.state.puesto,
-            telefonoTra: this.state.fileEvideciaIPN,
-        };
-        let fileVali = {
-            fileValCurp: this.state.fileValCurp,
-            fileValImg: this.state.fileValImg,
+    validarForm_Uno(mapData, pos) {
+        let msg = "";
+        for (let clave of mapData.keys()) {
+            var valor = mapData.get(clave);
+            if (valor === null || valor === "") {
+                msg = `El campo :${clave} esta vacio`;
+                break;
+            }
         }
-        console.log("Vamos a validar que la informacion");
-        /*
-            Omitimos validar los campos:
-            1.- Telefono particular
-
-            Formacion academica 
-            institucion educativa
-            año de agreso
-            evidencia en caso de ser IPn
-
-            Datos laborales
-        
-        */
-        var msg = "";
-        if (!fileVali.fileValImg) {
-            msg = "Cargue la fotografia del alumno"
-        } else if (!fileVali.fileValCurp) {
-            msg = "cargue la curp en formato pdf";
-        } else if (validacion.email_Alumno === "") {
-            msg = 'El campo email  esta vacio';
-        } else if (validacion.genero === "") {
-            msg = 'Seleccione un genero';
-        } else if (validacion.nombre_Alumno === "") {
-            msg = 'El campo nombre  esta vacio';
-        } else if (validacion.appPat_Alumno === "") {
-            msg = 'El campo apellido paterno esta vacio';
-        } else if (validacion.appMat_Alumno === "") {
-            msg = 'El campo apellido materno esta vacio';
-        } else if (validacion.fechaNac_Alumno === "") {
-            msg = 'Seleccione la fecha de nacimiento';
-        } else if (validacion.telCel_Alumno === "") {
-            msg = 'El campo telefono celular  esta vacio';
-        } else if (validacion.calle_Alumno === "") {
-            msg = 'El campo calle  esta vacio';
-        } else if (validacion.num_Alumno === "") {
-            msg = 'El campo numero  esta vacio';
-        } else if (validacion.col_Alumno === "") {
-            msg = 'El campo colonia esta vacio';
-        } else if (validacion.cp_Alumno === "") {
-            msg = 'El campo codigo postal esta vacio';
-        } else if (validacion.municipio_Alumno === "") {
-            msg = 'El campo municipio esta vacio';
-        } else if (validacion.nombre_Emerge === "") {
-            msg = 'El campo nombre del contacto de emergencia esta vacio';
-        } else if (validacion.appPat_Emerge === "") {
-            msg = 'El campo apellido paterno del contacto de emergencia esta vacio';
-        } else if (validacion.appMat_Emerge === "") {
-            msg = 'El campo apellido materno del contacto de emergencia esta vacio';
-        } else if (validacion.telContacto_Emerge === "") {
-            msg = 'El campo telefono del contacto de emergencia esta vacio';
-        } else if (validacion.email_Emerge === "") {
-            msg = 'El campo email del contacto de emergencia esta vacio';
-        } else if (validacion.n_max_estudios === "") {
-            msg = 'Seleccione un nivel maximo de estudios';
-        } else if (validacion.sitAcademico === "") {
-            msg = 'Seleccione Situacion academica ';
-        }else{
-            msg="";
-        }
-        if (msg === ""){
-            this.SendDatos();
+        if (msg === "") {
             console.log("Enviamos datos para insertar");
-        }else{
+            this.setState({ data_form_uno: mapData });
+            this.ShowView(pos);
+        } else {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops..',
@@ -350,585 +448,539 @@ class FormularioC extends React.Component {
             })
         }
     }
-
-    SendDatos() {
-        console.log("Esta funcion deberia de mandar la informacion al api");
-        var nacimiento=Moment(this.state.fechaNac_Alumno);
-        var hoy=Moment();
-        var anios=hoy.diff(nacimiento,"years");
-        console.log();
-        var url = config.general[0].url + config.general[0].puerto_api + "/Api/createRegistro";
-        var bodyFormData = new FormData();
-        bodyFormData.append('fileImg', this.state.file_fotografia);
-        bodyFormData.append('emailAlum', this.state.email_Alumno);
-        bodyFormData.append('curp', this.state.curp_Alumno);
-        bodyFormData.append('fileCurp', this.state.fileCurp_Alumno);
-
-        bodyFormData.append('genero', this.state.genero);
-        bodyFormData.append('nombreAlum', this.state.nombre_Alumno);
-        bodyFormData.append('appPatAlum', this.state.appPat_Alumno);
-        bodyFormData.append('appMatAlum', this.state.appMat_Alumno);
-        bodyFormData.append('fechaNacimiento', this.state.fechaNac_Alumno);
-        bodyFormData.append('edad', "");
-        bodyFormData.append('telParticularAlum', this.state.telPar_Alumno);
-        bodyFormData.append('telCelularAlum', this.state.telCel_Alumno);
-
-        bodyFormData.append('calle', this.state.calle_Alumno);
-        bodyFormData.append('NumeroDom', this.state.num_Alumno);
-        bodyFormData.append('colonia', this.state.col_Alumno);
-        bodyFormData.append('codigoPostal', this.state.cp_Alumno);
-        bodyFormData.append('municipio', this.state.municipio_Alumno);
-
-        //Datos del contacto de emergencia
-        bodyFormData.append('nombreEmergencia', this.state.nombre_Emerge);
-        bodyFormData.append('appPatEmergencia', this.state.appPat_Emerge);
-        bodyFormData.append('appMatEmergencia', this.state.appMat_Emerge);
-        bodyFormData.append('telEmergencia', this.state.telContacto_Emerge);
-        bodyFormData.append('emailEmergencia', this.state.email_Emerge);
-
-        //Formacion academica
-        bodyFormData.append('nivMaxStudy', this.state.n_max_estudios);
-        bodyFormData.append('acadSituacion', this.state.sitAcademico);
-        bodyFormData.append('insEducativa', this.state.instEducativa);
-        bodyFormData.append('anioEgreso', this.state.anioEgresoi);
-        bodyFormData.append('fileEvidencia', this.state.fileEvideciaIPN);
-        
-        //Datos laborales
-        bodyFormData.append('nombreInst', this.state.nombInstLaboral);
-        bodyFormData.append('domicilioInst', this.state.domicilioLaboral);
-        bodyFormData.append('puestoInst', this.state.puesto);
-        bodyFormData.append('telefonoInst', this.state.telefonoTra);
-        // headers: { 'Content-Type': 'application/json' }
-
-        axios({
-            method: 'POST',
-            url: url,
-            data: bodyFormData,
-            // headers: {'content-type': 'multipart/form-data'}
-            headers: { 'Content-Type': 'application/json' }
-
-    }).then(function (response) {
-            console.log("Aqui");
-        Swal.fire({
-            position: 'top-end',
-            icon: 'success',
-            title: 'Servicio Agregado',
-            showConfirmButton: false,
-            timer: 1500
-        })
-        this.setState({
-            showForm: false,
-            showTable: true,
-        });
-    }).catch(function (e) {
-        console.log(e);
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops..',
-            text:e,
-        })
-    })
-    }
-    //Esta funcion nos ayuda a obtener todos los datos del formulario
-    //Evetos onChange para obtener los datos con React Js
-    handlechange(event) {
-        console.log(event.target.value);
-        this.setState({ n_max_estudios: event.target.value });
-    }
-    onSeleccion(event) {
-        console.log(event.target.value);
-        this.setState({ modalidad: event.target.value });
-    }
-    SeleccGenero(event) {
-        console.log(event.target.value);
-        this.setState({ genero: event.target.value });
-    }
-    SeleccMaxEstudios(event) {
-        if(event.target.value !== "Seleccione una opcion"){
-            this.setState({ n_max_estudios: event.target.value });
-        }
-    }
-    SeleccSituacionAcademina(event) {
-        if(event.target.value !== "Seleccione una opcion"){
-            this.setState({ sitAcademico: event.target.value });
-        }
-    }
-    uploadPhoto(event) {
-        var photoUser = event.target.value;
-        console.log(event.target.files[0]);
-
-        if (photoUser === "") {
-            this.setState({ fileValImg: false });
-            console.log("No se ha cargado ninguna imagen");
-        } else {
-            console.log("Imagen cargada");
-            console.log(event.target.value);
-            this.setState({ fileValImg: true });
-            this.setState({ file_fotografia:event.target.files[0] });
-        }
-    }
-    uploadFileCurp(event) {
-        var curp = event.target.value;
-        console.log(event.target.files[0]);
-
-        if (curp === "") {
-            this.setState({ fileValCurp: false });
-            console.log("No se ha cargado ninguna archivo");
-        } else {
-            console.log("Curp crgada");
-            this.setState({ fileValCurp: true });
-            this.setState({ fileCurp_Alumno: event.target.files[0] });
-        }
-    }
-    uploadFileEvidencia(event) {
-        var evidencia = event.target.value;
-        console.log(event.target.files[0]);
-
-        if (evidencia === "") {
-            console.log("No se ha cargado ninguna archivo");
-            this.setState({ fileEvideciaIPN:"false"});
-        } else {
-            console.log("Curp crgada");
-            this.setState({ fileEvideciaIPN:event.target.files[0]});
-        }
-    }
-    dataForm0(event, data) {
-        if (data === "email") {
-            this.setState({ email_Alumno: event.target.value });
-        } else if (data === "curp") {
-            this.setState({ curp_Alumno: event.target.value });
-        } else if (data === "nombre") {
-            this.setState({ nombre_Alumno: event.target.value });
-        } else if (data === "appPat") {
-            this.setState({ appPat_Alumno: event.target.value });
-        } else if (data === "appMat") {
-            this.setState({ appMat_Alumno: event.target.value });
-        } else if (data === "nacimiento") {
-            this.setState({ fechaNac_Alumno: event.target.value });
-        } else if (data === "edad") {
-            this.setState({ edad_Alumno: event.target.value });
-        } else if (data === "telpar") {
-            this.setState({ telPar_Alumno: event.target.value });
-        } else if (data === "telcel") {
-            this.setState({ telCel_Alumno: event.target.value });
-        } else if (data === "calle") {
-            this.setState({ calle_Alumno: event.target.value });
-        } else if (data === "numero") {
-            this.setState({ num_Alumno: event.target.value });
-        } else if (data === "colonia") {
-            this.setState({ col_Alumno: event.target.value });
-        } else if (data === "cp") {
-            this.setState({ cp_Alumno: event.target.value });
-        } else if (data === "municipio") {
-            this.setState({ municipio_Alumno: event.target.value });
-        } else if (data === "nombre_Emerge") {
-            this.setState({ nombre_Emerge: event.target.value });
-        } else if (data === "appPat_Emerge") {
-            this.setState({ appPat_Emerge: event.target.value });
-        } else if (data === "appMat_Emerge") {
-            this.setState({ appMat_Emerge: event.target.value });
-        } else if (data === "telContacto_Emerge") {
-            this.setState({ telContacto_Emerge: event.target.value });
-        } else if (data === "email_Emerge") {
-            this.setState({ email_Emerge: event.target.value });
-        } else if (data === "InstitucionEducativa") {
-            this.setState({ instEducativa : event.target.value });
-        } else if (data === "anioegreso") {
-            this.setState({ anioEgresoi : event.target.value });
-        } else if (data === "laboralinstitucion") {
-            this.setState({ nombInstLaboral: event.target.value });
-        } else if (data === "laboralDomicilio") {
-            this.setState({ domicilioLaboral : event.target.value });
-        } else if (data === "laboralPuesto") {
-            this.setState({ puesto : event.target.value });
-        } else if (data === "laboralTelefono") {
-            this.setState({ telefonoTra: event.target.value });
-        } else if(data === "lugarNacimiento"){
-            this.setState({ lugarNacimiento: event.target.value });
-        }
-    }
-    getDownloadFile  = async (curp , tipo) => {
-        var formData = new FormData();
-        formData.append('curp', curp);
-        formData.append('tipo', tipo);
-        const res = await fetch(
-            config.general[0].url + config.general[0].puerto_api + "/api/downloadFile",
-            {
-                method: 'POST', // or 'PUT'
-                body: formData, // data can be `string` or {object}!
+    ValidarForm_Dos(mapData, pos) {
+        let msg = "";
+        for (let clave of mapData.keys()) {
+            var valor = mapData.get(clave);
+            if (valor === null || valor === "") {
+                msg = `El campo :${clave} esta vacio`;
+                break;
             }
-        )
-        .catch(function(error){
-            console.log(Error);
-        });
-        console.log(res);
-        console.log(res.body);
-        if(res.ok){
-            const blob = await res.blob();
-            // download(blob , 'dlText.jpeg' , "image/jpeg");
-            download(blob );
-        }else{
-            console.log("No se encontro el archivo");
+        }
+        if (msg === "") {
+            console.log("Enviamos datos para insertar");
+            this.setState({ data_form_dos: mapData });
+            this.ShownextView(pos);
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops..',
+                text: msg,
+            })
+        }
+    }
+    form2Validacion(pos) {
+        var campos = new Map();
+        campos.set('Nombre ', this.state.nombre_Emerge);
+        campos.set('Apellido paterno ', this.state.appPat_Emerge);
+        campos.set('Apellido Materno ', this.state.appMat_Emerge);
+        campos.set('Telefono celular', this.state.telContacto_Emerge);
+        campos.set('email', this.state.email_Emerge);
+
+        this.ValidarForm_Dos(campos, pos);
+    }
+    ShowView(num) {
+        this.setState({ fileValCurp: false });
+        this.setState({ fileCurp_Alumno: null });
+        this.setState({ fileValImg: false });
+        this.setState({ file_fotografia: null });
+        if (num === 0) {
+            this.setState({
+                showF_uno: true,
+                showF_dos: false,
+                showF_tres: false,
+                showF_cuatro: false,
+
+            });
+        } else if (num === 1) {
+            this.setState({
+                showF_uno: false,
+                showF_dos: true,
+                showF_tres: false,
+                showF_cuatro: false,
+            });
+        }
+    }
+    ShownextView(num) {
+        if (num === 2) {
+            this.setState({
+                showF_uno: false,
+                showF_dos: false,
+                showF_tres: true,
+                showF_cuatro: false,
+            });
+        } else if (num === 1) {
+            this.setState({
+                showF_uno: false,
+                showF_dos: true,
+                showF_tres: false,
+                showF_cuatro: false,
+            });
+        } else if (num === 3) {
+            this.setState({
+                showF_uno: false,
+                showF_dos: false,
+                showF_tres: false,
+                showF_cuatro: true,
+            });
         }
     }
 
-    /*
-        ===========================================================================
-                    Esta funcion trae toodos los servicios educativos
-                        que esten en la base de datos
-        ===========================================================================
-    */
     render() {
         let { showForm } = this.state
         let { showTable } = this.state
         let { informacion } = this.state
+        let { showF_uno } = this.state
+        let { showF_dos } = this.state
+        let { showF_tres } = this.state
+        let { showF_cuatro } = this.state
+        let { data_form_uno } = this.state
+        let { data_form_dos } = this.state
+
         let { MaxEstudiosOp } = this.state
-        let {situacionAcademica} = this.state
+        let { situacionAcademica } = this.state
+        let { sistemaProcendencia } = this.state
+        let { MedioInformacion } = this.state
+
+
         return (
             <main >
                 <header>
-                    <NavbarMain  />
+                    <NavbarMain />
                 </header>
                 {showForm ?
-                    <section style={{ marginTop:80}} >
+
+                    <section style={{ marginTop: 80 }} >
                         <Container className="mt-3 mb-3 border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2">
+                            {
+                                showF_uno ?
+                                    <div>
+                                        <Form>
+                                            <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
+                                                Datos personales del participante
+                                            </div>
+                                            <Row className="mt-3">
+                                                <Col sm >
+                                                    <Form.Group controlId="formFile1" className="mb-3">
+                                                        <Form.Label className="h6">Fotografía <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                                        <Form.Control type="file" accept="image/*" onChange={this.uploadPhoto} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm >
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Email <small style={{ color: "#600101" }}>*</small>  </Form.Label>
+                                                        <Form.Control type="email" placeholder="Email" value={this.state.email_Alumno} onChange={(evt) => this.dataForm_Uno(evt, "email")} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group >
+                                                        <Form.Label className="h6">Curp <small style={{ color: "#600101" }}>*</small>  </Form.Label>
+                                                        <Form.Control type="text" placeholder="Curp" value={this.state.curp_Alumno} onChange={(evt) => this.dataForm_Uno(evt, "curp")} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm >
+                                                    <Form.Group controlId="formFile2" className="mb-3">
+                                                        <Form.Label className="h6">Archivo de curp <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                                        <Form.Control type="file" accept=".pdf" onChange={this.uploadFileCurp} />
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
+                                            <Row>
+                                                <Col sm>
+                                                    <Form.Group>
+                                                        <Form.Label className="h6" >Genero <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                                        {/* <Select   options={this.state.options}  /> */}
+                                                        <Form.Select aria-label="Default select example" onChange={this.SeleccGenero} value={this.state.genero}>
+                                                            <option>Seleccione una opcion</option>
+                                                            <option value="Mujer">Mujer</option>
+                                                            <option value="Hombre">Hombre</option>
+                                                        </Form.Select>
+                                                    </Form.Group>
 
-                             
-                            <Form>
-                                <Accordion>
-                                    <Accordion.Item eventKey="0">
-                                        <Accordion.Header>Accordion Item #1</Accordion.Header>
-                                        <Accordion.Body>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                                            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                            commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                                            velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                                            cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-                                            est laborum.
-                                        </Accordion.Body>
-                                    </Accordion.Item>
-                                    <Accordion.Item eventKey="1">
-                                        <Accordion.Header>Accordion Item #2</Accordion.Header>
-                                        <Accordion.Body>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                                        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                                        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-                                        est laborum.
-                                        </Accordion.Body>
-                                    </Accordion.Item>
-                                    <Accordion.Item eventKey="1">
-                                        <Accordion.Header>Accordion Item #2</Accordion.Header>
-                                        <Accordion.Body>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                                        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                                        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-                                        est laborum.
-                                        </Accordion.Body>
-                                    </Accordion.Item>
-                                </Accordion>
-                              
-                                <div className="alert mt-2" role="alert" style={{background: ' #ceac00' ,  color: '#000'}}> 
-                                    Datos personales del participante
-                                </div>
-                                <Row className="mt-3">
-                                    <Col sm >
-                                        <Form.Group controlId="formFile1" className="mb-3">
-                                            <Form.Label className="h6">Fotografía <small style={{ color:"#600101" }}>*</small> </Form.Label>
-                                            <Form.Control type="file" accept="image/*" onChange={this.uploadPhoto} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm >
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h6">Email <small style={{ color:"#600101" }}>*</small>  </Form.Label>
-                                            <Form.Control type="email" placeholder="Email" onChange={(evt) => this.dataForm0(evt, "email")} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm>
-                                        <Form.Group >
-                                            <Form.Label className="h6">Curp <small style={{ color:"#600101" }}>*</small>  </Form.Label>
-                                            <Form.Control type="text" placeholder="Curp" onChange={(evt) => this.dataForm0(evt, "curp")} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm >
-                                        <Form.Group controlId="formFile2" className="mb-3">
-                                            <Form.Label className="h6">Archivo de curp <small style={{ color:"#600101" }}>*</small> </Form.Label>
-                                            <Form.Control type="file" accept=".pdf" onChange={this.uploadFileCurp} />
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col sm>
-                                        <Form.Group>
-                                            <Form.Label className="h6" >Genero <small style={{ color:"#600101" }}>*</small> </Form.Label>
-                                            {/* <Select   options={this.state.options}  /> */}
-                                            <Form.Select aria-label="Default select example" onChange={this.SeleccGenero}>
-                                                <option>Seleccione una opcion</option>
-                                                <option value="Mujer">Mujer</option>
-                                                <option value="Hombre">Hombre</option>
-                                            </Form.Select>
-                                        </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Nombre <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                                        <Form.Control type="text" placeholder="Nombre" value={this.state.nombre_Alumno} onChange={(evt) => this.dataForm_Uno(evt, "nombre")} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3" >
+                                                        <Form.Label className="h6">Apellido paterno <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                                        <Form.Control type="text" placeholder="Apellido paterno" value={this.state.appPat_Alumno} onChange={(evt) => this.dataForm_Uno(evt, "appPat")} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Apellido Materno <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                                        <Form.Control type="text" placeholder="Apellido Materno" value={this.state.appMat_Alumno} onChange={(evt) => this.dataForm_Uno(evt, "appMat")} />
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
+                                            <Row>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3" >
+                                                        <Form.Label className="h6">Fecha de nacimiento <small style={{ color: "#600101" }}>*</small>  </Form.Label>
+                                                        <Form.Control type="date" value={this.state.fechaNac_Alumno} onChange={(evt) => this.dataForm_Uno(evt, "nacimiento")} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Lugar de nacimiento <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                                        <Form.Control type="text" value={this.state.lugarNacimiento} placeholder="LugarNacimineto" min="0" max="300" onChange={(evt) => this.dataForm_Uno(evt, "lugarNacimiento")} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Telefono particular </Form.Label>
+                                                        <Form.Control type="tel" placeholder="Telefono particular" value={this.state.telPar_Alumno} onChange={(evt) => this.dataForm_Uno(evt, "telpar")} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Telefono celular <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                                        <Form.Control type="tel" placeholder="Telefono celular" value={this.state.telCel_Alumno} onChange={(evt) => this.dataForm_Uno(evt, "telcel")} />
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
+                                            <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
+                                                Domicilio
+                                            </div>
+                                            <Row >
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Calle <small style={{ color: "#600101" }}>*</small></Form.Label>
+                                                        <Form.Control type="text" placeholder="Calle" value={this.state.calle_Alumno} onChange={(evt) => this.dataForm_Uno(evt, "calle")} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Numero <small style={{ color: "#600101" }}>*</small></Form.Label>
+                                                        <Form.Control type="text" placeholder="Numero" min="0" value={this.state.num_Alumno} onChange={(evt) => this.dataForm_Uno(evt, "numero")} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Colonia <small style={{ color: "#600101" }}>*</small></Form.Label>
+                                                        <Form.Control type="text" placeholder="Colonia" value={this.state.col_Alumno} onChange={(evt) => this.dataForm_Uno(evt, "colonia")} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Codigo postal <small style={{ color: "#600101" }}>*</small></Form.Label>
+                                                        <Form.Control type="number" placeholder="Codigo postal" value={this.state.cp_Alumno} onChange={(evt) => this.dataForm_Uno(evt, "cp")} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Municipio <small style={{ color: "#600101" }}>*</small></Form.Label>
+                                                        <Form.Control type="text" placeholder="Municipio" value={this.state.municipio_Alumno} onChange={(evt) => this.dataForm_Uno(evt, "municipio")} />
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
+                                            <Row  >
+                                                <Col sm>
+                                                    <Button className="col-6" variant="warning" onClick={() => this.existeCurpAlum(1)}>Siguiente</Button>
 
-                                    </Col>
-                                    <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h6">Nombre <small style={{ color:"#600101" }}>*</small> </Form.Label>
-                                            <Form.Control type="text" placeholder="Nombre" onChange={(evt) => this.dataForm0(evt, "nombre")} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm>
-                                        <Form.Group className="mb-3" >
-                                            <Form.Label className="h6">Apellido paterno <small style={{ color:"#600101" }}>*</small> </Form.Label>
-                                            <Form.Control type="text" placeholder="Apellido paterno" onChange={(evt) => this.dataForm0(evt, "appPat")} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h6">Apellido Materno <small style={{ color:"#600101" }}>*</small> </Form.Label>
-                                            <Form.Control type="text" placeholder="Apellido Materno" onChange={(evt) => this.dataForm0(evt, "appMat")} />
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col sm>
-                                        <Form.Group className="mb-3" >
-                                            <Form.Label className="h6">Fecha de nacimiento <small style={{ color:"#600101" }}>*</small>  </Form.Label>
-                                            <Form.Control type="date" onChange={(evt) => this.dataForm0(evt, "nacimiento")} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Lugar de nacimiento <small style={{ color:"#600101" }}>*</small> </Form.Label>
-                                            <Form.Control type="text" placeholder="LugarNacimineto" min="0" max="120" onChange={(evt) => this.dataForm0(evt, "lugarNacimiento")} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Telefono particular </Form.Label>
-                                            <Form.Control type="tel" placeholder="Telefono particular" onChange={(evt) => this.dataForm0(evt, "telpar")} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Telefono celular <small style={{ color:"#600101" }}>*</small> </Form.Label>
-                                            <Form.Control type="tel" placeholder="Telefono celular" onChange={(evt) => this.dataForm0(evt, "telcel")} />
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                <div className="alert mt-2" role="alert" style={{background: ' #ceac00' ,  color: '#000'}}> 
-                                    Domicilio
-                                </div>
-                                <Row >
-                                    <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Calle <small style={{ color:"#600101" }}>*</small></Form.Label>
-                                            <Form.Control type="text" placeholder="Calle" onChange={(evt) => this.dataForm0(evt, "calle")} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Numero <small style={{ color:"#600101" }}>*</small></Form.Label>
-                                            <Form.Control type="Number" placeholder="Numero" min="0" onChange={(evt) => this.dataForm0(evt, "numero")} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Colonia <small style={{ color:"#600101" }}>*</small></Form.Label>
-                                            <Form.Control type="text" placeholder="Colonia" onChange={(evt) => this.dataForm0(evt, "colonia")} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Codigo postal <small style={{ color:"#600101" }}>*</small></Form.Label>
-                                            <Form.Control type="number" placeholder="Codigo postal" onChange={(evt) => this.dataForm0(evt, "cp")} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Municipio <small style={{ color:"#600101" }}>*</small></Form.Label>
-                                            <Form.Control type="text" placeholder="Municipio" onChange={(evt) => this.dataForm0(evt, "municipio")} />
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                
-                                
-                                <div className="alert mt-2" role="alert" style={{background: ' #ceac00' ,  color: '#000'}}> 
-                                    Contacto de emergencia
-                                </div>
+                                                </Col>
+                                            </Row>
+                                        </Form>
+                                    </div>
+                                    : null
 
-                                <Row>
-                                    {/* <Alert className="mt-2 " variant={"info"} style={{ color: '#00' }}>
-                                            <h5 >Contacto de emergencia</h5>
-                                        </Alert> */}
-                                    <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Nombre <small style={{ color:"#600101" }}>*</small>  </Form.Label>
-                                            <Form.Control type="text" placeholder="Nombre" onChange={(evt) => this.dataForm0(evt, "nombre_Emerge")} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm>
-                                        <Form.Group className="mb-3" >
-                                            <Form.Label className="h5">Apellido paterno <small style={{ color:"#600101" }}>*</small> </Form.Label>
-                                            <Form.Control type="text" placeholder="Apellido paterno" onChange={(evt) => this.dataForm0(evt, "appPat_Emerge")} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Apellido Materno <small style={{ color:"#600101" }}>*</small> </Form.Label>
-                                            <Form.Control type="text" placeholder="Apellido Materno" onChange={(evt) => this.dataForm0(evt, "appMat_Emerge")} />
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Telefono de contacto <small style={{ color:"#600101" }}>*</small>  </Form.Label>
-                                            <Form.Control type="tel" placeholder="Telefono de contacto" onChange={(evt) => this.dataForm0(evt, "telContacto_Emerge")} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Email <small style={{ color:"#600101" }}>*</small> </Form.Label>
-                                            <Form.Control type="email" placeholder="Email" onChange={(evt) => this.dataForm0(evt, "email_Emerge")} />
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
+                            }
+                            {
+                                showF_dos ?
+                                    <div>
+                                        <Form>
+                                            <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
+                                                Contacto de emergencia
+                                            </div>
+                                            <Row>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Nombre <small style={{ color: "#600101" }}>*</small>  </Form.Label>
+                                                        <Form.Control type="text" placeholder="Nombre" value={this.state.nombre_Emerge} onChange={(evt) => this.dataoFrm_Dos(evt, "nombre_Emerge")} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3" >
+                                                        <Form.Label className="h6">Apellido paterno <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                                        <Form.Control type="text" placeholder="Apellido paterno" value={this.state.appPat_Emerge} onChange={(evt) => this.dataoFrm_Dos(evt, "appPat_Emerge")} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Apellido Materno <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                                        <Form.Control type="text" placeholder="Apellido Materno" value={this.state.appMat_Emerge} onChange={(evt) => this.dataoFrm_Dos(evt, "appMat_Emerge")} />
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
+                                            <Row>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Telefono de contacto <small style={{ color: "#600101" }}>*</small>  </Form.Label>
+                                                        <Form.Control type="tel" placeholder="Telefono de contacto" value={this.state.telContacto_Emerge} onChange={(evt) => this.dataoFrm_Dos(evt, "telContacto_Emerge")} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Email <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                                        <Form.Control type="email" placeholder="Email" value={this.state.email_Emerge} onChange={(evt) => this.dataoFrm_Dos(evt, "email_Emerge")} />
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
 
 
-    
-                                <div className="alert mt-2" role="alert" style={{background: ' #ceac00' ,  color: '#000'}}> 
-                                   Formacion academica del alumno
-                                </div>
-                                <Row>
-                                    <Col sm className="mt-3">
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Nivel maximo de estudios</Form.Label>
-                                            <Form.Select onChange={this.SeleccMaxEstudios}>
-                                                <option>Seleccione una opcion</option>
-                                               
-                                                 {
-                                                    MaxEstudiosOp.map((index) => 
-                                                        <option value={index} key={index}>{index}</option>
-                                                    )
-                                                 }
+                                            <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
+                                                Datos laborales
+                                            </div>
+                                            <Row>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3" >
+                                                        <Form.Label className="h6">Nombre de la institución</Form.Label>
+                                                        <Form.Control type="text" placeholder="Nombre de la institución" value={this.state.nombInstLaboral} onChange={(evt) => this.dataoFrm_Dos(evt, "laboralinstitucion")} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Domicilio</Form.Label>
+                                                        <Form.Control type="text" placeholder="Domicilio" value={this.state.domicilioLaboral} onChange={(evt) => this.dataoFrm_Dos(evt, "laboralDomicilio")} />
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
+                                            <Row>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3" >
+                                                        <Form.Label className="h6">Puesto</Form.Label>
+                                                        <Form.Control type="text" placeholder="Puesto" value={this.state.puesto} onChange={(evt) => this.dataoFrm_Dos(evt, "laboralPuesto")} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Telefono</Form.Label>
+                                                        <Form.Control type="text" placeholder="Telefono" value={this.state.telefonoTra} onChange={(evt) => this.dataoFrm_Dos(evt, "laboralTelefono")} />
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
+                                            <Row  >
+                                                <Col sm>
+                                                    <Button className="col-12" variant="warning" onClick={() => this.form2Validacion(2)}>Siguiente</Button>
+                                                </Col>
+                                                <Col sm >
+                                                    <Button className="col-12" variant="danger" onClick={() => this.ShowView(0)}>Anterior</Button>
+                                                </Col>
+                                            </Row>
 
-                                            </Form.Select>
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm className="mt-3">
-                                        <Form.Group  className="mb-3">
-                                            <Form.Label className="h5">Situacion academica</Form.Label>
-                                            <Form.Select onChange={this.SeleccSituacionAcademina}>
-                                                <option>Seleccione una opcion</option>
-                                                {/* <option value="0">Basico</option>
-                                                <option value="1">Medio Superior</option>
-                                                <option value="2">Superior</option>
-                                                <option value="3">Posgrado</option> */}
-                                                 {
-                                                    situacionAcademica.map((index) => 
-                                                        <option value={index} key={index}>{index}</option>
-                                                    )
-                                                 }
-                                            </Form.Select>
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Institucion educativa</Form.Label>
-                                            <Form.Control type="text" placeholder="Institucion Educativa"  onChange={(evt) => this.dataForm0(evt, "InstitucionEducativa")} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm>
-                                        <Form.Group className="mb-3" >
-                                            <Form.Label className="h5">Año de egreso</Form.Label>
-                                            <Form.Control type="number"  onChange={(evt) => this.dataForm0(evt, "anioegreso")} />
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col sm className="mb-3">
-                                        <Form.Group className="mb-3"  controlId="formFile3">
-                                            <Form.Label className="h5">En caso de ser comunidad politecnica adjuntar evidencia</Form.Label>
-                                            <Form.Control type="file" accept="image/*,.pdf" onChange={this.uploadFileEvidencia} />
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                {/* <Row>
-                                        <Alert className="mt-2 " variant={"info"} style={{ color: '#00' }}>
-                                            <h5>Datos laborales</h5>
-                                        </Alert >
-                                    </Row> */}
-                                <div className="alert mt-2" role="alert" style={{background: ' #ceac00' ,  color: '#000'}}> 
-                                    Datos laborales
-                                </div>
-                                <Row>
-                                    <Col sm>
-                                        <Form.Group className="mb-3" >
-                                            <Form.Label className="h5">Nombre de la institución</Form.Label>
-                                            <Form.Control type="text" placeholder="Nombre de la institución"  onChange={(evt) => this.dataForm0(evt, "laboralinstitucion")} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Domicilio</Form.Label>
-                                            <Form.Control type="text" placeholder="Domicilio" onChange={(evt) => this.dataForm0(evt, "laboralDomicilio")}/>
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col sm>
-                                        <Form.Group className="mb-3" >
-                                            <Form.Label className="h5">Puesto</Form.Label>
-                                            <Form.Control type="text" placeholder="Puesto" onChange={(evt) => this.dataForm0(evt, "laboralPuesto")}/>
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Telefono</Form.Label>
-                                            <Form.Control type="text" placeholder="Telefono" onChange={(evt) => this.dataForm0(evt, "laboralTelefono")} />
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
+                                        </Form>
 
-                                {/* <Row>
-                                    <Alert className="mt-2 " variant={"info"} style={{ color: '#00' }}>
-                                        <h5>Información Adicional </h5>
-                                    </Alert >
-                                </Row> */}
-                                <div className="alert alert-info mt-2" role="alert">
-                                    Información Adicional 
-                                </div>
-                                <Row  >
-                                    <Col sm>
-                                        <Button className="col-12" variant="outline-primary" onClick={() => this.existeCurpAlum()}>
-                                            <i className="bi bi-plus-circle-fill "></i>
-                                            &nbsp;&nbsp;Agregar
-                                        </Button>
-                                    </Col>
-                                    <Col sm >
-                                        <Button className="col-12" variant="outline-danger" onClick={() => this.ShowForm(0)}>
-                                            <i className="bi bi-plus-circle-fill "></i>
-                                            &nbsp;&nbsp;Cancelar
-                                        </Button>
-                                    </Col>
-                                </Row>
-                            </Form>
+                                    </div>
+                                    : null
+
+                            }
+                            {
+                                showF_tres ?
+                                    <div>
+                                        <Form>
+                                            <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
+                                                Formacion academica del alumno
+                                            </div>
+                                            <Row>
+                                                <Col sm className="mt-3">
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Nivel maximo de estudios</Form.Label>
+                                                        <Form.Select onChange={this.SeleccMaxEstudios}>
+                                                            <option>Seleccione una opcion</option>
+
+                                                            {
+                                                                MaxEstudiosOp.map((index) =>
+                                                                    <option value={index} key={index}>{index}</option>
+                                                                )
+                                                            }
+
+                                                        </Form.Select>
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm className="mt-3">
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Situacion academica</Form.Label>
+                                                        <Form.Select onChange={this.SeleccSituacionAcademina}>
+                                                            <option>Seleccione una opcion</option>
+
+                                                            {
+                                                                situacionAcademica.map((index) =>
+                                                                    <option value={index} key={index}>{index}</option>
+                                                                )
+                                                            }
+                                                        </Form.Select>
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
+                                            <Row>
+                                                <Col sm >
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Sistema educativo de la Institución de procedencia</Form.Label>
+                                                        <Form.Select onChange={this.SeleccSistemEducativo}>
+                                                            <option>Seleccione una opcion</option>
+
+                                                            {
+                                                                sistemaProcendencia.map((index) =>
+                                                                    <option value={index} key={index}>{index}</option>
+                                                                )
+                                                            }
+                                                        </Form.Select>
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Otro </Form.Label>
+                                                        <Form.Control type="text" placeholder="Otro" onChange={(evt) => this.dataoForm_tres(evt, "sistemaEducativoOtro")} />
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
+
+                                            <Row>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Institucion educativa de procedencia  </Form.Label>
+                                                        <Form.Control type="text" placeholder="Institucion Educativa" onChange={(evt) => this.dataoForm_tres(evt, "InstitucionEducativa")} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3" >
+                                                        <Form.Label className="h6">Año de egreso</Form.Label>
+                                                        <Form.Control type="number" onChange={(evt) => this.dataoForm_tres(evt, "anioegreso")} />
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
+                                            <Row>
+                                                <Col sm className="mb-3">
+                                                    <Form.Group className="mb-3" controlId="formFile3">
+                                                        <Form.Label className="h6">En caso de ser comunidad politecnica adjuntar evidencia</Form.Label>
+                                                        <Form.Control type="file" accept="image/*,.pdf" onChange={this.uploadFileEvidencia} />
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
+
+
+                                            <Row>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Universidad a la que aspiras ingresar</Form.Label>
+                                                        <Form.Control type="text" placeholder="Institucion Educativa" onChange={(evt) => this.dataoForm_tres(evt, "universidadAspira")} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3" >
+                                                        <Form.Label className="h6">Carrera a la que aspiras ingresar </Form.Label>
+                                                        <Form.Control type="text" onChange={(evt) => this.dataoForm_tres(evt, "carreraAspiras")} />
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
+                                        </Form>
+
+                                        <Row  >
+                                            <Col sm>
+                                                <Button className="col-12" variant="warning" onClick={() => this.ShownextView(3)}>Siguiente</Button>
+                                            </Col>
+                                            <Col sm >
+                                                <Button className="col-12" variant="danger" onClick={() => this.ShownextView(1)}>Anterior</Button>
+                                            </Col>
+                                        </Row>
+
+                                    </div>
+
+                                    : null
+                            }
                         </Container>
-
                     </section>
                     : null
+
+                }
+                {
+                    showF_cuatro ?
+                        <div>
+                            <Form>
+
+                                <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
+                                    Acceso vehicular
+                                </div>
+                                <Row>
+                                    <Col sm>
+                                        <Form.Group className="mb-3" >
+                                            <Form.Label className="h6">Marca y Modelo</Form.Label>
+                                            <Form.Control type="text" placeholder="marca_modelo" onChange={(evt) => this.dataoForm_cuatro(evt, "marca_modelo")} />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col sm>
+                                        <Form.Group className="mb-3">
+                                            <Form.Label className="h6">Placas</Form.Label>
+                                            <Form.Control type="text" placeholder="Placas" onChange={(evt) => this.dataoForm_cuatro(evt, "Placas")} />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
+                                    Información Adicional
+                                </div>
+                                <Row>
+                                    <Col sm>
+
+                                        <Form.Group className="mb-3">
+                                            <Form.Label className="h6">¿Cómo se enteró del curso? *</Form.Label>
+                                            <Form.Select onChange={this.SeleccMaxEstudios}>
+                                                <option>Seleccione una opcion</option>
+
+                                                {
+                                                    MedioInformacion.map((index) =>
+                                                        <option value={index} key={index}>{index}</option>
+                                                    )
+                                                }
+
+                                            </Form.Select>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col sm>
+                                        <Form.Group className="mb-3" >
+                                            <Form.Label className="h6">En caso de seleccionar "Otro" ¿Cómo fue?</Form.Label>
+                                            <Form.Control type="text" placeholder="Puesto" onChange={(evt) => this.dataoForm_cuatro(evt, "laboralPuesto")} />
+                                        </Form.Group>
+                                    </Col>
+
+                                </Row>
+                                <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
+                                    ¿A quién recomendaría este curso?
+                                </div>
+                                <Row>
+                                    <Col sm>
+                                        <Form.Group className="mb-3">
+                                            <Form.Label className="h6">Nombre <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                            <Form.Control type="text" placeholder="Nombre" value={this.state.nombre_Alumno} onChange={(evt) => this.dataoForm_cuatro(evt, "nombre")} />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col sm>
+                                        <Form.Group className="mb-3" >
+                                            <Form.Label className="h6">Correo electronico <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                            <Form.Control type="text" placeholder="Apellido paterno" value={this.state.appPat_Alumno} onChange={(evt) => this.dataoForm_cuatro(evt, "appPat")} />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col sm>
+                                        <Form.Group className="mb-3">
+                                            <Form.Label className="h6">TelefonoCelular <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                            <Form.Control type="text" placeholder="Apellido Materno" value={this.state.appMat_Alumno} onChange={(evt) => this.dataoForm_cuatro(evt, "appMat")} />
+                                        </Form.Group>
+                                    </Col>
+
+                                </Row>
+
+                                <Button className="col-12" variant="danger" onClick={() => this.ShownextView(2)}>Anterior</Button>
+                            </Form>
+                        </div>
+
+                        : null
                 }
                 {showTable ?
 
-                    <section style={{ marginTop:80}} >
+                    <section style={{ marginTop: 80 }} >
                         <section>
                             <Container className="mt-3 mb-3">
                             </Container>
@@ -973,7 +1025,7 @@ class FormularioC extends React.Component {
                                     </thead>
                                     <tbody>
                                         {
-                                            informacion.map((index) => 
+                                            informacion.map((index) =>
                                                 <tr key={index}>
                                                     <td >{index[0]}</td>
                                                     <td >{index[1]}</td>
@@ -996,41 +1048,22 @@ class FormularioC extends React.Component {
                                                                 <Dropdown.Divider />
                                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i className="bi bi-cloud-download"></i>&nbsp;&nbsp;Download
                                                                 <Dropdown.Divider />
-                                                                <Dropdown.Item onClick={() => this.getDownloadFile(index[1] , 0)}                                                                >
+                                                                <Dropdown.Item onClick={() => this.getDownloadFile(index[1], 0)}                                                                >
                                                                     <i className="bi bi-images"></i>&nbsp;&nbsp;Fotografia
                                                                 </Dropdown.Item>
-                                                                
-                                                                <Dropdown.Item onClick={() => this.getDownloadFile(index[1] , 1)}                                                                >
+
+                                                                <Dropdown.Item onClick={() => this.getDownloadFile(index[1], 1)}                                                                >
                                                                     <i className="bi bi-file-earmark-pdf"></i>&nbsp;&nbsp;Curp
                                                                 </Dropdown.Item>
 
-                                                                <Dropdown.Item onClick={() => this.getDownloadFile(index[1] , 2)}                                                                >
+                                                                <Dropdown.Item onClick={() => this.getDownloadFile(index[1], 2)}                                                                >
                                                                     <i className="bi bi-file-earmark-pdf"></i>&nbsp;&nbsp;Evidencia IPN
                                                                 </Dropdown.Item>
-                                                                <Dropdown.Item as={Link} to={`/PDFalumno/${index[1]}`} target="_blank" > 
+                                                                <Dropdown.Item as={Link} to={`/PDFalumno/${index[1]}`} target="_blank" >
                                                                     <i className="bi bi-cloud-download"></i>&nbsp;&nbsp;PDF
                                                                 </Dropdown.Item>
-                                                               
-                                                               
-                                                                {/* 
-                                                                <Dropdown.Item onClick={() => this.closeOpenModal(1)}>
-                                                                    <i className="bi bi-eye"></i> &nbsp;&nbsp;Ver
-                                                                </Dropdown.Item> */}
 
-                                                                {/* <Dropdown.Item 
-                                                                    onClick={async () => {
-                                                                        const res = await fetch('http://localhost:5000/api/downloadFile');
-                                                                        const blob = await res.blob();
-                                                                        download(blob, 'imagenDescarga.jpeg');
-                                                                    }}
-                                                                >
-                                                                    <i className="bi bi-cloud-download"></i>&nbsp;&nbsp;Curp
-                                                                </Dropdown.Item> */}
-                                                                
 
-                                                                {/* <Dropdown.Item as={Link} to="/PDFalumno" target="_blank" > <i className="bi bi-cloud-download"></i>&nbsp;&nbsp;PDf</Dropdown.Item> */}
-                                                            
-                                                            
                                                             </Dropdown.Menu>
                                                         </Dropdown>
                                                     </td>
@@ -1040,16 +1073,6 @@ class FormularioC extends React.Component {
 
                                     </tbody>
                                 </Table>
-                                {/* <button
-                                    type="button"
-                                    onClick={async () => {
-                                        const res = await fetch('http://localhost:5000/api/downloadFile');
-                                        const blob = await res.blob();
-                                        download(blob, 'imagenDescarga.jpeg');
-                                    }}
-                                >
-                                Download
-                            </button> */}
                             </div>
                         </Container>
                     </section>
