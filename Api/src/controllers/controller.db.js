@@ -26,7 +26,7 @@ const Home = async () =>{
     return 200;
 };
 const getServicios = async () => {
-    const response = await pool.query('SELECT * FROM SERVICIOEDUCATIVO ORDER BY idServiciosEdu ASC');
+    const response = await pool.query('SELECT * FROM SERVICIOEDUCATIVO ORDER BY idServiciosEdu DESC');
     var data = response.rows;
     let id =[]
     let registro = []
