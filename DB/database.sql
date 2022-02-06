@@ -9,6 +9,8 @@
 -- 	idUsersFK int references Usuarios(idUsers),
 -- 	name_Permiso varchar
 -- );
+-- Num Horas son totales
+-- Cuota de cada Curso
 
 CREATE TABLE SERVICIOEDUCATIVO(
 	idServiciosEdu serial primary key,
@@ -31,14 +33,14 @@ CREATE TABLE Personas(
 	AppMat varchar,
 	Sexo varchar,
 	FechaNacimiento Date,
-	Edad int,
 	TelPar varchar,
 	TelCel varchar,
 	Calle varchar,
 	Colonia varchar,
 	CodigoPostal varchar,
 	Municipio varchar,
-	numDomicilio varchar
+	numDomicilio varchar,
+	lugarNacimiento varchar
 );
 
 CREATE TABLE FilesPersona(
@@ -59,15 +61,6 @@ CREATE TABLE ContactoEmergencia(
 	email varchar
 );
 
-CREATE TABLE FormacionAcademica(
-	idFormacion serial primary key ,
-	idCurpFK varchar references Personas(Curp),
-	N_Max_Estudios varchar,
-	S_Academica_Actual varchar,
-	InstEducativa varchar,
-	AnioEgreso varchar
-);
-
 CREATE TABLE DATOSLABORALES(
 	idDatosLaborales serial primary key ,
 	idCurpFK varchar references Personas(Curp),
@@ -76,6 +69,34 @@ CREATE TABLE DATOSLABORALES(
 	Puesto varchar ,
 	Telefono varchar
 );
+
+-- CREATE TABLE FormacionAcademica(
+-- 	idFormacion serial primary key ,
+-- 	idCurpFK varchar references Personas(Curp),
+-- 	N_Max_Estudios varchar,
+-- 	S_Academica_Actual varchar,
+-- 	InstEducativa varchar,
+-- 	AnioEgreso varchar,
+-- 	sistemaEducativoProcedencia varchar ,
+	
+-- );
+
+
+
+CREATE TABLE FormacionAcademica(
+	idFormacion serial primary key ,
+	idCurpFK varchar references Personas(Curp),
+	N_Max_Estudios varchar,
+	S_Academica_Actual varchar,
+	sistemaeducativoprocedencia varchar ,
+	sistemaeducativoprocedenciaOtro varchar,
+
+	InstEducativa varchar,
+	AnioEgreso varchar,
+	uniAspiraIngresar varchar,
+	carrerarAspirasIngresar varchar 
+);
+
 
 CREATE TABLE PAGOS(
 	idPAgos serial primary key ,
@@ -90,7 +111,15 @@ CREATE TABLE PAGOS(
 	FECHA_TERMINO timestamp
 );
 
-
+CREATE TABLE INFOADICIONAL(
+	marca_modelo_Vehiculo varchar,
+	placas_Vehiculo varchar,
+	comoseenterodelcuros varchar,
+	comoseenterodelcurosOtro varchar,
+	recomendacion_Nombre varchar,
+	recomendacion_Email varchar,
+	recomendacion_telCel varchar
+);
 
 -- INSERT INTO  SERVICIOEDUCATIVO  (Nombre_Servicio , Habilitado) VALUES 
 -- 								('Curso de Excel' , true),
