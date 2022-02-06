@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import { Button, Form, Container, Row, Col, ButtonGroup, Table, Dropdown, Modal, Accordion } from 'react-bootstrap'
+import { Button, Form, Container, Row, Col, ButtonGroup, Table, Dropdown , CloseButton , OverlayTrigger , Tooltip , Image } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2'
 import Moment from 'moment'
@@ -9,6 +9,8 @@ import PDFAlumno from './PDFalumno'
 import $ from 'jquery';
 import config from '../config/config.json';
 import download from 'downloadjs';
+import {StyleSheet } from '@react-pdf/renderer';
+
 
 class FormularioC extends React.Component {
     constructor(props) {
@@ -108,7 +110,9 @@ class FormularioC extends React.Component {
             //Informacion Adicional
             comoseenterodelcurso: "",
             comoseenterodelcursoOtro: "",
-            recomendacionCurso: "",
+            recomendacionCursoNombre: "",
+            recomendacionCursoemail: "",
+            recomendacionCursotelce: "",
 
 
 
@@ -128,6 +132,9 @@ class FormularioC extends React.Component {
             fileValImg: false,
             fileValIpn: false,
 
+
+            activateSend:false
+
         };
         //Funciones para el primero formulario
         this.uploadPhoto = this.uploadPhoto.bind(this);
@@ -138,8 +145,11 @@ class FormularioC extends React.Component {
         this.SeleccSituacionAcademina = this.SeleccSituacionAcademina.bind(this);
         this.SeleccSistemEducativo = this.SeleccSistemEducativo.bind(this);
         this.uploadFileEvidencia = this.uploadFileEvidencia.bind(this);
-
-
+        this.dataoForm_cuatro = this.dataoForm_cuatro.bind(this);
+        this.SeleccMedioInformacio = this.SeleccMedioInformacio.bind(this);
+        this.form3Validacion = this.form3Validacion.bind(this);
+        this.AceptoCheck = this.AceptoCheck.bind(this);
+        
     }
     componentDidMount() {
         this.apiAlumnos();
@@ -284,19 +294,19 @@ class FormularioC extends React.Component {
     dataoForm_tres(event, data) {
         switch (data) {
             case "sistemaEducativoOtro":
-                this.setState({ nombre_Emerge: event.target.value });
+                this.setState({ sistemaProcendenciaOtro: event.target.value });
                 break;
             case "InstitucionEducativa":
-                this.setState({ appPat_Emerge: event.target.value });
+                this.setState({ instEducativa: event.target.value });
                 break;
             case "anioegreso":
-                this.setState({ appMat_Emerge: event.target.value });
+                this.setState({ anioEgresoi: event.target.value });
                 break;
             case "universidadAspira":
-                this.setState({ telContacto_Emerge: event.target.value });
+                this.setState({ UniversidadAspira: event.target.value });
                 break;
             case "carreraAspiras":
-                this.setState({ email_Emerge: event.target.value });
+                this.setState({ CarreraApira: event.target.value });
                 break;
 
             default:
@@ -305,22 +315,24 @@ class FormularioC extends React.Component {
     }
     dataoForm_cuatro(event, data) {
         switch (data) {
-            case "sistemaEducativoOtro":
-                this.setState({ nombre_Emerge: event.target.value });
+            case "marca_modelo":
+                this.setState({ marca_modelo: event.target.value });
                 break;
-            case "InstitucionEducativa":
-                this.setState({ appPat_Emerge: event.target.value });
+            case "Placas":
+                this.setState({ placas: event.target.value });
                 break;
-            case "anioegreso":
-                this.setState({ appMat_Emerge: event.target.value });
+            case "otro":
+                this.setState({ comoseenterodelcursoOtro: event.target.value });
                 break;
-            case "universidadAspira":
-                this.setState({ telContacto_Emerge: event.target.value });
+            case "nombre":
+                this.setState({ recomendacionCursoNombre: event.target.value });
                 break;
-            case "carreraAspiras":
-                this.setState({ email_Emerge: event.target.value });
+            case "email":
+                this.setState({ recomendacionCursoemail: event.target.value });
                 break;
-
+            case "telcel":
+                this.setState({ recomendacionCursotelce: event.target.value });
+                break;
             default:
                 console.log("No se encuntra la opcion");
         }
@@ -375,9 +387,23 @@ class FormularioC extends React.Component {
     }
     SeleccSistemEducativo(event) {
         if (event.target.value !== "Seleccione una opcion") {
-            this.setState({ sitAcademico: event.target.value });
+            this.setState({ sistemaProcendenciaOpcion: event.target.value });
         }
     }
+    SeleccMedioInformacio(event) {
+        if (event.target.value !== "Seleccione una opcion") {
+            this.setState({ comoseenterodelcurso: event.target.value });
+        }
+    }
+    AceptoCheck(event){
+        console.log("Acivamos Check");
+        var env = event.target.checked;
+        console.log(env);
+        this.setState({ activateSend: env});
+
+        // activateSend
+    }
+
     existeCurpAlum = async (pos) => {
         let validacion = {
             curpAlum: this.state.curp_Alumno,
@@ -479,6 +505,41 @@ class FormularioC extends React.Component {
 
         this.ValidarForm_Dos(campos, pos);
     }
+    form3Validacion() {
+        var campos = new Map();
+        campos.set('Nombre ', this.state.recomendacionCursoNombre);
+        campos.set('Email ', this.state.recomendacionCursoemail);
+        campos.set('Telefono de Celular ', this.state.recomendacionCursotelce);
+        this.dataMessage(campos);
+    }
+    dataMessage(mapData){
+        let msg = "";
+        for (let clave of mapData.keys()) {
+            var valor = mapData.get(clave);
+            if (valor === null || valor === "") {
+                msg = `El campo :${clave} esta vacio`;
+                break;
+            }
+        }
+        if (msg === "") {
+            console.log("Enviamos datos para insertar");
+            this.sendData();    
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops..',
+                text: msg,
+            })
+        }
+    }
+    sendData(){
+        console.log("Enviamos datas");
+        var data1 = this.recolectamosData();
+        console.log(data1);
+    }
+    recolectamosData(){
+        return 1;
+    }
     ShowView(num) {
         this.setState({ fileValCurp: false });
         this.setState({ fileCurp_Alumno: null });
@@ -534,6 +595,7 @@ class FormularioC extends React.Component {
         let { showF_dos } = this.state
         let { showF_tres } = this.state
         let { showF_cuatro } = this.state
+        let { activateSend } = this.state
         let { data_form_uno } = this.state
         let { data_form_dos } = this.state
 
@@ -541,7 +603,34 @@ class FormularioC extends React.Component {
         let { situacionAcademica } = this.state
         let { sistemaProcendencia } = this.state
         let { MedioInformacion } = this.state
-
+        const styles = StyleSheet.create({
+            buttonNext: {
+                backgroundColor:" #ceac00 ",
+                color:" #000",
+                border: "none",
+                height: 45
+            },
+            buttonPrevious:{
+                backgroundColor:"#600101",
+                color:" #FFF",
+                border: "none",
+                height: 45
+            },
+            buttonSend:{
+                backgroundColor:"#00a01b ",
+                color:" #000",
+                border: "none",
+                height: 45
+            },
+            buttonClose:{
+                // backgroundColor:"#600101 ",
+                color:"red",
+                border: "none",
+                height: 45
+            }
+        
+        
+        })
 
         return (
             <main >
@@ -552,6 +641,38 @@ class FormularioC extends React.Component {
 
                     <section style={{ marginTop: 80 }} >
                         <Container className="mt-3 mb-3 border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2">
+                            <div >                               
+                                 {/* <CloseButton style={styles.buttonClose} onClick={() => this.ShowForm(0)} /> */}
+                                 {/* <OverlayTrigger
+                                        placement="bottom"
+                                        overlay={<Tooltip id="button-tooltip-2">Cerrar</Tooltip>}
+                                    >
+                                        {({ ref, ...triggerHandler }) => (
+                                        <Button
+                                            variant="light"
+                                            {...triggerHandler}
+                                            className="d-inline-flex align-items-center"
+                                        >
+                                            <Image
+                                            ref={ref}
+                                            roundedCircle
+                                            src="holder.js/20x20?text=J&bg=28a745&fg=FFF"
+                                            />
+                                            <span className="ms-1">Hover to see</span>
+                                        </Button>
+                                        
+                                        )}
+                                    </OverlayTrigger>, */}
+                                    <OverlayTrigger
+                                        placement="right"
+                                        delay={{ show: 250, hide: 400 }}
+                                        overlay={<Tooltip id="button-tooltip-2">Cerrar</Tooltip>}
+                                    >
+                                    <CloseButton style={styles.buttonClose} onClick={() => window.location.reload(false)} />
+                                        {/* <Button variant="success">Hover me to see</Button> */}
+                                    </OverlayTrigger>
+                            </div>
+
                             {
                                 showF_uno ?
                                     <div>
@@ -680,7 +801,10 @@ class FormularioC extends React.Component {
                                             </Row>
                                             <Row  >
                                                 <Col sm>
-                                                    <Button className="col-6" variant="warning" onClick={() => this.existeCurpAlum(1)}>Siguiente</Button>
+                                                    <Button className="col-6" style={styles.buttonNext} onClick={() => this.existeCurpAlum(1)}>
+                                                        Siguiente &nbsp;<i className="bi bi-arrow-right-circle"></i>
+                                                        
+                                                    </Button>
 
                                                 </Col>
                                             </Row>
@@ -765,10 +889,16 @@ class FormularioC extends React.Component {
                                             </Row>
                                             <Row  >
                                                 <Col sm>
-                                                    <Button className="col-12" variant="warning" onClick={() => this.form2Validacion(2)}>Siguiente</Button>
+                                                    <Button className="col-12" style={styles.buttonNext}  onClick={() => this.form2Validacion(2)}>
+                                                        Siguiente &nbsp;<i className="bi bi-arrow-right-circle"></i>
+                                                    </Button>
                                                 </Col>
                                                 <Col sm >
-                                                    <Button className="col-12" variant="danger" onClick={() => this.ShowView(0)}>Anterior</Button>
+                                                    <Button className="col-12" style={styles.buttonPrevious} onClick={() => this.ShowView(0)}>
+                                                        
+                                                        <i className="bi bi-arrow-left-circle"></i> &nbsp; Anterior 
+
+                                                    </Button>
                                                 </Col>
                                             </Row>
 
@@ -789,7 +919,7 @@ class FormularioC extends React.Component {
                                                 <Col sm className="mt-3">
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">Nivel maximo de estudios</Form.Label>
-                                                        <Form.Select onChange={this.SeleccMaxEstudios}>
+                                                        <Form.Select onChange={this.SeleccMaxEstudios} value={this.state.n_max_estudios}> 
                                                             <option>Seleccione una opcion</option>
 
                                                             {
@@ -804,7 +934,7 @@ class FormularioC extends React.Component {
                                                 <Col sm className="mt-3">
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">Situacion academica</Form.Label>
-                                                        <Form.Select onChange={this.SeleccSituacionAcademina}>
+                                                        <Form.Select onChange={this.SeleccSituacionAcademina} value={this.state.sitAcademico}>
                                                             <option>Seleccione una opcion</option>
 
                                                             {
@@ -820,7 +950,7 @@ class FormularioC extends React.Component {
                                                 <Col sm >
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">Sistema educativo de la Institución de procedencia</Form.Label>
-                                                        <Form.Select onChange={this.SeleccSistemEducativo}>
+                                                        <Form.Select onChange={this.SeleccSistemEducativo} value={this.state.sistemaProcendenciaOpcion}>
                                                             <option>Seleccione una opcion</option>
 
                                                             {
@@ -834,7 +964,7 @@ class FormularioC extends React.Component {
                                                 <Col sm>
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">Otro </Form.Label>
-                                                        <Form.Control type="text" placeholder="Otro" onChange={(evt) => this.dataoForm_tres(evt, "sistemaEducativoOtro")} />
+                                                        <Form.Control type="text" placeholder="Otro"  value={this.state.sistemaProcendenciaOtro}  onChange={(evt) => this.dataoForm_tres(evt, "sistemaEducativoOtro")} />
                                                     </Form.Group>
                                                 </Col>
                                             </Row>
@@ -843,13 +973,13 @@ class FormularioC extends React.Component {
                                                 <Col sm>
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">Institucion educativa de procedencia  </Form.Label>
-                                                        <Form.Control type="text" placeholder="Institucion Educativa" onChange={(evt) => this.dataoForm_tres(evt, "InstitucionEducativa")} />
+                                                        <Form.Control type="text" placeholder="Institucion Educativa" value={this.state.instEducativa} onChange={(evt) => this.dataoForm_tres(evt, "InstitucionEducativa")} />
                                                     </Form.Group>
                                                 </Col>
                                                 <Col sm>
                                                     <Form.Group className="mb-3" >
                                                         <Form.Label className="h6">Año de egreso</Form.Label>
-                                                        <Form.Control type="number" onChange={(evt) => this.dataoForm_tres(evt, "anioegreso")} />
+                                                        <Form.Control type="number"  value={this.state.anioEgresoi} onChange={(evt) => this.dataoForm_tres(evt, "anioegreso")} />
                                                     </Form.Group>
                                                 </Col>
                                             </Row>
@@ -867,13 +997,13 @@ class FormularioC extends React.Component {
                                                 <Col sm>
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">Universidad a la que aspiras ingresar</Form.Label>
-                                                        <Form.Control type="text" placeholder="Institucion Educativa" onChange={(evt) => this.dataoForm_tres(evt, "universidadAspira")} />
+                                                        <Form.Control type="text" placeholder="Institucion Educativa"  value={this.state.UniversidadAspira}  onChange={(evt) => this.dataoForm_tres(evt, "universidadAspira")} />
                                                     </Form.Group>
                                                 </Col>
                                                 <Col sm>
                                                     <Form.Group className="mb-3" >
                                                         <Form.Label className="h6">Carrera a la que aspiras ingresar </Form.Label>
-                                                        <Form.Control type="text" onChange={(evt) => this.dataoForm_tres(evt, "carreraAspiras")} />
+                                                        <Form.Control type="text"   placeholder="Carrera a la que aspiras ingresar" value={this.state.CarreraApira} onChange={(evt) => this.dataoForm_tres(evt, "carreraAspiras")} />
                                                     </Form.Group>
                                                 </Col>
                                             </Row>
@@ -881,10 +1011,18 @@ class FormularioC extends React.Component {
 
                                         <Row  >
                                             <Col sm>
-                                                <Button className="col-12" variant="warning" onClick={() => this.ShownextView(3)}>Siguiente</Button>
+                                                <Button className="col-12" style={styles.buttonNext}  onClick={() => this.ShownextView(3)}>
+                                                    Siguiente &nbsp;<i className="bi bi-arrow-right-circle"></i>
+
+                                                    
+                                                </Button>
                                             </Col>
                                             <Col sm >
-                                                <Button className="col-12" variant="danger" onClick={() => this.ShownextView(1)}>Anterior</Button>
+                                                <Button className="col-12"  style={styles.buttonPrevious}  onClick={() => this.ShownextView(1)}>
+                                                    <i className="bi bi-arrow-left-circle"></i> &nbsp; Anterior 
+
+                                                    
+                                                </Button>
                                             </Col>
                                         </Row>
 
@@ -892,91 +1030,119 @@ class FormularioC extends React.Component {
 
                                     : null
                             }
+                            {
+                                showF_cuatro ?
+                                    <div>
+                                        <Form>
+            
+                                            <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
+                                                Acceso vehicular
+                                            </div>
+                                            <Row>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3" >
+                                                        <Form.Label className="h6">Marca y Modelo</Form.Label>
+                                                        <Form.Control type="text" placeholder="Marca y Modelo"  value={this.state.marca_modelo}  onChange={(evt) => this.dataoForm_cuatro(evt, "marca_modelo")} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Placas</Form.Label>
+                                                        <Form.Control type="text" placeholder="Placas" value={this.state.placas}   onChange={(evt) => this.dataoForm_cuatro(evt, "Placas")} />
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
+                                            <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
+                                                Información Adicional
+                                            </div>
+                                            <Row>
+                                                <Col sm>
+            
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">¿Cómo se enteró del curso? *</Form.Label>
+                                                        <Form.Select onChange={this.SeleccMedioInformacio}  value={this.state.comoseenterodelcurso} >
+                                                            <option>Seleccione una opcion</option>
+            
+                                                            {
+                                                                MedioInformacion.map((index) =>
+                                                                    <option value={index} key={index}>{index}</option>
+                                                                )
+                                                            }
+            
+                                                        </Form.Select>
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3" >
+                                                        <Form.Label className="h6">En caso de seleccionar "Otro" ¿Cómo fue?</Form.Label>
+                                                        <Form.Control type="text" placeholder="Otro" value={this.state.comoseenterodelcursoOtro}   onChange={(evt) => this.dataoForm_cuatro(evt, "otro")} />
+                                                    </Form.Group>
+                                                </Col>
+            
+                                            </Row>
+                                            <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
+                                                ¿A quién recomendaría este curso?
+                                            </div>
+                                            <Row>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">Nombre <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                                        <Form.Control type="text" placeholder="Nombre" value={this.state.recomendacionCursoNombre} onChange={(evt) => this.dataoForm_cuatro(evt, "nombre")} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3" >
+                                                        <Form.Label className="h6">Correo electronico <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                                        <Form.Control type="email" placeholder="Correo Electronico" value={this.state.recomendacionCursoemail} onChange={(evt) => this.dataoForm_cuatro(evt, "email")} />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col sm>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="h6">TelefonoCelular <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                                        <Form.Control type="text" placeholder="Telefono de celular" value={this.state.recomendacionCursotelce} onChange={(evt) => this.dataoForm_cuatro(evt, "telcel")} />
+                                                    </Form.Group>
+                                                </Col>
+            
+                                            </Row>
+                                            <div className="alert alert-danger  mt-2 " role="alert" >
+                                            <h2>
+                                                ¡Importante!
+                                            </h2>
+                                            {"\n"}
+                                                El Centro de Vinculación y Desarrollo Regional Unidad Oaxaca se reserva el derecho de cancelar o posponer el programa 
+                                                académico si no se cumple con el mínimo de participantes a la fecha de inicio del programa. 
+                                            </div>
+                                            <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                                                <Form.Check type="checkbox" label="Si , acepto"  onChange={this.AceptoCheck}   />
+                                            </Form.Group>
+                                            <Row  >
+                                                <Col sm>
+                                                    <Button className="col-12" style={styles.buttonPrevious}  onClick={() => this.ShownextView(2)}>
+                                                        
+                                                    <i className="bi bi-arrow-left-circle"></i> &nbsp; Anterior 
+
+                                                    
+                                                    </Button>
+                                                </Col>
+                                                <Col sm >
+                                                    {  activateSend ? 
+                                                            <Button className="col-12" style={styles.buttonSend} onClick={ () => this.form3Validacion() }>Enviar</Button>
+                                                        
+                                                        :
+                                                            <Button className="col-12" style={styles.buttonSend} disabled>Enviar</Button>                                            
+                                                    }
+                                                </Col>
+                                            </Row>
+
+                                        </Form>
+                                    </div>
+            
+                                    : null
+                            }
                         </Container>
                     </section>
                     : null
 
-                }
-                {
-                    showF_cuatro ?
-                        <div>
-                            <Form>
-
-                                <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
-                                    Acceso vehicular
-                                </div>
-                                <Row>
-                                    <Col sm>
-                                        <Form.Group className="mb-3" >
-                                            <Form.Label className="h6">Marca y Modelo</Form.Label>
-                                            <Form.Control type="text" placeholder="marca_modelo" onChange={(evt) => this.dataoForm_cuatro(evt, "marca_modelo")} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h6">Placas</Form.Label>
-                                            <Form.Control type="text" placeholder="Placas" onChange={(evt) => this.dataoForm_cuatro(evt, "Placas")} />
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
-                                    Información Adicional
-                                </div>
-                                <Row>
-                                    <Col sm>
-
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h6">¿Cómo se enteró del curso? *</Form.Label>
-                                            <Form.Select onChange={this.SeleccMaxEstudios}>
-                                                <option>Seleccione una opcion</option>
-
-                                                {
-                                                    MedioInformacion.map((index) =>
-                                                        <option value={index} key={index}>{index}</option>
-                                                    )
-                                                }
-
-                                            </Form.Select>
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm>
-                                        <Form.Group className="mb-3" >
-                                            <Form.Label className="h6">En caso de seleccionar "Otro" ¿Cómo fue?</Form.Label>
-                                            <Form.Control type="text" placeholder="Puesto" onChange={(evt) => this.dataoForm_cuatro(evt, "laboralPuesto")} />
-                                        </Form.Group>
-                                    </Col>
-
-                                </Row>
-                                <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
-                                    ¿A quién recomendaría este curso?
-                                </div>
-                                <Row>
-                                    <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h6">Nombre <small style={{ color: "#600101" }}>*</small> </Form.Label>
-                                            <Form.Control type="text" placeholder="Nombre" value={this.state.nombre_Alumno} onChange={(evt) => this.dataoForm_cuatro(evt, "nombre")} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm>
-                                        <Form.Group className="mb-3" >
-                                            <Form.Label className="h6">Correo electronico <small style={{ color: "#600101" }}>*</small> </Form.Label>
-                                            <Form.Control type="text" placeholder="Apellido paterno" value={this.state.appPat_Alumno} onChange={(evt) => this.dataoForm_cuatro(evt, "appPat")} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h6">TelefonoCelular <small style={{ color: "#600101" }}>*</small> </Form.Label>
-                                            <Form.Control type="text" placeholder="Apellido Materno" value={this.state.appMat_Alumno} onChange={(evt) => this.dataoForm_cuatro(evt, "appMat")} />
-                                        </Form.Group>
-                                    </Col>
-
-                                </Row>
-
-                                <Button className="col-12" variant="danger" onClick={() => this.ShownextView(2)}>Anterior</Button>
-                            </Form>
-                        </div>
-
-                        : null
                 }
                 {showTable ?
 
