@@ -464,8 +464,7 @@ class FormularioC extends React.Component {
         }
         if (msg === "") {
             console.log("Enviamos datos para insertar");
-            this.setState({ data_form_uno: mapData });
-            this.ShowView(pos);
+            this.ShowViewX(pos);
         } else {
             Swal.fire({
                 icon: 'error',
@@ -533,9 +532,98 @@ class FormularioC extends React.Component {
         }
     }
     sendData(){
-        console.log("Enviamos datas");
-        var data1 = this.recolectamosData();
-        console.log(data1);
+        var url = config.general[0].url + config.general[0].puerto_api + "/Api/createRegistro";
+        // var nacimiento = Moment(this.state.fechaNac_Alumno);
+        // var hoy = Moment();
+        // var anios = hoy.diff(nacimiento, "years");
+        // console.log();
+        var bodyFormData = new FormData();
+        bodyFormData.append('fileImg', this.state.file_fotografia);
+        bodyFormData.append('emailAlum', this.state.email_Alumno);
+        bodyFormData.append('curp', this.state.curp_Alumno);
+        bodyFormData.append('fileCurp', this.state.fileCurp_Alumno);
+
+        bodyFormData.append('genero', this.state.genero);
+        bodyFormData.append('nombreAlum', this.state.nombre_Alumno);
+        bodyFormData.append('appPatAlum', this.state.appPat_Alumno);
+        bodyFormData.append('appMatAlum', this.state.appMat_Alumno);
+        bodyFormData.append('fechaNacimiento', this.state.fechaNac_Alumno);
+        bodyFormData.append('telParticularAlum', this.state.telPar_Alumno);
+        bodyFormData.append('telCelularAlum', this.state.telCel_Alumno);
+        bodyFormData.append('lugarNacimiento', this.state.lugarNacimiento);
+        
+        bodyFormData.append('calle', this.state.calle_Alumno);
+        bodyFormData.append('NumeroDom', this.state.num_Alumno);
+        bodyFormData.append('colonia', this.state.col_Alumno);
+        bodyFormData.append('codigoPostal', this.state.cp_Alumno);
+        bodyFormData.append('municipio', this.state.municipio_Alumno);
+
+        //Datos del contacto de emergencia
+        bodyFormData.append('nombreEmergencia', this.state.nombre_Emerge);
+        bodyFormData.append('appPatEmergencia', this.state.appPat_Emerge);
+        bodyFormData.append('appMatEmergencia', this.state.appMat_Emerge);
+        bodyFormData.append('telEmergencia', this.state.telContacto_Emerge);
+        bodyFormData.append('emailEmergencia', this.state.email_Emerge);
+
+        
+        //Datos laborales
+        bodyFormData.append('nombreInst', this.state.nombInstLaboral);
+        bodyFormData.append('domicilioInst', this.state.domicilioLaboral);
+        bodyFormData.append('puestoInst', this.state.puesto);
+        bodyFormData.append('telefonoInst', this.state.telefonoTra);
+
+
+        //Formacion academica
+        bodyFormData.append('nivMaxStudy', this.state.n_max_estudios);
+        bodyFormData.append('acadSituacion', this.state.sitAcademico);
+        bodyFormData.append('insEducativa', this.state.instEducativa);
+        bodyFormData.append('anioEgreso', this.state.anioEgresoi);
+        bodyFormData.append('fileEvidencia', this.state.fileEvideciaIPN);
+        bodyFormData.append('SitemaEducativoProcedencia', this.state.sistemaProcendenciaOpcion);
+        bodyFormData.append('SitemaEducativoProcedenciaOtro', this.state.sistemaProcendenciaOtro);
+        bodyFormData.append('UniversidadAspira', this.state.UniversidadAspira);
+        bodyFormData.append('CarreraAspira', this.state.CarreraApira);
+
+        //Informacion Adicional
+        bodyFormData.append('marca_modelo', this.state.marca_modelo);
+        bodyFormData.append('placas', this.state.placas);
+        bodyFormData.append('comoseenterodelcurso', this.state.comoseenterodelcurso);
+        bodyFormData.append('comoseenterodelcursoOtro', this.state.comoseenterodelcursoOtro);
+        bodyFormData.append('recomendacionCursoNombre', this.state.recomendacionCursoNombre);
+        bodyFormData.append('recomendacionCursoemail', this.state.recomendacionCursoemail);
+        bodyFormData.append('recomendacionCursotelce', this.state.recomendacionCursotelce);
+
+
+        axios({
+            method: 'POST',
+            url: url,
+            data: bodyFormData,
+            // headers: {'content-type': 'multipart/form-data'}
+            headers: { 'Content-Type': 'application/json' }
+
+        }).then(function (response) {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Servicio Agregado',
+                showConfirmButton: false,
+                timer: 1500
+            })
+            // window.location.reload(false);
+            // this.setState({
+            //     showForm: false,
+            //     showTable: true,
+            // });
+        }).catch(function (e) {
+            console.log(e);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops..',
+                text: e,
+            })
+        })
+
+
     }
     recolectamosData(){
         return 1;
@@ -545,6 +633,24 @@ class FormularioC extends React.Component {
         this.setState({ fileCurp_Alumno: null });
         this.setState({ fileValImg: false });
         this.setState({ file_fotografia: null });
+        if (num === 0) {
+            this.setState({
+                showF_uno: true,
+                showF_dos: false,
+                showF_tres: false,
+                showF_cuatro: false,
+
+            });
+        } else if (num === 1) {
+            this.setState({
+                showF_uno: false,
+                showF_dos: true,
+                showF_tres: false,
+                showF_cuatro: false,
+            });
+        }
+    }
+    ShowViewX(num) {
         if (num === 0) {
             this.setState({
                 showF_uno: true,
@@ -748,7 +854,7 @@ class FormularioC extends React.Component {
                                                 <Col sm>
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">Lugar de nacimiento <small style={{ color: "#600101" }}>*</small> </Form.Label>
-                                                        <Form.Control type="text" value={this.state.lugarNacimiento} placeholder="LugarNacimineto" min="0" max="300" onChange={(evt) => this.dataForm_Uno(evt, "lugarNacimiento")} />
+                                                        <Form.Control type="text" value={this.state.lugarNacimiento} placeholder="Lugar de Nacimiento" min="0" max="300" onChange={(evt) => this.dataForm_Uno(evt, "lugarNacimiento")} />
                                                     </Form.Group>
                                                 </Col>
                                                 <Col sm>
