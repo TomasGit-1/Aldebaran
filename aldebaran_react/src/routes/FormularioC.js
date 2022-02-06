@@ -405,6 +405,7 @@ class FormularioC extends React.Component {
     }
 
     existeCurpAlum = async (pos) => {
+        console.log("Validacion");
         let validacion = {
             curpAlum: this.state.curp_Alumno,
         }
@@ -602,18 +603,32 @@ class FormularioC extends React.Component {
             headers: { 'Content-Type': 'application/json' }
 
         }).then(function (response) {
-            Swal.fire({
-                position: 'top-end',
-                icon: 'success',
-                title: 'Servicio Agregado',
-                showConfirmButton: false,
-                timer: 1500
-            })
-            // window.location.reload(false);
-            // this.setState({
-            //     showForm: false,
-            //     showTable: true,
-            // });
+            // console.log(response);
+            console.log(response['data']);
+            console.log(response['status']);
+            console.log(response['data']['status']);
+            console.log(response['data']['data']);
+            if(response['data']['status'] == 200){
+
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Alumno agregado',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                window.location.reload(false);
+                // this.setState({
+                //     showForm: false,
+                //     showTable: true,
+                // });
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops..',
+                    text: response['data']['data'] ,
+                })
+            }
         }).catch(function (e) {
             console.log(e);
             Swal.fire({

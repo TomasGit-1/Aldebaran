@@ -87,9 +87,8 @@ routes.post('/createRegistro',  (req, res )=> {
     } else {
         dirpdfEvidencia = save(req , dirpdfEvidencia , sampleFile);
     }
-    //Datos personales
-    let arrayBD = [
-        //tabla persona
+
+    let datosPersonales = [
         curp,
         datos.emailAlum,
         datos.nombreAlum,
@@ -97,7 +96,6 @@ routes.post('/createRegistro',  (req, res )=> {
         datos.appMatAlum,
         datos.genero,
         datos.fechaNacimiento,
-        datos.edad,
         datos.telParticularAlum,
         datos.telCelularAlum,
         datos.calle,
@@ -105,45 +103,112 @@ routes.post('/createRegistro',  (req, res )=> {
         datos.codigoPostal,
         datos.municipio,
         datos.NumeroDom,
-        
+        datos.lugarNacimiento
+    ];
+    let filepath = [
         //TablaFilePerson
         dirimg,
         dirpdf,
         dirpdfEvidencia,
-        //17
-        
-        //Tabla constacto emergencia
-        datos.nombreEmergencia,
-        datos.appPatEmergencia,
-        datos.appMatEmergencia,
-        datos.telEmergencia,
-        datos.emailEmergencia,
-        //22
-        
-
-        //Tabla formacion academica
-        datos.nivMaxStudy,
-        datos.acadSituacion,
-        datos.insEducativa,
-        datos.anioEgreso,
-        //26
-        
+    ];
+    let datosLaborales = [
         //Tabla datos laborales
         datos.nombreInst,
         datos.domicilioInst,
         datos.puestoInst,
         datos.telefonoInst
+    ];
+    let formacionAcademica = [
+        //   Tabla formacion academica
+        datos.nivMaxStudy,
+        datos.acadSituacion,
+        datos.SitemaEducativoProcedencia,
+        datos.SitemaEducativoProcedenciaOtro,
+        datos.insEducativa,
+        datos.anioEgreso,
+        datos.UniversidadAspira,
+        datos.CarreraAspira
+    ];
+    
+    let contactoEmergecia = [
+        datos.nombreEmergencia,
+        datos.appPatEmergencia,
+        datos.appMatEmergencia,
+        datos.telEmergencia,
+        datos.emailEmergencia
+    ];
+    let informacionAdicional = [
+        datos.marca_modelo,
+        datos.placas,
+        datos.comoseenterodelcurso,
+        datos.comoseenterodelcursoOtro,
+        datos.recomendacionCursoNombre,
+        datos.recomendacionCursoemail,
+        datos.recomendacionCursotelce
+    ]
+
+    // //Datos personales
+    // let arrayBD = [
+    //     //tabla persona
+    //     curp,
+    //     datos.emailAlum,
+    //     datos.nombreAlum,
+    //     datos.appPatAlum,
+    //     datos.appMatAlum,
+    //     datos.genero,
+    //     datos.fechaNacimiento,
+    //     datos.edad,
+    //     datos.telParticularAlum,
+    //     datos.telCelularAlum,
+    //     datos.calle,
+    //     datos.colonia,
+    //     datos.codigoPostal,
+    //     datos.municipio,
+    //     datos.NumeroDom,
+        
+    //     //TablaFilePerson
+    //     dirimg,
+    //     dirpdf,
+    //     dirpdfEvidencia,
+    //     //17
+        
+    //     //Tabla constacto emergencia
+    //     datos.nombreEmergencia,
+    //     datos.appPatEmergencia,
+    //     datos.appMatEmergencia,
+    //     datos.telEmergencia,
+    //     datos.emailEmergencia,
+    //     //22
+        
+
+    //     //Tabla formacion academica
+    //     datos.nivMaxStudy,
+    //     datos.acadSituacion,
+    //     datos.insEducativa,
+    //     datos.anioEgreso,
+    //     //26
+        
+    //     //Tabla datos laborales
+    //     datos.nombreInst,
+    //     datos.domicilioInst,
+    //     datos.puestoInst,
+    //     datos.telefonoInst
 
         
-    ]
-    db.createIngreso(arrayBD).then(respuesta =>{
+    // ]
+
+    db.createIngreso(datosPersonales , contactoEmergecia , datosLaborales , filepath , formacionAcademica , informacionAdicional ).then(respuesta =>{
         // res.json({ "status": respuesta});
-        res.status(200).send({
-            message: "El registro fue creado" + err,
-        });
+        res.json({ "status": 200 , "data":respuesta});
+
+        // res.status(200).send({
+        //     message: "El registro fue creado" ,
+        // });
     }).catch(error =>{
         console.log(error);
-        res.status(404).send("Not found");
+        // res.status(404).send("Not found");
+        res.json({ "status": 400 , "data":error.message});
+
     })
     // } catch (error) {
     //     res.json({ "error": error.message});
