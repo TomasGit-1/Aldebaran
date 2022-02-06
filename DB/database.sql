@@ -99,7 +99,7 @@ CREATE TABLE FormacionAcademica(
 
 
 CREATE TABLE PAGOS(
-	idPAgos serial primary key ,
+	idPagos serial primary key ,
 	idServiciosEduFk int references SERVICIOEDUCATIVO(idServiciosEdu),
 	idCurpFK varchar references Personas(Curp),
 	comprobantePath  varchar,
@@ -112,6 +112,8 @@ CREATE TABLE PAGOS(
 );
 
 CREATE TABLE INFOADICIONAL(
+	idInfo serial primary key ,
+	idCurpFK varchar references Personas(Curp),
 	marca_modelo_Vehiculo varchar,
 	placas_Vehiculo varchar,
 	comoseenterodelcuros varchar,

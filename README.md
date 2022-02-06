@@ -1,15 +1,11 @@
 # Aldebaran
-Este proyecto es para el servicio social
-npm init -y crea el package.json
-Framework
-npm i express
-npm i express express-handlebars 
-npm i morgan
-Como dependencia de desarrollo
-npm i nodemon --D
-npm run dev
-#Para instalar las dependencias
-npm install 
+Este proyecto es para el servicio social para el area de CVDR del IPN
+# Para utilizar el sistema en dev
+    Tenemos que movernos a las carpetas correspondientes donde esta el archivo package.json
+    1. Movernos a la ruta Aldebaran/aldebaran_react/
+    2. Ejecutar npm install 
+    3. Movernos a la ruta  Aldebaran/Api/
+    4. Ejecutar npm install 
 
 # Documentacion
     https://www.npmjs.com/package/sweetalert2-react
@@ -22,9 +18,21 @@ npm install
     \dt lista las tablas creadas
 
 
-600101
+# Docker
+    Para levantar el servicio docker 
+    Movernos a la ruta en donde se encuentra el archivo docker-compose.yml
+    y ejecutar
+    docker-compose up
+    esperamos a que termine de contruir y ejecutar
+    docker ps 
+    este comando te permitara ver todo los contenedores activos
+    o
+    docker ps -a 
+    todos los contenedores activos o inactivos
+    necesitamos el CONTAINER ID y ejecutamos
+    docker start CONTAINER ID
 
 
-#Docker
-docker-compose up -build
+
+
 
