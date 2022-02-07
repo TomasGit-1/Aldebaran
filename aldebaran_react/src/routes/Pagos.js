@@ -20,10 +20,12 @@ class Pagos extends React.Component {
             servicio: [
             ],
             opServicio: 0,
-            modalidad: "",
+            servicioPago: "",
             showForm: false,
             showTable: true,
-            dataPagos: []
+            dataPagos: [],
+            numModuloPago:[],
+            cantidadPago:""
         };
         this.onModalida = this.onModalida.bind(this);
         this.onServicio = this.onServicio.bind(this);
@@ -47,7 +49,22 @@ class Pagos extends React.Component {
         this.setState({ modalidad: event.target.value });
     }
     onServicio(event) {
-        this.setState({ modalidad: event.target.value });
+        var select =parseInt( event.target.value);
+        var servicios= this.state.servicio;
+
+        for (let index = 0; index < servicios.length; index++) {
+            if(servicios[index][0] === select){
+                console.log(servicios[index]);
+                let array =[];
+                for (let i = 0; i < servicios[index][7]; i++) {
+                    array.push(i+1);
+                }
+                this.setState({ numModuloPago: array });
+                this.setState({ cantidadPago: servicios[index][5]  });
+                break;
+            }
+        }
+
     }
     ShowForm(num) {
         if (num === 1) {
@@ -77,10 +94,9 @@ class Pagos extends React.Component {
             const response = await fetch(config.general[0].url + config.general[0].puerto_api + "/api/Pagos");
             var responseJson = await response.json();
             var temp = responseJson;
-            if (temp['status'] == 200) {
+            if (temp['status'] === 200) {
                 responseJson = responseJson['data'];
                 let arrayInfo = [];
-                console.log(responseJson.length);
                 for (let i = 0; i < responseJson.length; i++) {
                     let arrayTemp = [];
                     arrayTemp.push(responseJson[i].idpagos);
@@ -109,7 +125,6 @@ class Pagos extends React.Component {
 
                     arrayInfo.push(arrayTemp);
                 }
-                console.log(arrayInfo);
                 this.setState({ dataPagos: arrayInfo });
 
             } else {
@@ -128,19 +143,29 @@ class Pagos extends React.Component {
             var id = [];
             var Servicios = [];
             var habilitado = [];
-            const response = await fetch(config.general[0].url + config.general[0].puerto_api + "/api/Servicios")
+            const response = await fetch(config.general[0].url + config.general[0].puerto_api + "/api/ServiciosLista")
             var responseJson = await response.json();
             var temp = responseJson;
-            if (temp['status'] == 200) {
-                responseJson = responseJson['data']
-                for (var i = 0; i < responseJson.id.length; i++) {
-                    if (responseJson.habilitado[i] === "true") {
-                        id.push(responseJson.id[i]);
-                        Servicios.push(responseJson.programaAcademico[i]);
-                        habilitado.push(responseJson.habilitado[i]);
+            
+            if (temp['status'] === 200) {
+                responseJson = responseJson['data'];
+                for (var i = 0; i < responseJson.length; i++) {
+                    if (responseJson[i].habilitado === true) {
+                        var tempArray =[];
+                        tempArray.push(responseJson[i].idserviciosedu);
+                        tempArray.push(responseJson[i].registro_academico);
+                        tempArray.push(responseJson[i].tipo_evento);
+                        tempArray.push(responseJson[i].programa_academico);
+                        tempArray.push(responseJson[i].modalidad);
+                        tempArray.push(responseJson[i].cuota);
+                        tempArray.push(responseJson[i].habilitado);
+                        tempArray.push(responseJson[i].nummodulo);
+                        tempArray.push(responseJson[i].numhoras);
+                        
+                        Servicios.push(tempArray);
                     }
                 }
-                this.setState({ id: id });
+                // this.setState({ id: id });
                 this.setState({ servicio: Servicios });
             } else {
                 Swal.fire({
@@ -157,8 +182,23 @@ class Pagos extends React.Component {
             })
         }
     }
+    formularioSetData = (event ,  data) => {
+        switch (data) {
+            case "cantidadPago":
+                this.setState({ cantidadPago: event.target.value });
+                break;
+            case "curp":
+                this.setState({ curp_Alumno: event.target.value });
+                break;
+            default:
+                console.log("No se encuntra la opcion")
+          
+           
+        }
+    }
     render() {
         var { servicio } = this.state
+        var { numModuloPago } = this.state
         let { showTable } = this.state
         let { showForm } = this.state
         let { dataPagos } = this.state
@@ -203,12 +243,12 @@ class Pagos extends React.Component {
                                     <Col sm >
                                         <Form.Group controlId="formFile">
                                             <Form.Label className="h6 ">Servicio educativo  <small style={{ color: "#600101" }}>*</small> </Form.Label>
-                                            <p> {this.state.msgServicio}</p>
                                             <Form.Select onChange={this.onServicio}>
-                                                <option value="null">Seleccione una opcion</option>
+                                                <option value="Seleccione una opcion">Seleccione una opcion</option>
                                                 {
+                                                    
                                                     servicio.map(function (item) {
-                                                        return <option key={item} value={item}>{item}</option>;
+                                                        return <option key={item[0]} value={item[0]}>{item[3]}</option>;
                                                     })
                                                 }
                                             </Form.Select>
@@ -217,11 +257,10 @@ class Pagos extends React.Component {
                                     <Col sm >
                                         <Form.Group controlId="formFile">
                                             <Form.Label className="h6 ">Numero de modulo  <small style={{ color: "#600101" }}>*</small> </Form.Label>
-                                            <p> {this.state.msgServicio}</p>
-                                            <Form.Select onChange={this.onServicio}>
-                                                <option value="null">Seleccione una opcion</option>
+                                            <Form.Select >
+                                                <option value="Seleccione una opcio">Seleccione una opcion</option>
                                                 {
-                                                    servicio.map(function (item) {
+                                                    numModuloPago.map(function (item) {
                                                         return <option key={item} value={item}>{item}</option>;
                                                     })
                                                 }
@@ -257,7 +296,8 @@ class Pagos extends React.Component {
                                             </Form.Group>
                                             <InputGroup className="mb-3">
                                                 <InputGroup.Text id="basic-addon1">$</InputGroup.Text>
-                                                <Form.Control type="text" placeholder="Cantidad"  />
+                                                { console.log(this.state.cantidadPago)}
+                                                <Form.Control type="text" placeholder="Cantidad"   value={this.state.cantidadPago} onChange={(evt) => this.formularioSetData(evt, "cantidadPago")}  />
                                             </InputGroup>
                                     </Col>
                                 </Row>
