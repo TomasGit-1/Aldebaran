@@ -1,10 +1,11 @@
 import React from 'react'
-import { Button, Form, Container, Row, Col ,ButtonGroup , Table , Dropdown } from 'react-bootstrap'
+import { Button, Form, Container, Row, Col, ButtonGroup, Table, Dropdown, CloseButton, OverlayTrigger, Tooltip , InputGroup} from 'react-bootstrap'
 import NavbarMain from '../Components/NavbarS';
 import Swal from 'sweetalert2'
 import $ from 'jquery';
 import config from '../config/config.json';
 import Moment from 'moment'
+import { StyleSheet } from '@react-pdf/renderer';
 
 
 class Pagos extends React.Component {
@@ -18,11 +19,11 @@ class Pagos extends React.Component {
             ],
             servicio: [
             ],
-            opServicio:0,
-            modalidad:"",
+            opServicio: 0,
+            modalidad: "",
             showForm: false,
             showTable: true,
-            dataPagos :[]
+            dataPagos: []
         };
         this.onModalida = this.onModalida.bind(this);
         this.onServicio = this.onServicio.bind(this);
@@ -48,39 +49,39 @@ class Pagos extends React.Component {
     onServicio(event) {
         this.setState({ modalidad: event.target.value });
     }
-    ShowForm (num) {
+    ShowForm(num) {
         if (num === 1) {
             this.setState({
                 showForm: true,
                 showTable: false,
             });
-        }else if  (num === 0) {
+        } else if (num === 0) {
             this.setState({
                 showForm: false,
                 showTable: true,
             });
         }
     }
-    filterInput(){
+    filterInput() {
         $(document).ready(function () {
-            $("#myInput").on("keyup" , function () {
+            $("#myInput").on("keyup", function () {
                 var value = $(this).val().toLowerCase();
                 $("#myTable tr").filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value)> -1)
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 })
             })
         })
     }
     apiGetPagos = async () => {
-        try{
-            const response = await fetch(config.general[0].url+config.general[0].puerto_api+"/api/Pagos");
+        try {
+            const response = await fetch(config.general[0].url + config.general[0].puerto_api + "/api/Pagos");
             var responseJson = await response.json();
             var temp = responseJson;
-            if(temp['status'] == 200){
+            if (temp['status'] == 200) {
                 responseJson = responseJson['data'];
                 let arrayInfo = [];
                 console.log(responseJson.length);
-                for(let i=0; i<responseJson.length; i++){
+                for (let i = 0; i < responseJson.length; i++) {
                     let arrayTemp = [];
                     arrayTemp.push(responseJson[i].idpagos);
                     arrayTemp.push(responseJson[i].idcurpfk);
@@ -94,7 +95,7 @@ class Pagos extends React.Component {
                     var fechahoraregistro = new Moment(responseJson[i].fechahoraregistro).format('DD/MM/YYYY');
                     arrayTemp.push(fechahoraregistro);
 
-                    
+
                     arrayTemp.push(responseJson[i].nummodulo);
                     arrayTemp.push(responseJson[i].idserviciosedufk);
                     arrayTemp.push(responseJson[i].comprobantepath);
@@ -109,16 +110,16 @@ class Pagos extends React.Component {
                     arrayInfo.push(arrayTemp);
                 }
                 console.log(arrayInfo);
-                this.setState({ dataPagos: arrayInfo});
+                this.setState({ dataPagos: arrayInfo });
 
-            }else{
+            } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops..',
-                    text: temp['data'] ,
+                    text: temp['data'],
                 })
             }
-        }catch(e){
+        } catch (e) {
 
         }
     }
@@ -127,32 +128,32 @@ class Pagos extends React.Component {
             var id = [];
             var Servicios = [];
             var habilitado = [];
-            const response = await fetch(config.general[0].url+config.general[0].puerto_api+"/api/Servicios")
+            const response = await fetch(config.general[0].url + config.general[0].puerto_api + "/api/Servicios")
             var responseJson = await response.json();
             var temp = responseJson;
-            if(temp['status'] == 200){
+            if (temp['status'] == 200) {
                 responseJson = responseJson['data']
                 for (var i = 0; i < responseJson.id.length; i++) {
-                    if (responseJson.habilitado[i] === "true"){
+                    if (responseJson.habilitado[i] === "true") {
                         id.push(responseJson.id[i]);
                         Servicios.push(responseJson.programaAcademico[i]);
                         habilitado.push(responseJson.habilitado[i]);
                     }
                 }
-                this.setState({ id: id});
-                this.setState({ servicio: Servicios});
-            }else{
+                this.setState({ id: id });
+                this.setState({ servicio: Servicios });
+            } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops..',
-                    text: temp['data'] ,
+                    text: temp['data'],
                 })
             }
         } catch (e) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops..',
-                text:e,
+                text: e,
             })
         }
     }
@@ -161,24 +162,47 @@ class Pagos extends React.Component {
         let { showTable } = this.state
         let { showForm } = this.state
         let { dataPagos } = this.state
+        const styles = StyleSheet.create({
 
+            buttonSend: {
+                backgroundColor: "#00a01b ",
+                color: " #000",
+                border: "none",
+                height: 45
+            },
+            buttonClose: {
+                // backgroundColor:"#600101 ",
+                color: "red",
+                border: "none",
+                height: 45
+            }
+
+
+        })
         return (
             <main>
                 <NavbarMain />
-                { showForm ? 
+                {showForm ?
 
-                    <section style={{ marginTop:80}} >
+                    <section style={{ marginTop: 80 }} >
                         <Container className="mt-3 mb-3 border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2" >
+                            <OverlayTrigger
+                                placement="right"
+                                delay={{ show: 250, hide: 400 }}
+                                overlay={<Tooltip id="button-tooltip-2">Cerrar</Tooltip>}
+                            >
+                                <CloseButton style={styles.buttonClose} onClick={() => window.location.reload(false)} />
+                                {/* <Button variant="success">Hover me to see</Button> */}
+                            </OverlayTrigger>
                             <Form>
-                                <Row>
-                                    <div className="alert alert-secondary mt-2" role="alert">
-                                        Pagos
-                                    </div>
-                                </Row>
-                                <Row>
-                                    <Col sm className="mt-3">
+                                
+                                <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
+                                    Comprobante de pago
+                                </div>
+                                <Row className="mt-3">
+                                    <Col sm >
                                         <Form.Group controlId="formFile">
-                                            <Form.Label className="h5 ">Servicio educativo *</Form.Label>
+                                            <Form.Label className="h6 ">Servicio educativo  <small style={{ color: "#600101" }}>*</small> </Form.Label>
                                             <p> {this.state.msgServicio}</p>
                                             <Form.Select onChange={this.onServicio}>
                                                 <option value="null">Seleccione una opcion</option>
@@ -191,102 +215,95 @@ class Pagos extends React.Component {
                                         </Form.Group>
                                     </Col>
                                     <Col sm >
-                                        <Row>
-                                            <Form.Label className="h5 mt-3 mb-4">Modalidad *</Form.Label>
-                                        </Row>
-                                        <Form.Check
-                                            inline
-                                            label="Virtual"
-                                            name="modalidad"
-                                            type="radio"
-                                            value="Virtual"
-                                            onChange={this.onSeleccion}
-                                        />
-                                        <Form.Check
-                                            inline
-                                            label="Presencial"
-                                            name="modalidad"
-                                            type="radio"
-                                            value="Presencial"
-                                            onChange={this.onSeleccion}
-                                        />
+                                        <Form.Group controlId="formFile">
+                                            <Form.Label className="h6 ">Numero de modulo  <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                            <p> {this.state.msgServicio}</p>
+                                            <Form.Select onChange={this.onServicio}>
+                                                <option value="null">Seleccione una opcion</option>
+                                                {
+                                                    servicio.map(function (item) {
+                                                        return <option key={item} value={item}>{item}</option>;
+                                                    })
+                                                }
+                                            </Form.Select>
+                                        </Form.Group>
                                     </Col>
-                                    <Col sm className="mt-3" >
+
+                                    <Col sm >
                                         <Form.Group controlId="formFile" >
-                                            <Form.Label className="h5">Ticket de pago *</Form.Label>
-                                            <Form.Control type="file" accept=".pdf" onChange={this.uploadFileCurp} />
+                                            <Form.Label className="h6 mb-4" >Ticket de pago  <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                            <Form.Control type="file" accept=".pdf" />
                                         </Form.Group>
                                     </Col>
                                 </Row>
-                                
-                                <Row>
-                                    <div className="alert alert-secondary mt-2" role="alert">
-                                        Pagos
-                                    </div>
-                                </Row>
-                                <Row>
+
+                                <Row className="mt-3">
                                     <Col sm>
                                         <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Referencia</Form.Label>
-                                            <Form.Control type="text" placeholder="Referencia"  />
+                                            <Form.Label className="h5">Referencia  <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                            <Form.Control type="text" placeholder="Referencia" />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
                                         <Form.Group className="mb-3" >
                                             <Form.Label className="h5">Fecha / Hora </Form.Label>
-                                            <Form.Control type="datetime-local"/>
+                                            <Form.Control type="datetime-local" />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Cantidad $</Form.Label>
-                                            <Form.Control type="Number" placeholder="Cantidad"  />
-                                        </Form.Group>
+                                        
+                                            <Form.Group >
+                                                <Form.Label className="h5">Cantidad</Form.Label>
+                                            </Form.Group>
+                                            <InputGroup className="mb-3">
+                                                <InputGroup.Text id="basic-addon1">$</InputGroup.Text>
+                                                <Form.Control type="text" placeholder="Cantidad"  />
+                                            </InputGroup>
                                     </Col>
                                 </Row>
-                                <Row>
+
+                                <Row className="mt-3 ">
                                     <Col sm>
-                                        <Button type="button" className=" mt- 3 mb-3 col-4" style={{ background: '#600101', color: '#FFFFFF' }}>
-                                            Guardar
+                                        {/* <Button className="col-6" variant="outline-primary" onClick={() => this.SendDatos()}>
+                                            <i className="bi bi-plus-circle-fill "></i>
+                                            &nbsp;&nbsp;Agregar
+                                        </Button>&nbsp;&nbsp; */}
+                                          <Button className="col-6"
+                                               variant="success"  >
+                                                <i className="bi bi-plus-circle-fill "></i>
+                                                &nbsp;&nbsp;
+                                                Enviar
+                                            </Button>
+                                    </Col>
+                                    {/* <Col sm >
+                                        <Button className="col-12" variant="outline-danger" onClick={() => this.ShowForm(0)}>
+                                            <i className="bi bi-plus-circle-fill "></i>
+                                            &nbsp;&nbsp;Cancelar
                                         </Button>
-                                    </Col>
+                                    </Col> */}
                                 </Row>
-                                <Row   className="mt-3 ">
-                                <Col sm> 
-                                    <Button className="col-12" variant="outline-primary" onClick={() => this.SendDatos()}>
-                                        <i className="bi bi-plus-circle-fill "></i>
-                                        &nbsp;&nbsp;Agregar
-                                    </Button>&nbsp;&nbsp;
-                                </Col>        
-                                <Col sm >
-                                    <Button className="col-12" variant="outline-danger" onClick={() => this.ShowForm(0)}>
-                                        <i className="bi bi-plus-circle-fill "></i>
-                                        &nbsp;&nbsp;Cancelar
-                                    </Button>
-                                </Col>        
-                            </Row>
                             </Form>
                         </Container>
 
                     </section>
-                    : null 
+                    : null
                 }
 
 
-                { showTable ? 
+                {showTable ?
 
-                    <section style={{ marginTop:80}} >
+                    <section style={{ marginTop: 80 }} >
                         <section>
-                            <Container className="mt-3 mb-3"> 
+                            <Container className="mt-3 mb-3">
                             </Container>
                         </section>
                         <Container className="border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2" >
-                        <h3>Pagos</h3>
+                            <h3>Pagos</h3>
 
                             <Row className="mt-3 mb-3">
                                 <Col >
-                                    <ButtonGroup aria-label="Basic example" > 
-                                        <Button variant="secondary" onClick={() => this.ShowForm(1)}>  
+                                    <ButtonGroup aria-label="Basic example" >
+                                        <Button variant="secondary" onClick={() => this.ShowForm(1)}>
                                             Nuevo Pago &nbsp;&nbsp;<i className="bi bi-plus-circle-fill "></i>
                                         </Button>
                                     </ButtonGroup>
@@ -296,9 +313,9 @@ class Pagos extends React.Component {
                                 </Col>
                             </Row>
 
-                           
+
                             <div className="table-responsive " style={{ height: "500px" }}>
-                                <Table  className="table-hover" id ="myTable" striped bordered hover>
+                                <Table className="table-hover" id="myTable" striped bordered hover>
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -313,8 +330,8 @@ class Pagos extends React.Component {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        { 
-                                            dataPagos.map((index) => 
+                                        {
+                                            dataPagos.map((index) =>
                                                 <tr key={index}>
                                                     <td >{index[0]}</td>
                                                     <td >{index[1]}</td>
@@ -339,30 +356,30 @@ class Pagos extends React.Component {
                                                                 <Dropdown.Item  >
                                                                     <i className="bi bi-images"></i>&nbsp;&nbsp;Fotografia
                                                                 </Dropdown.Item>
-                                                                
+
                                                                 <Dropdown.Item>
                                                                     <i className="bi bi-file-earmark-pdf"></i>&nbsp;&nbsp;Curp
                                                                 </Dropdown.Item>
 
-                                                            
+
                                                             </Dropdown.Menu>
                                                         </Dropdown>
                                                     </td>
 
-                                                </tr>                                            
+                                                </tr>
                                             )
                                         }
-                                      
+
                                     </tbody>
                                 </Table>
                             </div>
                         </Container>
                     </section>
-                 : null 
-                }                         
-           
-           
-           
+                    : null
+                }
+
+
+
             </main>
         )
     }

@@ -811,7 +811,7 @@ class FormularioC extends React.Component {
                 backgroundColor:" #ceac00 ",
                 color:" #000",
                 border: "none",
-                height: 45
+                height: 39
             },
             buttonPrevious:{
                 backgroundColor:"#600101",
@@ -1097,7 +1097,7 @@ class FormularioC extends React.Component {
                                                     </Button>
                                                 </Col>
                                                 <Col sm >
-                                                    <Button className="col-12" style={styles.buttonPrevious} onClick={() => this.ShowView(0)}>
+                                                    <Button className="col-12"  variant="danger" onClick={() => this.ShowView(0)}>
                                                         
                                                         <i className="bi bi-arrow-left-circle"></i> &nbsp; Anterior 
 
@@ -1221,7 +1221,7 @@ class FormularioC extends React.Component {
                                                 </Button>
                                             </Col>
                                             <Col sm >
-                                                <Button className="col-12"  style={styles.buttonPrevious}  onClick={() => this.ShownextView(1)}>
+                                                <Button className="col-12"   variant="danger"  onClick={() => this.ShownextView(1)}>
                                                     <i className="bi bi-arrow-left-circle"></i> &nbsp; Anterior 
 
                                                     
@@ -1320,7 +1320,7 @@ class FormularioC extends React.Component {
                                             </Form.Group>
                                             <Row  >
                                                 <Col sm>
-                                                    <Button className="col-12" style={styles.buttonPrevious}  onClick={() => this.ShownextView(2)}>
+                                                    <Button className="col-12"  variant="danger" onClick={() => this.ShownextView(2)}>
                                                         
                                                     <i className="bi bi-arrow-left-circle"></i> &nbsp; Anterior 
 
@@ -1329,10 +1329,10 @@ class FormularioC extends React.Component {
                                                 </Col>
                                                 <Col sm >
                                                     {  activateSend ? 
-                                                            <Button className="col-12" style={styles.buttonSend} onClick={ () => this.form3Validacion() }>Enviar</Button>
+                                                            <Button className="col-12" variant="success" onClick={ () => this.form3Validacion() }>Enviar</Button>
                                                         
                                                         :
-                                                            <Button className="col-12" style={styles.buttonSend} disabled>Enviar</Button>                                            
+                                                            <Button className="col-12" variant="success" disabled>Enviar</Button>                                            
                                                     }
                                                 </Col>
                                             </Row>
@@ -1355,6 +1355,8 @@ class FormularioC extends React.Component {
                             </Container>
                         </section>
                         <Container className="border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2" >
+                        <h3>Alumnos</h3>
+
                             <Row className="mt-3 mb-3"   >
                                 <Col sm >
                                     <ButtonGroup aria-label="Basic example"  >

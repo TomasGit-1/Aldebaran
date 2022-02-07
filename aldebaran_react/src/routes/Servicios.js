@@ -1,10 +1,12 @@
 import React from 'react';
 import NavbarMain from '../Components/NavbarS';
-import { Table, Container, Col, Row, Form, Button, Dropdown , ButtonGroup  , InputGroup } from 'react-bootstrap';
+import { Table, Container, Col, Row, Form, Button, Dropdown, ButtonGroup, InputGroup ,  CloseButton , OverlayTrigger , Tooltip } from 'react-bootstrap';
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import $ from 'jquery';
 import config from '../config/config.json';
+import {StyleSheet } from '@react-pdf/renderer';
+
 
 
 class Servicios extends React.Component {
@@ -12,7 +14,7 @@ class Servicios extends React.Component {
         super(props)
         this.state = {
             msg: "Primera aplicacion React",
-            url:"",
+            url: "",
             id: [
             ],
             registro: [
@@ -27,21 +29,21 @@ class Servicios extends React.Component {
             ],
             cuotaArray: [
             ],
-            moduloArray:[   
+            moduloArray: [
             ],
-            HorasArray:[   
+            HorasArray: [
             ],
             servicioNew: "",
             show: false,
             showForm: false,
             showTable: true,
-            resAcademico:"",
-            tipoEvento:"",
-            nombreServicio:"",
-            modalidad:"",
-            cuota : "",
-            numModulo:1,
-            numHoras:1
+            resAcademico: "",
+            tipoEvento: "",
+            nombreServicio: "",
+            modalidad: "",
+            cuota: "",
+            numModulo: 1,
+            numHoras: 1
         }
         this.SendDatos = this.SendDatos.bind(this);
         this.dataForm0 = this.dataForm0.bind(this);
@@ -51,23 +53,23 @@ class Servicios extends React.Component {
         this.filterInput = this.filterInput.bind(this);
 
     }
-    filterInput(){
+    filterInput() {
         $(document).ready(function () {
-            $("#myInput").on("keyup" , function () {
+            $("#myInput").on("keyup", function () {
                 var value = $(this).val().toLowerCase();
                 $("#myTable tr").filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value)> -1)
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 })
             })
         })
     }
-    ShowForm (num) {
+    ShowForm(num) {
         if (num === 1) {
             this.setState({
                 showForm: true,
                 showTable: false,
             });
-        }else if  (num === 0) {
+        } else if (num === 0) {
             this.setState({
                 showForm: false,
                 showTable: true,
@@ -78,31 +80,31 @@ class Servicios extends React.Component {
         console.log(event.target.value);
         this.setState({ modalidad: event.target.value });
     }
-    dataForm0(event , data) {
-        if (data === "resgitroid"){
+    dataForm0(event, data) {
+        if (data === "resgitroid") {
             this.setState({ resAcademico: event.target.value });
-        }else if (data === "evento"){
+        } else if (data === "evento") {
             this.setState({ tipoEvento: event.target.value });
-        }else if (data === "nombre"){
+        } else if (data === "nombre") {
             this.setState({ nombreServicio: event.target.value });
-        }else if (data ==="cuota"){
+        } else if (data === "cuota") {
             this.setState({ cuota: event.target.value });
-        }else if (data ==="numModulo"){
+        } else if (data === "numModulo") {
             this.setState({ numModulo: event.target.value });
-        }else if (data ==="numHoras"){
+        } else if (data === "numHoras") {
             this.setState({ numHoras: event.target.value });
         }
     }
 
     SendDatos() {
         let validacion = {
-            registro:  this.state.resAcademico,
-            evento:    this.state.tipoEvento,
-            nombre:    this.state.nombreServicio,
-            cuota:     this.state.cuota,
-            modalidad :this.state.modalidad,
-            numModulo :this.state.numModulo,
-            numHoras :this.state.numHoras
+            registro: this.state.resAcademico,
+            evento: this.state.tipoEvento,
+            nombre: this.state.nombreServicio,
+            cuota: this.state.cuota,
+            modalidad: this.state.modalidad,
+            numModulo: this.state.numModulo,
+            numHoras: this.state.numHoras
         }
         console.log(validacion);
         console.log(validacion.registro);
@@ -116,32 +118,32 @@ class Servicios extends React.Component {
                 title: 'Oops..',
                 text: 'El campo resgitro academico esta vacio',
             })
-        }else if (validacion.evento === "") {
+        } else if (validacion.evento === "") {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops..',
                 text: 'El campo tipo de evento esta vacio',
             })
-        }else if (validacion.nombre === "") {
+        } else if (validacion.nombre === "") {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops..',
                 text: 'El camppo Nombre del programa academico esta vacio',
             })
-        }else if (validacion.cuota === "") {
+        } else if (validacion.cuota === "") {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops..',
                 text: 'Agregue el costo del servicio por persona',
             })
-        }else if (validacion.modalidad=== "") {
+        } else if (validacion.modalidad === "") {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops..',
                 text: 'Seleccione una opcion de modalidad',
             })
-        }else {
-            var msg = '¿Estas seguro de agregar\n - ' + validacion.registro+ '- como servicio?';
+        } else {
+            var msg = '¿Estas seguro de agregar\n - ' + validacion.registro + '- como servicio?';
             Swal.fire({
                 title: msg,
                 text: "¡No podrás revertir esto!",
@@ -155,7 +157,7 @@ class Servicios extends React.Component {
                     // let data = {
                     //     servicioNew: this.state.servicioNew,
                     // }
-                    axios.post(config.general[0].url+config.general[0].puerto_api+'/api/createServicio', {
+                    axios.post(config.general[0].url + config.general[0].puerto_api + '/api/createServicio', {
                         validacion,
                     })
                         .then(res => {
@@ -177,7 +179,7 @@ class Servicios extends React.Component {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops..',
-                                text:e,
+                                text: e,
                             })
                         });
 
@@ -193,13 +195,13 @@ class Servicios extends React.Component {
             habilitado: this.state.habilitado,
         }
         var msg = "";
-        var opcion= false;
-        console.log( validacion['habilitado'][b]);
-        if(validacion['habilitado'][b] === "Habilitado"){
-            msg ="¿Desahabilitar el servicio?";
+        var opcion = false;
+        console.log(validacion['habilitado'][b]);
+        if (validacion['habilitado'][b] === "Habilitado") {
+            msg = "¿Desahabilitar el servicio?";
             opcion = false;
-        }else{
-            msg ="¿Habilitar el servicio?";
+        } else {
+            msg = "¿Habilitar el servicio?";
             opcion = true;
         }
         Swal.fire({
@@ -212,32 +214,32 @@ class Servicios extends React.Component {
         }).then((result) => {
             if (result.isConfirmed) {
                 let data = {
-                    "id":validacion['id'][b],
-                    "habilitado":opcion
+                    "id": validacion['id'][b],
+                    "habilitado": opcion
                 }
-                axios.post(config.general[0].url+config.general[0].puerto_api+'/api/updateHabilitado', {
+                axios.post(config.general[0].url + config.general[0].puerto_api + '/api/updateHabilitado', {
                     data,
                 })
-                .then(res => {
-                    console.log(res);
-                    console.log(res.data);
-                    this.apiServicios();
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Servicio modificado',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                }).catch(function (e) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops..',
-                        text:e,
-                    })
-                    
-                });
-                
+                    .then(res => {
+                        console.log(res);
+                        console.log(res.data);
+                        this.apiServicios();
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Servicio modificado',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }).catch(function (e) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops..',
+                            text: e,
+                        })
+
+                    });
+
             }
         })
 
@@ -247,31 +249,31 @@ class Servicios extends React.Component {
     }
     apiServicios = async () => {
         try {
-            
-            let id =[]
+
+            let id = []
             let registro = []
             let evento = []
-            let programaAcademico =[]
-            let habilitado =[]
-            let modalidadArray =[]
-            let cuotaArray =[]
-            let moduloArray =[]
-            let HorasArray =[]
-            const response = await fetch(config.general[0].url+config.general[0].puerto_api+"/api/Servicios")
+            let programaAcademico = []
+            let habilitado = []
+            let modalidadArray = []
+            let cuotaArray = []
+            let moduloArray = []
+            let HorasArray = []
+            const response = await fetch(config.general[0].url + config.general[0].puerto_api + "/api/Servicios")
             var responseJson = await response.json();
             var temp = responseJson;
             console.log(temp);
-            if(temp['status'] == 200){
+            if (temp['status'] == 200) {
                 responseJson = responseJson['data'];
                 for (var i = 0; i < responseJson.id.length; i++) {
                     id.push(responseJson.id[i]);
                     registro.push(responseJson.registro[i]);
                     evento.push(responseJson.evento[i]);
                     programaAcademico.push(responseJson.programaAcademico[i]);
-                    if(responseJson.habilitado[i] === "true"){
+                    if (responseJson.habilitado[i] === "true") {
                         console.log("Habilitado");
                         habilitado.push("Habilitado");
-                    }else{
+                    } else {
                         console.log("Deshabilidato");
                         habilitado.push("Deshabilidato");
                     }
@@ -292,73 +294,100 @@ class Servicios extends React.Component {
                 this.setState({ cuotaArray: cuotaArray });
                 this.setState({ moduloArray: moduloArray });
                 this.setState({ HorasArray: HorasArray });
-            }else{
+            } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops..',
-                    text: temp['data'] ,
+                    text: temp['data'],
                 })
             }
         } catch (e) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops..',
-                text:e,
+                text: e,
             })
         }
 
     }
     render() {
-        let {id} = this.state
-        let {registro} = this.state
-        let {evento} = this.state
-        let {programaAcademico} =this.state
-        let {habilitado} =this.state
-        let {modalidadArray} =this.state
-        let {cuotaArray} =this.state
-        let {moduloArray} =this.state
-        let {HorasArray} =this.state
+        let { id } = this.state
+        let { registro } = this.state
+        let { evento } = this.state
+        let { programaAcademico } = this.state
+        let { habilitado } = this.state
+        let { modalidadArray } = this.state
+        let { cuotaArray } = this.state
+        let { moduloArray } = this.state
+        let { HorasArray } = this.state
         let { showForm } = this.state
         let { showTable } = this.state
-
+        const styles = StyleSheet.create({
+            
+            buttonSend:{
+                backgroundColor:"#00a01b ",
+                color:" #000",
+                border: "none",
+                height: 45
+            },
+            buttonClose:{
+                // backgroundColor:"#600101 ",
+                color:"red",
+                border: "none",
+                height: 45
+            }
+        
+        
+        })
         return (
             <main>
                 <NavbarMain />
 
-                { showForm ? 
-                    <section style={{ marginTop:80}} >
-                     <Container className="mt-3 mb-3 border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2" >
+                {showForm ?
+                    <section style={{ marginTop: 80 }} >
+                        <Container className="mt-3 mb-3 border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2" >
+                            <OverlayTrigger
+                                placement="right"
+                                delay={{ show: 250, hide: 400 }}
+                                overlay={<Tooltip id="button-tooltip-2">Cerrar</Tooltip>}
+                            >
+                                <CloseButton style={styles.buttonClose} onClick={() => window.location.reload(false)} />
+                                {/* <Button variant="success">Hover me to see</Button> */}
+                            </OverlayTrigger>
+                            <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
+                                Servicios educativos                           
+                            </div>
                             <Row className="mt-3 mb-3">
                                 <Col sm >
                                     <Form.Group >
-                                    <Form.Label className="h5">Registro academico</Form.Label>
-                                        <Form.Control type="text" placeholder="Registro academico" onChange={(evt) => this.dataForm0(evt , "resgitroid")}/>
+                                        <Form.Label className="h5">Registro academico</Form.Label>
+                                        <Form.Control type="text" placeholder="Registro academico" onChange={(evt) => this.dataForm0(evt, "resgitroid")} />
                                     </Form.Group>
                                 </Col>
                                 <Col sm >
                                     <Form.Group >
-                                    <Form.Label className="h5">Numero de Modulos (1, 2, 3...)</Form.Label>
-                                        <Form.Control type="number" placeholder="Numero de modulos" onChange={(evt) => this.dataForm0(evt ,"numModulo")} min={1}  />
+                                        <Form.Label className="h5">Numero de Modulos (1, 2, 3...)</Form.Label>
+                                        <Form.Control type="number" placeholder="Numero de modulos" onChange={(evt) => this.dataForm0(evt, "numModulo")} min={1} />
                                     </Form.Group>
                                 </Col>
                                 <Col sm >
                                     <Form.Group >
-                                    <Form.Label className="h5">Numero de horas </Form.Label>
-                                        <Form.Control type="number" placeholder="Numero de horas" onChange={(evt) => this.dataForm0(evt ,"numHoras")} min={1}/>
+                                        <Form.Label className="h5">Numero de horas </Form.Label>
+                                        <Form.Control type="number" placeholder="Numero de horas" onChange={(evt) => this.dataForm0(evt, "numHoras")} min={1} />
                                     </Form.Group>
                                 </Col>
                             </Row>
                             <Row >
                                 <Col sm >
                                     <Form.Group >
-                                    <Form.Label className="h5">Tipo de evento</Form.Label>
-                                        <Form.Control type="text" placeholder="Evento" onChange={(evt) => this.dataForm0(evt ,"evento")}/>
+                                        <Form.Label className="h5">Tipo de evento</Form.Label>
+                                        <Form.Control type="text" placeholder="Evento" onChange={(evt) => this.dataForm0(evt, "evento")} />
                                     </Form.Group>
                                 </Col>
                                 <Col sm >
                                     <Form.Group >
-                                    <Form.Label className="h5">Nombre del programa academico</Form.Label>
-                                        <Form.Control type="text" placeholder="Programa academico" onChange={(evt) => this.dataForm0(evt , "nombre")}/>
+                                        <Form.Label className="h5">Nombre del programa academico</Form.Label>
+                                        <Form.Control type="text" placeholder="Programa academico" onChange={(evt) => this.dataForm0(evt, "nombre")} />
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -391,43 +420,54 @@ class Servicios extends React.Component {
                                     </Form.Group>
                                     <InputGroup className="mb-3">
                                         <InputGroup.Text id="basic-addon1">$</InputGroup.Text>
-                                        <Form.Control type="text" placeholder="Cuota por participante" onChange={(evt) => this.dataForm0(evt, "cuota")}/>
+                                        <Form.Control type="text" placeholder="Cuota por participante" onChange={(evt) => this.dataForm0(evt, "cuota")} />
                                     </InputGroup>
                                 </Col>
                             </Row>
-                            <Row   className="mt-3 ">
-                                <Col sm> 
-                                    <Button className="col-12" variant="outline-primary" onClick={() => this.SendDatos()}>
+                            <Row className="mt-3 ">
+                                <Col>
+                                    {/* <Button className="col-6" variant="outline-primary" onClick={() => this.SendDatos()}>
                                         <i className="bi bi-plus-circle-fill "></i>
                                         &nbsp;&nbsp;Agregar
-                                    </Button>&nbsp;&nbsp;
-                                </Col>        
-                                <Col sm >
+                                    </Button>&nbsp;&nbsp; */}
+                                    <Button className="col-6"
+                                        variant="success"onClick={ () => this.SendDatos() }>
+                                        <i className="bi bi-plus-circle-fill "></i>
+                                        &nbsp;&nbsp;
+                                        Enviar
+                                    </Button>
+{/* 
+                                    <Button className="col-6" variant="outline-primary" onClick={() => this.SendDatos()}>
+                                        <i className="bi bi-plus-circle-fill "></i>
+                                        &nbsp;&nbsp;Agregar
+                                    </Button>&nbsp;&nbsp; */}
+                                </Col>
+                                {/* <Col sm >
                                     <Button className="col-12" variant="outline-danger" onClick={() => this.ShowForm(0)}>
                                         <i className="bi bi-plus-circle-fill "></i>
                                         &nbsp;&nbsp;Cancelar
                                     </Button>
-                                </Col>        
+                                </Col> */}
                             </Row>
                         </Container>
                     </section>
-                 : null 
+                    : null
                 }
 
-                { showTable ? 
+                {showTable ?
 
-                    <section style={{ marginTop:80}} >
+                    <section style={{ marginTop: 80 }} >
                         <section>
-                            <Container className="mt-3 mb-3"> 
+                            <Container className="mt-3 mb-3">
                             </Container>
                         </section>
                         <Container className="border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2" >
-                        <h3>Servicios educativos</h3>
+                            <h3>Servicios educativos</h3>
 
                             <Row className="mt-3 mb-3">
                                 <Col >
-                                    <ButtonGroup aria-label="Basic example" > 
-                                        <Button variant="secondary" onClick={() => this.ShowForm(1)}>  
+                                    <ButtonGroup aria-label="Basic example" >
+                                        <Button variant="secondary" onClick={() => this.ShowForm(1)}>
                                             Nuevo servicio &nbsp;&nbsp;<i className="bi bi-plus-circle-fill "></i>
                                         </Button>
                                     </ButtonGroup>
@@ -444,10 +484,10 @@ class Servicios extends React.Component {
                                             No hay servicios en la base de datos
                                         </div>
                                     </Container>
-                                : null
+                                    : null
                             }
                             <div className="table-responsive " style={{ height: "500px" }}>
-                                <Table  className="table-hover" id ="myTable" striped bordered hover>
+                                <Table className="table-hover" id="myTable" striped bordered hover>
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -483,15 +523,15 @@ class Servicios extends React.Component {
                                                         <Dropdown.Menu>
                                                             <Dropdown.Item onClick={() => this.editar(index)} >
                                                                 {/* <Button onClick={() => this.editar(index)}><i className="bi bi-pencil"></i></Button> */}
-                                                                 <i className="bi bi-pencil"></i> &nbsp;&nbsp;Editar
+                                                                <i className="bi bi-pencil"></i> &nbsp;&nbsp;Editar
                                                             </Dropdown.Item>
                                                             <Dropdown.Item onClick={() => this.editar(index)}>
-                                                                
-                                                                    {
-                                                                        habilitado[index]==="Habilitado" ?
+
+                                                                {
+                                                                    habilitado[index] === "Habilitado" ?
                                                                         <label><i className="bi bi-toggle-off"></i>&nbsp;&nbsp;Deshabilitar</label>
-                                                                        :  <label><i className="bi bi-toggle-on"></i>&nbsp;&nbsp;Habilitar</label>
-                                                                    }
+                                                                        : <label><i className="bi bi-toggle-on"></i>&nbsp;&nbsp;Habilitar</label>
+                                                                }
 
                                                             </Dropdown.Item>
 
@@ -506,7 +546,7 @@ class Servicios extends React.Component {
                             </div>
                         </Container>
                     </section>
-                 : null 
+                    : null
                 }
             </main>
         )
