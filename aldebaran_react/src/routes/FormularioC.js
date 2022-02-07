@@ -480,12 +480,12 @@ class FormularioC extends React.Component {
                 campos.set('Fotografia', this.state.file_fotografia);
                 campos.set('email', this.state.email_Alumno);
                 campos.set('Curp', this.state.curp_Alumno);
-                campos.set('Archivo Curp ', this.state.fileCurp_Alumno);
-                campos.set('Genero ', this.state.genero);
-                campos.set('Nombre ', this.state.nombre_Alumno);
-                campos.set('Apellido paterno ', this.state.appPat_Alumno);
-                campos.set('Apellido Materno ', this.state.appMat_Alumno);
-                campos.set('Fecha de nacimiento ', this.state.fechaNac_Alumno);
+                campos.set('Archivo Curp', this.state.fileCurp_Alumno);
+                campos.set('Genero', this.state.genero);
+                campos.set('Nombre', this.state.nombre_Alumno);
+                campos.set('Apellido paterno', this.state.appPat_Alumno);
+                campos.set('Apellido Materno', this.state.appMat_Alumno);
+                campos.set('Fecha de nacimiento', this.state.fechaNac_Alumno);
                 campos.set('Lugar de nacimiento', this.state.lugarNacimiento);
                 campos.set('Telefono celular', this.state.telCel_Alumno);
                 campos.set('Calle', this.state.calle_Alumno);
@@ -573,9 +573,9 @@ class FormularioC extends React.Component {
     }
     form2Validacion(pos) {
         var campos = new Map();
-        campos.set('Nombre ', this.state.nombre_Emerge);
-        campos.set('Apellido paterno ', this.state.appPat_Emerge);
-        campos.set('Apellido Materno ', this.state.appMat_Emerge);
+        campos.set('Nombre', this.state.nombre_Emerge);
+        campos.set('Apellido paterno', this.state.appPat_Emerge);
+        campos.set('Apellido Materno', this.state.appMat_Emerge);
         campos.set('Telefono celular', this.state.telContacto_Emerge);
         campos.set('email', this.state.email_Emerge);
 
@@ -583,9 +583,9 @@ class FormularioC extends React.Component {
     }
     form3Validacion() {
         var campos = new Map();
-        campos.set('Nombre ', this.state.recomendacionCursoNombre);
-        campos.set('Email ', this.state.recomendacionCursoemail);
-        campos.set('Telefono de Celular ', this.state.recomendacionCursotelce);
+        campos.set('Nombre', this.state.recomendacionCursoNombre);
+        campos.set('email', this.state.recomendacionCursoemail);
+        campos.set('Telefono de Celular', this.state.recomendacionCursotelce);
         this.dataMessage(campos);
     }
     dataMessage(mapData){
@@ -598,7 +598,10 @@ class FormularioC extends React.Component {
             }
         }
         if (msg === "") {
-            var email = mapData.get('Email');
+            var email = mapData.get('email');
+            console.log("validamos el tercer email");
+            console.log(mapData);
+            console.log(mapData.get('email'));
             var esEmail = this.fun_esEmail(email);
             if (esEmail){
                 this.sendData();    
@@ -1281,7 +1284,7 @@ class FormularioC extends React.Component {
                                                         <Form.Control type="text" placeholder="Otro" value={this.state.comoseenterodelcursoOtro}   onChange={(evt) => this.dataoForm_cuatro(evt, "otro")} />
                                                     </Form.Group>
                                                 </Col>
-            
+                                                
                                             </Row>
                                             <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
                                                 ¿A quién recomendaría este curso?

@@ -263,7 +263,7 @@ class Servicios extends React.Component {
             var responseJson = await response.json();
             var temp = responseJson;
             console.log(temp);
-            if (temp['status'] == 200) {
+            if (temp['status'] === 200) {
                 responseJson = responseJson['data'];
                 for (var i = 0; i < responseJson.id.length; i++) {
                     id.push(responseJson.id[i]);

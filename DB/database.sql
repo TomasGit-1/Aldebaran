@@ -100,10 +100,10 @@ CREATE TABLE FormacionAcademica(
 
 CREATE TABLE PAGOS(
 	idPagos serial primary key ,
-	idServiciosEduFk int references SERVICIOEDUCATIVO(idServiciosEdu),
 	idCurpFK varchar references Personas(Curp),
+	idServiciosEduFk bigint references SERVICIOEDUCATIVO(idServiciosEdu),
+	numModulo varchar,
 	comprobantePath  varchar,
-	modalidad varchar(30),
 	referencia varchar,
 	FechaHoraTicket  timestamp,
 	fechaHoraRegistro timestamp,

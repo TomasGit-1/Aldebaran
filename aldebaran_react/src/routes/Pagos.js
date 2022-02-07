@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Form, Container, Row, Col, ButtonGroup, Table, Dropdown, CloseButton, OverlayTrigger, Tooltip , InputGroup} from 'react-bootstrap'
+import { Button, Form, Container, Row, Col, ButtonGroup, Table, Dropdown, CloseButton, OverlayTrigger, Tooltip, InputGroup } from 'react-bootstrap'
 import NavbarMain from '../Components/NavbarS';
 import Swal from 'sweetalert2'
 import $ from 'jquery';
@@ -24,8 +24,8 @@ class Pagos extends React.Component {
             showForm: false,
             showTable: true,
             dataPagos: [],
-            numModuloPago:[],
-            cantidadPago:""
+            numModuloPago: [],
+            cantidadPago: ""
         };
         this.onModalida = this.onModalida.bind(this);
         this.onServicio = this.onServicio.bind(this);
@@ -49,18 +49,18 @@ class Pagos extends React.Component {
         this.setState({ modalidad: event.target.value });
     }
     onServicio(event) {
-        var select =parseInt( event.target.value);
-        var servicios= this.state.servicio;
+        var select = parseInt(event.target.value);
+        var servicios = this.state.servicio;
 
         for (let index = 0; index < servicios.length; index++) {
-            if(servicios[index][0] === select){
+            if (servicios[index][0] === select) {
                 console.log(servicios[index]);
-                let array =[];
+                let array = [];
                 for (let i = 0; i < servicios[index][7]; i++) {
-                    array.push(i+1);
+                    array.push(i + 1);
                 }
                 this.setState({ numModuloPago: array });
-                this.setState({ cantidadPago: servicios[index][5]  });
+                this.setState({ cantidadPago: servicios[index][5] });
                 break;
             }
         }
@@ -146,12 +146,12 @@ class Pagos extends React.Component {
             const response = await fetch(config.general[0].url + config.general[0].puerto_api + "/api/ServiciosLista")
             var responseJson = await response.json();
             var temp = responseJson;
-            
+
             if (temp['status'] === 200) {
                 responseJson = responseJson['data'];
                 for (var i = 0; i < responseJson.length; i++) {
                     if (responseJson[i].habilitado === true) {
-                        var tempArray =[];
+                        var tempArray = [];
                         tempArray.push(responseJson[i].idserviciosedu);
                         tempArray.push(responseJson[i].registro_academico);
                         tempArray.push(responseJson[i].tipo_evento);
@@ -161,7 +161,7 @@ class Pagos extends React.Component {
                         tempArray.push(responseJson[i].habilitado);
                         tempArray.push(responseJson[i].nummodulo);
                         tempArray.push(responseJson[i].numhoras);
-                        
+
                         Servicios.push(tempArray);
                     }
                 }
@@ -182,7 +182,7 @@ class Pagos extends React.Component {
             })
         }
     }
-    formularioSetData = (event ,  data) => {
+    formularioSetData = (event, data) => {
         switch (data) {
             case "cantidadPago":
                 this.setState({ cantidadPago: event.target.value });
@@ -192,8 +192,8 @@ class Pagos extends React.Component {
                 break;
             default:
                 console.log("No se encuntra la opcion")
-          
-           
+
+
         }
     }
     render() {
@@ -235,7 +235,7 @@ class Pagos extends React.Component {
                                 {/* <Button variant="success">Hover me to see</Button> */}
                             </OverlayTrigger>
                             <Form>
-                                
+
                                 <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
                                     Comprobante de pago
                                 </div>
@@ -246,7 +246,7 @@ class Pagos extends React.Component {
                                             <Form.Select onChange={this.onServicio}>
                                                 <option value="Seleccione una opcion">Seleccione una opcion</option>
                                                 {
-                                                    
+
                                                     servicio.map(function (item) {
                                                         return <option key={item[0]} value={item[0]}>{item[3]}</option>;
                                                     })
@@ -270,15 +270,35 @@ class Pagos extends React.Component {
 
                                     <Col sm >
                                         <Form.Group controlId="formFile" >
-                                            <Form.Label className="h6 mb-4" >Ticket de pago  <small style={{ color: "#600101" }}>*</small> </Form.Label>
-                                            <Form.Control type="file" accept=".pdf" />
+                                            <Form.Label className="h6 mb-1 " >Comprobante de pago  <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                            <Form.Control type="file" accept=".pdf" className="mt-1" />
                                         </Form.Group>
                                     </Col>
                                 </Row>
 
                                 <Row className="mt-3">
                                     <Col sm>
-                                        <Form.Group className="mb-3">
+                                    <Form.Group className="mb-3">
+                                            <Form.Label className="h5"> ¿Requiere factura electrónica? <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                            <Form.Check 
+                                                type="switch"
+                                                id="custom-switch"
+                                                label="factura electrónica"
+                                            />
+                                        </Form.Group>
+                                       
+                                    </Col>
+                                    <Col sm >
+                                        <Form.Group controlId="formFile" >
+                                            <Form.Label className="h6 mb-3" >Anexar cédula fiscal <small> Solo en caso de requerirse </small>  </Form.Label>
+                                            <Form.Control type="file" accept=".pdf" />
+                                        </Form.Group>
+                                    </Col>
+                                   
+                                </Row>
+                                <Row className="mt-3">
+                                    <Col sm>
+                                    <Form.Group className="mb-3">
                                             <Form.Label className="h5">Referencia  <small style={{ color: "#600101" }}>*</small> </Form.Label>
                                             <Form.Control type="text" placeholder="Referencia" />
                                         </Form.Group>
@@ -290,16 +310,30 @@ class Pagos extends React.Component {
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
-                                        
-                                            <Form.Group >
-                                                <Form.Label className="h5">Cantidad</Form.Label>
-                                            </Form.Group>
-                                            <InputGroup className="mb-3">
-                                                <InputGroup.Text id="basic-addon1">$</InputGroup.Text>
-                                                { console.log(this.state.cantidadPago)}
-                                                <Form.Control type="text" placeholder="Cantidad"   value={this.state.cantidadPago} onChange={(evt) => this.formularioSetData(evt, "cantidadPago")}  />
-                                            </InputGroup>
+
+                                        <Form.Group >
+                                            <Form.Label className="h5">Cantidad</Form.Label>
+                                        </Form.Group>
+                                        <InputGroup className="mb-3">
+                                            <InputGroup.Text id="basic-addon1">$</InputGroup.Text>
+                                            {console.log(this.state.cantidadPago)}
+                                            <Form.Control type="text" placeholder="Cantidad" value={this.state.cantidadPago} onChange={(evt) => this.formularioSetData(evt, "cantidadPago")} />
+                                        </InputGroup>
                                     </Col>
+                                </Row>
+                                <Row>
+                                    <Col sm>
+                                    <Form.Group controlId="formFile" >
+                                            <Form.Label className="h6 mb-3" >Descripcion </Form.Label>
+                                        <textarea
+
+                                            className="col-12"
+                                        />
+                                        </Form.Group>
+
+                                    </Col>
+
+
                                 </Row>
 
                                 <Row className="mt-3 ">
@@ -308,12 +342,12 @@ class Pagos extends React.Component {
                                             <i className="bi bi-plus-circle-fill "></i>
                                             &nbsp;&nbsp;Agregar
                                         </Button>&nbsp;&nbsp; */}
-                                          <Button className="col-6"
-                                               variant="success"  >
-                                                <i className="bi bi-plus-circle-fill "></i>
-                                                &nbsp;&nbsp;
-                                                Enviar
-                                            </Button>
+                                        <Button className="col-6"
+                                            variant="success"  >
+                                            <i className="bi bi-plus-circle-fill "></i>
+                                            &nbsp;&nbsp;
+                                            Enviar
+                                        </Button>
                                     </Col>
                                     {/* <Col sm >
                                         <Button className="col-12" variant="outline-danger" onClick={() => this.ShowForm(0)}>
