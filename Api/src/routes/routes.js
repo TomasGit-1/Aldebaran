@@ -147,72 +147,17 @@ routes.post('/createRegistro',  (req, res )=> {
         datos.recomendacionCursotelce
     ]
 
-    // //Datos personales
-    // let arrayBD = [
-    //     //tabla persona
-    //     curp,
-    //     datos.emailAlum,
-    //     datos.nombreAlum,
-    //     datos.appPatAlum,
-    //     datos.appMatAlum,
-    //     datos.genero,
-    //     datos.fechaNacimiento,
-    //     datos.edad,
-    //     datos.telParticularAlum,
-    //     datos.telCelularAlum,
-    //     datos.calle,
-    //     datos.colonia,
-    //     datos.codigoPostal,
-    //     datos.municipio,
-    //     datos.NumeroDom,
-        
-    //     //TablaFilePerson
-    //     dirimg,
-    //     dirpdf,
-    //     dirpdfEvidencia,
-    //     //17
-        
-    //     //Tabla constacto emergencia
-    //     datos.nombreEmergencia,
-    //     datos.appPatEmergencia,
-    //     datos.appMatEmergencia,
-    //     datos.telEmergencia,
-    //     datos.emailEmergencia,
-    //     //22
-        
-
-    //     //Tabla formacion academica
-    //     datos.nivMaxStudy,
-    //     datos.acadSituacion,
-    //     datos.insEducativa,
-    //     datos.anioEgreso,
-    //     //26
-        
-    //     //Tabla datos laborales
-    //     datos.nombreInst,
-    //     datos.domicilioInst,
-    //     datos.puestoInst,
-    //     datos.telefonoInst
-
-        
-    // ]
+  
 
     db.createIngreso(datosPersonales , contactoEmergecia , datosLaborales , filepath , formacionAcademica , informacionAdicional ).then(respuesta =>{
-        // res.json({ "status": respuesta});
         res.json({ "status": 200 , "data":respuesta});
 
-        // res.status(200).send({
-        //     message: "El registro fue creado" ,
-        // });
     }).catch(error =>{
         console.log(error);
-        // res.status(404).send("Not found");
         res.json({ "status": 400 , "data":error.message});
 
     })
-    // } catch (error) {
-    //     res.json({ "error": error.message});
-    // }
+    
 });
 
 const save = ( req , dir , sampleFile) =>{
@@ -309,6 +254,15 @@ routes.post('/AlumnoJoin',  (req, res )=> {
 
 routes.get('/Pagos',  (req, res )=> {
     db.getPagos().then(respuesta =>{
+        res.json({ "status": 200 , "data":respuesta['Info']});
+
+    }).catch(error =>{
+        res.json({ "status": 400 , "data":error.message});
+    })
+});
+
+routes.get('/ServiciosLista',  (req, res )=> {
+    db.getDataServicios().then(respuesta =>{
         res.json({ "status": 200 , "data":respuesta['Info']});
 
     }).catch(error =>{
