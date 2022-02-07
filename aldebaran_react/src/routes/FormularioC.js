@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import { Button, Form, Container, Row, Col, ButtonGroup, Table, Dropdown , CloseButton , OverlayTrigger , Tooltip , Image } from 'react-bootstrap'
+import { Button, Form, Container, Row, Col, ButtonGroup, Table, Dropdown , CloseButton , OverlayTrigger , Tooltip } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2'
 import Moment from 'moment'
@@ -149,12 +149,55 @@ class FormularioC extends React.Component {
         this.SeleccMedioInformacio = this.SeleccMedioInformacio.bind(this);
         this.form3Validacion = this.form3Validacion.bind(this);
         this.AceptoCheck = this.AceptoCheck.bind(this);
+        this.filterInput = this.filterInput.bind(this);
+        this.getDownloadFile = this.getDownloadFile.bind(this);
         
     }
     componentDidMount() {
         this.apiAlumnos();
     }
-
+    filterInput() {
+        $(document).ready(function () {
+            $("#myInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                })
+            })
+        })
+    }
+    getDownloadFile  = async (curp , tipo) => {
+        var formData = new FormData();
+        formData.append('curp', curp);
+        formData.append('tipo', tipo);
+        const res = await fetch(
+            config.general[0].url + config.general[0].puerto_api + "/api/downloadFile",
+            {
+                method: 'POST', // or 'PUT'
+                body: formData, // data can be `string` or {object}!
+            }
+        )
+        .catch(function(error){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops..',
+                text: error.message,
+            })
+        });
+        console.log(res);
+        console.log(res.body);
+        if(res.ok){
+            const blob = await res.blob();
+            // download(blob , 'dlText.jpeg' , "image/jpeg");
+            download(blob );
+        }else{
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops..',
+                text: "No se encontro el archivo",
+            })
+        }
+    }
     apiAlumnos = async () => {
         try {
             const response = await fetch(config.general[0].url + config.general[0].puerto_api + "/api/Alumnos");
@@ -254,7 +297,11 @@ class FormularioC extends React.Component {
                 this.setState({ municipio_Alumno: event.target.value });
                 break;
             default:
-                console.log("No se encuntra la opcion");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops..',
+                    text: "No se encuntra la opcion",
+                })
         }
     }
 
@@ -288,7 +335,11 @@ class FormularioC extends React.Component {
                 this.setState({ telefonoTra: event.target.value });
                 break;
             default:
-                console.log("No se encuntra la opcion");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops..',
+                    text: "No se encuntra la opcion",
+                })
         }
     }
     dataoForm_tres(event, data) {
@@ -310,7 +361,11 @@ class FormularioC extends React.Component {
                 break;
 
             default:
-                console.log("No se encuntra la opcion");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops..',
+                    text: "No se encuntra la opcion",
+                })
         }
     }
     dataoForm_cuatro(event, data) {
@@ -334,16 +389,17 @@ class FormularioC extends React.Component {
                 this.setState({ recomendacionCursotelce: event.target.value });
                 break;
             default:
-                console.log("No se encuntra la opcion");
-        }
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops..',
+                    text: "No se encuntra la opcion",
+                })        }
     }
     uploadFileEvidencia(event) {
         var evidencia = event.target.value;
         if (evidencia === "") {
-            console.log("No se ha cargado ninguna archivo");
-            // this.setState({ fileEvideciaIPN: "false" });
+           this.setState({ fileValIpn: false});
         } else {
-            console.log("Curp crgada");
             this.setState({ fileEvideciaIPN: event.target.files[0] });
         }
     }
@@ -351,10 +407,7 @@ class FormularioC extends React.Component {
         var photoUser = event.target.value;
         if (photoUser === "") {
             this.setState({ fileValImg: false });
-            console.log("No se ha cargado ninguna imagen");
         } else {
-            console.log("Imagen cargada");
-            console.log(event.target.value);
             this.setState({ fileValImg: true });
             this.setState({ file_fotografia: event.target.files[0] });
         }
@@ -364,15 +417,12 @@ class FormularioC extends React.Component {
 
         if (curp === "") {
             this.setState({ fileValCurp: false });
-            console.log("No se ha cargado ninguna archivo");
         } else {
-            console.log("Curp crgada");
             this.setState({ fileValCurp: true });
             this.setState({ fileCurp_Alumno: event.target.files[0] });
         }
     }
     SeleccGenero(event) {
-        console.log(event.target.value);
         this.setState({ genero: event.target.value });
     }
     SeleccMaxEstudios(event) {
@@ -396,16 +446,13 @@ class FormularioC extends React.Component {
         }
     }
     AceptoCheck(event){
-        console.log("Acivamos Check");
         var env = event.target.checked;
-        console.log(env);
         this.setState({ activateSend: env});
 
         // activateSend
     }
 
     existeCurpAlum = async (pos) => {
-        console.log("Validacion");
         let validacion = {
             curpAlum: this.state.curp_Alumno,
         }
@@ -422,7 +469,11 @@ class FormularioC extends React.Component {
             }).then(function (response) {
                 return response.data.mensaje;
             }).catch(function (error) {
-                console.log(error.message)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops..',
+                    text: error.message,
+                })
             })
             if (respuesta === 0) {
                 var campos = new Map();
@@ -443,7 +494,6 @@ class FormularioC extends React.Component {
                 campos.set('Codigo postal', this.state.cp_Alumno);
                 campos.set('Municipio', this.state.municipio_Alumno);
                 this.validarForm_Uno(campos, pos);
-                console.log("No existe la curp y si podemos agregar")
             } else {
                 var msg = 'la curp ya esta registrada';
                 Swal.fire({
@@ -453,6 +503,11 @@ class FormularioC extends React.Component {
                 })
             }
         }
+    }
+    fun_esEmail(correoElectronico){
+        const esCorreoElectronico =/\S+@\S+/.test(correoElectronico);
+        // const esCorreoElectronico =  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(correoElectronico);
+        return esCorreoElectronico;
     }
     validarForm_Uno(mapData, pos) {
         let msg = "";
@@ -464,8 +519,18 @@ class FormularioC extends React.Component {
             }
         }
         if (msg === "") {
-            console.log("Enviamos datos para insertar");
-            this.ShowViewX(pos);
+            var email = mapData.get('email');
+            var esEmail = this.fun_esEmail(email);
+            if (esEmail){
+                this.ShowViewX(pos);
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops..',
+                    text: "El campo email no es valido Ejemplo :email@gmail.com",
+                })
+            }
+        
         } else {
             Swal.fire({
                 icon: 'error',
@@ -484,9 +549,20 @@ class FormularioC extends React.Component {
             }
         }
         if (msg === "") {
-            console.log("Enviamos datos para insertar");
-            this.setState({ data_form_dos: mapData });
-            this.ShownextView(pos);
+            var email = mapData.get('email');
+            var esEmail = this.fun_esEmail(email);
+            if (esEmail){
+                this.ShownextView(pos);
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops..',
+                    text: "El campo email no es valido Ejemplo :email@gmail.com",
+                })
+            }
+        
+
+
         } else {
             Swal.fire({
                 icon: 'error',
@@ -522,8 +598,17 @@ class FormularioC extends React.Component {
             }
         }
         if (msg === "") {
-            console.log("Enviamos datos para insertar");
-            this.sendData();    
+            var email = mapData.get('Email');
+            var esEmail = this.fun_esEmail(email);
+            if (esEmail){
+                this.sendData();    
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops..',
+                    text: "El campo email no es valido Ejemplo :email@gmail.com",
+                })
+            }
         } else {
             Swal.fire({
                 icon: 'error',
@@ -537,7 +622,6 @@ class FormularioC extends React.Component {
         // var nacimiento = Moment(this.state.fechaNac_Alumno);
         // var hoy = Moment();
         // var anios = hoy.diff(nacimiento, "years");
-        // console.log();
         var bodyFormData = new FormData();
         bodyFormData.append('fileImg', this.state.file_fotografia);
         bodyFormData.append('emailAlum', this.state.email_Alumno);
@@ -603,11 +687,10 @@ class FormularioC extends React.Component {
             headers: { 'Content-Type': 'application/json' }
 
         }).then(function (response) {
-            // console.log(response);
-            console.log(response['data']);
-            console.log(response['status']);
-            console.log(response['data']['status']);
-            console.log(response['data']['data']);
+            // console.log(response['data']);
+            // console.log(response['status']);
+            // console.log(response['data']['status']);
+            // console.log(response['data']['data']);
             if(response['data']['status'] == 200){
 
                 Swal.fire({
@@ -630,7 +713,6 @@ class FormularioC extends React.Component {
                 })
             }
         }).catch(function (e) {
-            console.log(e);
             Swal.fire({
                 icon: 'error',
                 title: 'Oops..',
@@ -811,7 +893,7 @@ class FormularioC extends React.Component {
                                                 <Col sm >
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">Email <small style={{ color: "#600101" }}>*</small>  </Form.Label>
-                                                        <Form.Control type="email" placeholder="Email" value={this.state.email_Alumno} onChange={(evt) => this.dataForm_Uno(evt, "email")} />
+                                                        <Form.Control type="email" placeholder="Correo Electronico" value={this.state.email_Alumno} onChange={(evt) => this.dataForm_Uno(evt, "email")} />
                                                     </Form.Group>
                                                 </Col>
                                                 <Col sm>
@@ -971,7 +1053,7 @@ class FormularioC extends React.Component {
                                                 <Col sm>
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">Email <small style={{ color: "#600101" }}>*</small> </Form.Label>
-                                                        <Form.Control type="email" placeholder="Email" value={this.state.email_Emerge} onChange={(evt) => this.dataoFrm_Dos(evt, "email_Emerge")} />
+                                                        <Form.Control type="email" placeholder="Correo Electronico" value={this.state.email_Emerge} onChange={(evt) => this.dataoFrm_Dos(evt, "email_Emerge")} />
                                                     </Form.Group>
                                                 </Col>
                                             </Row>
@@ -1213,7 +1295,7 @@ class FormularioC extends React.Component {
                                                 </Col>
                                                 <Col sm>
                                                     <Form.Group className="mb-3" >
-                                                        <Form.Label className="h6">Correo electronico <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                                        <Form.Label className="h6">Email <small style={{ color: "#600101" }}>*</small> </Form.Label>
                                                         <Form.Control type="email" placeholder="Correo Electronico" value={this.state.recomendacionCursoemail} onChange={(evt) => this.dataoForm_cuatro(evt, "email")} />
                                                     </Form.Group>
                                                 </Col>
