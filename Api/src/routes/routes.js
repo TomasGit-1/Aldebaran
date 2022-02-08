@@ -254,7 +254,7 @@ routes.post('/AlumnoJoin',  (req, res )=> {
 
 routes.get('/Pagos',  (req, res )=> {
     db.getPagos().then(respuesta =>{
-        res.json({ "status": 200 , "data":respuesta['Info']});
+        res.json({ "status": 200 , "data":respuesta['Info']  });
 
     }).catch(error =>{
         res.json({ "status": 400 , "data":error.message});
@@ -263,7 +263,7 @@ routes.get('/Pagos',  (req, res )=> {
 
 routes.get('/ServiciosLista',  (req, res )=> {
     db.getDataServicios().then(respuesta =>{
-        res.json({ "status": 200 , "data":respuesta['Info']});
+        res.json({ "status": 200 , "data":respuesta['Info'] , "Curp":respuesta['Curp'] });
 
     }).catch(error =>{
         res.json({ "status": 400 , "data":error.message});

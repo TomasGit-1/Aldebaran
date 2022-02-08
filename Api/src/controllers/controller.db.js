@@ -198,9 +198,16 @@ const getDataServicios = async () => {
     for (let index = 0; index < data.length; index++) {
         bdServicios.push(data[index]);
     }
-  
 
-    return {"Info":bdServicios};
+    const responsePersona = await pool.query('SELECT * FROM personas  ORDER BY idPersona ASC');
+    data = responsePersona.rows;
+    var bdAlumnos = []
+    for (let index = 0; index < data.length; index++) {
+        bdAlumnos.push(data[index].curp);
+    }
+    
+
+    return {"Info":bdServicios , "Curp":bdAlumnos};
 };
 
 

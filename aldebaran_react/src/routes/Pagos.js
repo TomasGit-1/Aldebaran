@@ -13,8 +13,6 @@ class Pagos extends React.Component {
         super(props)
         this.state = {
             msg: "Primera aplicacion React",
-            opciones: [
-            ],
             id: [
             ],
             servicio: [
@@ -25,12 +23,29 @@ class Pagos extends React.Component {
             showTable: true,
             dataPagos: [],
             numModuloPago: [],
-            cantidadPago: ""
+            cantidadPago: "",
+            curpData:[],
+            
+            //Data input
+            isFacturaSelec:false,
+            servicioEducativoOpc:"",
+            numeroModuloOpc:"",
+            alumnoSelect:"",
+
+            comprobantePago:null,
+            cedulaFiscal:null,
+
+            referencia:"",
+            fechaHoraBaucher:"",
+            cantidad:"",
+            descripcionInput:"",
+
         };
         this.onModalida = this.onModalida.bind(this);
         this.onServicio = this.onServicio.bind(this);
         this.ShowForm = this.ShowForm.bind(this);
         this.filterInput = this.filterInput.bind(this);
+        this.onChangeFactura = this.onChangeFactura.bind(this);
 
 
     }
@@ -54,7 +69,6 @@ class Pagos extends React.Component {
 
         for (let index = 0; index < servicios.length; index++) {
             if (servicios[index][0] === select) {
-                console.log(servicios[index]);
                 let array = [];
                 for (let i = 0; i < servicios[index][7]; i++) {
                     array.push(i + 1);
@@ -148,23 +162,25 @@ class Pagos extends React.Component {
             var temp = responseJson;
 
             if (temp['status'] === 200) {
-                responseJson = responseJson['data'];
-                for (var i = 0; i < responseJson.length; i++) {
-                    if (responseJson[i].habilitado === true) {
+                var responseData = responseJson['data'];
+                for (var i = 0; i < responseData.length; i++) {
+                    if (responseData[i].habilitado === true) {
                         var tempArray = [];
-                        tempArray.push(responseJson[i].idserviciosedu);
-                        tempArray.push(responseJson[i].registro_academico);
-                        tempArray.push(responseJson[i].tipo_evento);
-                        tempArray.push(responseJson[i].programa_academico);
-                        tempArray.push(responseJson[i].modalidad);
-                        tempArray.push(responseJson[i].cuota);
-                        tempArray.push(responseJson[i].habilitado);
-                        tempArray.push(responseJson[i].nummodulo);
-                        tempArray.push(responseJson[i].numhoras);
+                        tempArray.push(responseData[i].idserviciosedu);
+                        tempArray.push(responseData[i].registro_academico);
+                        tempArray.push(responseData[i].tipo_evento);
+                        tempArray.push(responseData[i].programa_academico);
+                        tempArray.push(responseData[i].modalidad);
+                        tempArray.push(responseData[i].cuota);
+                        tempArray.push(responseData[i].habilitado);
+                        tempArray.push(responseData[i].nummodulo);
+                        tempArray.push(responseData[i].numhoras);
 
                         Servicios.push(tempArray);
                     }
                 }
+                var curpData = responseJson['Curp'];
+                this.setState({curpData : curpData})
                 // this.setState({ id: id });
                 this.setState({ servicio: Servicios });
             } else {
@@ -196,12 +212,19 @@ class Pagos extends React.Component {
 
         }
     }
+    onChangeFactura( event ){
+        var env = event.target.checked;
+        console.log(env);
+        this.setState({ isFacturaSelec: event.target.value });
+
+    }
     render() {
         var { servicio } = this.state
         var { numModuloPago } = this.state
         let { showTable } = this.state
         let { showForm } = this.state
         let { dataPagos } = this.state
+        let { curpData } = this.state
         const styles = StyleSheet.create({
 
             buttonSend: {
@@ -258,7 +281,7 @@ class Pagos extends React.Component {
                                         <Form.Group controlId="formFile">
                                             <Form.Label className="h6 ">Numero de modulo  <small style={{ color: "#600101" }}>*</small> </Form.Label>
                                             <Form.Select >
-                                                <option value="Seleccione una opcio">Seleccione una opcion</option>
+                                                <option value="Seleccione una opcion">Seleccione una opcion</option>
                                                 {
                                                     numModuloPago.map(function (item) {
                                                         return <option key={item} value={item}>{item}</option>;
@@ -267,16 +290,29 @@ class Pagos extends React.Component {
                                             </Form.Select>
                                         </Form.Group>
                                     </Col>
+                                    <Col sm >
+                                        <Form.Group controlId="formFile">
+                                            <Form.Label className="h6 ">Alumnos <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                            <Form.Select >
+                                                <option value="Seleccione una opcion">Seleccione una opcion</option>
+                                                {
+                                                    curpData.map(function (item) {
+                                                        return <option key={item} value={item}>{item}</option>;
+                                                    })
+                                                }
+                                            </Form.Select>
+                                        </Form.Group>
+                                    </Col>
 
+                                </Row>
+
+                                <Row className="mt-3">
                                     <Col sm >
                                         <Form.Group controlId="formFile" >
                                             <Form.Label className="h6 mb-1 " >Comprobante de pago  <small style={{ color: "#600101" }}>*</small> </Form.Label>
                                             <Form.Control type="file" accept=".pdf" className="mt-1" />
                                         </Form.Group>
                                     </Col>
-                                </Row>
-
-                                <Row className="mt-3">
                                     <Col sm>
                                     <Form.Group className="mb-3">
                                             <Form.Label className="h5"> ¿Requiere factura electrónica? <small style={{ color: "#600101" }}>*</small> </Form.Label>
@@ -284,6 +320,7 @@ class Pagos extends React.Component {
                                                 type="switch"
                                                 id="custom-switch"
                                                 label="factura electrónica"
+                                                onChange={this.onChangeFactura}
                                             />
                                         </Form.Group>
                                        
@@ -316,7 +353,6 @@ class Pagos extends React.Component {
                                         </Form.Group>
                                         <InputGroup className="mb-3">
                                             <InputGroup.Text id="basic-addon1">$</InputGroup.Text>
-                                            {console.log(this.state.cantidadPago)}
                                             <Form.Control type="text" placeholder="Cantidad" value={this.state.cantidadPago} onChange={(evt) => this.formularioSetData(evt, "cantidadPago")} />
                                         </InputGroup>
                                     </Col>
