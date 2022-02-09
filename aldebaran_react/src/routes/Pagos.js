@@ -23,7 +23,6 @@ class Pagos extends React.Component {
             showTable: true,
             dataPagos: [],
             numModuloPago: [],
-            cantidadPago: "",
             curpData:[],
             
             //Data input
@@ -33,12 +32,17 @@ class Pagos extends React.Component {
             alumnoSelect:"",
 
             comprobantePago:null,
+            isFileComprobante:false,
             cedulaFiscal:null,
+            isCedulaFiscal:false,
 
             referencia:"",
             fechaHoraBaucher:"",
-            cantidad:"",
+            cantidadPago: "",
             descripcionInput:"",
+
+            dateStart :"",
+            dateFinish:""
 
         };
         this.onModalida = this.onModalida.bind(this);
@@ -46,7 +50,10 @@ class Pagos extends React.Component {
         this.ShowForm = this.ShowForm.bind(this);
         this.filterInput = this.filterInput.bind(this);
         this.onChangeFactura = this.onChangeFactura.bind(this);
-
+        this.onChangeAlumnos = this.onChangeAlumnos.bind(this);
+        this.onChangeNumModulo = this.onChangeNumModulo.bind(this);
+        this.uploadFileCedulaFiscal = this.uploadFileCedulaFiscal.bind(this);
+        this.uploadFileComprobante = this.uploadFileComprobante.bind(this);
 
     }
     /*  
@@ -200,23 +207,57 @@ class Pagos extends React.Component {
     }
     formularioSetData = (event, data) => {
         switch (data) {
+            case "referencia":
+                this.setState({ referencia: event.target.value });
+                break;
+            case "FechaHora":
+                this.setState({ fechaHoraBaucher: event.target.value });
+                break;
             case "cantidadPago":
                 this.setState({ cantidadPago: event.target.value });
                 break;
-            case "curp":
-                this.setState({ curp_Alumno: event.target.value });
+            case "FechaInicio":
+                this.setState({ dateStart: event.target.value });
+                break;
+            case "FechaFin":
+                this.setState({ dateFinish: event.target.value });
+                break;
+            case "descripcion":
+                this.setState({ descripcionInput: event.target.value });
                 break;
             default:
-                console.log("No se encuntra la opcion")
+            console.log("No se encuntra la opcion")
+        }
+    }
+    uploadFileComprobante(event) {
+        console.log("Comprobante");
+        var comprobante = event.target.value;
+        console.log(comprobante);
 
-
+        if (comprobante === "") {
+            this.setState({ isFileComprobante: false });
+        } else {
+            this.setState({ isFileComprobante: true });
+            this.setState({ comprobantePago: event.target.files[0] });
+        }
+    }
+    uploadFileCedulaFiscal(event) {
+        var cedula = event.target.value;
+        if (cedula === "") {
+            this.setState({ isCedulaFiscal: false });
+        } else {
+            this.setState({ isCedulaFiscal: true });
+            this.setState({ cedulaFiscal: event.target.files[0] });
         }
     }
     onChangeFactura( event ){
-        var env = event.target.checked;
-        console.log(env);
-        this.setState({ isFacturaSelec: event.target.value });
-
+        this.setState({ isFacturaSelec: event.target.checked });
+    }
+    onChangeAlumnos( event ){
+        this.setState({ alumnoSelect: event.target.value });
+    }
+    onChangeNumModulo(event){
+        this.setState({ numeroModuloOpc: event.target.value });
     }
     render() {
         var { servicio } = this.state
@@ -226,7 +267,6 @@ class Pagos extends React.Component {
         let { dataPagos } = this.state
         let { curpData } = this.state
         const styles = StyleSheet.create({
-
             buttonSend: {
                 backgroundColor: "#00a01b ",
                 color: " #000",
@@ -239,8 +279,6 @@ class Pagos extends React.Component {
                 border: "none",
                 height: 45
             }
-
-
         })
         return (
             <main>
@@ -266,7 +304,7 @@ class Pagos extends React.Component {
                                     <Col sm >
                                         <Form.Group controlId="formFile">
                                             <Form.Label className="h6 ">Servicio educativo  <small style={{ color: "#600101" }}>*</small> </Form.Label>
-                                            <Form.Select onChange={this.onServicio}>
+                                            <Form.Select onChange={this.onServicio}  value={this.state.servicioEducativoOpc} >
                                                 <option value="Seleccione una opcion">Seleccione una opcion</option>
                                                 {
 
@@ -280,7 +318,7 @@ class Pagos extends React.Component {
                                     <Col sm >
                                         <Form.Group controlId="formFile">
                                             <Form.Label className="h6 ">Numero de modulo  <small style={{ color: "#600101" }}>*</small> </Form.Label>
-                                            <Form.Select >
+                                            <Form.Select  onChange={this.onChangeNumModulo} value={this.state.numeroModuloOpc}>
                                                 <option value="Seleccione una opcion">Seleccione una opcion</option>
                                                 {
                                                     numModuloPago.map(function (item) {
@@ -293,7 +331,7 @@ class Pagos extends React.Component {
                                     <Col sm >
                                         <Form.Group controlId="formFile">
                                             <Form.Label className="h6 ">Alumnos <small style={{ color: "#600101" }}>*</small> </Form.Label>
-                                            <Form.Select >
+                                            <Form.Select  onChange={this.onChangeAlumnos} value={this.state.alumnoSelect}>
                                                 <option value="Seleccione una opcion">Seleccione una opcion</option>
                                                 {
                                                     curpData.map(function (item) {
@@ -310,7 +348,7 @@ class Pagos extends React.Component {
                                     <Col sm >
                                         <Form.Group controlId="formFile" >
                                             <Form.Label className="h6 mb-1 " >Comprobante de pago  <small style={{ color: "#600101" }}>*</small> </Form.Label>
-                                            <Form.Control type="file" accept=".pdf" className="mt-1" />
+                                            <Form.Control type="file" accept=".pdf" className="mt-1" onChange={this.uploadFileComprobante} />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
@@ -321,6 +359,7 @@ class Pagos extends React.Component {
                                                 id="custom-switch"
                                                 label="factura electrónica"
                                                 onChange={this.onChangeFactura}
+                                                value={this.state.isFacturaSelec}
                                             />
                                         </Form.Group>
                                        
@@ -328,7 +367,7 @@ class Pagos extends React.Component {
                                     <Col sm >
                                         <Form.Group controlId="formFile" >
                                             <Form.Label className="h6 mb-3" >Anexar cédula fiscal <small> Solo en caso de requerirse </small>  </Form.Label>
-                                            <Form.Control type="file" accept=".pdf" />
+                                            <Form.Control type="file" accept=".pdf" onChange={this.uploadFileComprobante} />
                                         </Form.Group>
                                     </Col>
                                    
@@ -337,13 +376,13 @@ class Pagos extends React.Component {
                                     <Col sm>
                                     <Form.Group className="mb-3">
                                             <Form.Label className="h5">Referencia  <small style={{ color: "#600101" }}>*</small> </Form.Label>
-                                            <Form.Control type="text" placeholder="Referencia" />
+                                            <Form.Control type="text" placeholder="Referencia"   value={this.state.referencia}  onChange={(evt) => this.formularioSetData(evt, "referencia")}  />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
                                         <Form.Group className="mb-3" >
-                                            <Form.Label className="h5">Fecha / Hora </Form.Label>
-                                            <Form.Control type="datetime-local" />
+                                            <Form.Label className="h5">Fecha / Hora en el Baucher</Form.Label>
+                                            <Form.Control type="datetime-local" value={this.state.fechaHoraBaucher}  onChange={(evt) => this.formularioSetData(evt, "FechaHora")}  />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
@@ -357,6 +396,22 @@ class Pagos extends React.Component {
                                         </InputGroup>
                                     </Col>
                                 </Row>
+
+                                <Row className="mt-3">
+                                    <Col sm>
+                                        <Form.Group className="mb-3" >
+                                            <Form.Label className="h5">Fecha de Inicio </Form.Label>
+                                            <Form.Control type="date" value={this.state.dateStart}  onChange={(evt) => this.formularioSetData(evt, "FechaInicio")}   />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col sm>
+                                        <Form.Group className="mb-3" >
+                                            <Form.Label className="h5">Fecha de Termino </Form.Label>
+                                            <Form.Control type="date" value={this.state.dateFinish} onChange={(evt) => this.formularioSetData(evt, "FechaFin")}  />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+
                                 <Row>
                                     <Col sm>
                                     <Form.Group controlId="formFile" >
@@ -364,14 +419,13 @@ class Pagos extends React.Component {
                                         <textarea
 
                                             className="col-12"
+                                            value = {this.state.descripcionInput}
+                                            onChange={(evt) => this.formularioSetData(evt, "descripcion")}
                                         />
                                         </Form.Group>
 
                                     </Col>
-
-
                                 </Row>
-
                                 <Row className="mt-3 ">
                                     <Col sm>
                                         {/* <Button className="col-6" variant="outline-primary" onClick={() => this.SendDatos()}>
