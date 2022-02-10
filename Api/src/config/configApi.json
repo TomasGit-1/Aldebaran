@@ -13,5 +13,10 @@
             "images":"/resource/image/",
             "upload":"/resource/upload/"
         }
+    ],
+    "Hora":[
+        {
+            "resta_utc":0
+        }
     ]
 }

@@ -6,6 +6,7 @@ import $ from 'jquery';
 import config from '../config/config.json';
 import Moment from 'moment'
 import { StyleSheet } from '@react-pdf/renderer';
+import axios from 'axios';
 
 
 class Pagos extends React.Component {
@@ -28,6 +29,7 @@ class Pagos extends React.Component {
             //Data input
             isFacturaSelec:false,
             servicioEducativoOpc:"",
+            servicioEducativoID:"",
             numeroModuloOpc:"",
             alumnoSelect:"",
 
@@ -54,7 +56,8 @@ class Pagos extends React.Component {
         this.onChangeNumModulo = this.onChangeNumModulo.bind(this);
         this.uploadFileCedulaFiscal = this.uploadFileCedulaFiscal.bind(this);
         this.uploadFileComprobante = this.uploadFileComprobante.bind(this);
-
+        this.SendData = this.SendData.bind(this);
+        this.validarFormulario = this.validarFormulario.bind(this);
     }
     /*  
     ===========================================================================
@@ -73,15 +76,18 @@ class Pagos extends React.Component {
     onServicio(event) {
         var select = parseInt(event.target.value);
         var servicios = this.state.servicio;
-
         for (let index = 0; index < servicios.length; index++) {
             if (servicios[index][0] === select) {
                 let array = [];
                 for (let i = 0; i < servicios[index][7]; i++) {
                     array.push(i + 1);
                 }
+                console.log(servicios[index]);
                 this.setState({ numModuloPago: array });
                 this.setState({ cantidadPago: servicios[index][5] });
+                this.setState({ servicioEducativoOpc : servicios[index][3] });
+                this.setState({ servicioEducativoID : select });
+
                 break;
             }
         }
@@ -259,6 +265,71 @@ class Pagos extends React.Component {
     onChangeNumModulo(event){
         this.setState({ numeroModuloOpc: event.target.value });
     }
+    validarFormulario(){
+        var campos = new Map();
+        campos.set('Servicio educativo', this.state.servicioEducativoOpc);
+        campos.set('Numero de modulo', this.state.numeroModuloOpc);
+        campos.set('Alumnos', this.state.alumnoSelect);
+        campos.set('Comprobante de pago', this.state.comprobantePago);
+        campos.set('Factura electronica', this.state.isFacturaSelec);
+        campos.set('Referencia', this.state.referencia);
+        campos.set('Fecha / Hora Baucher', this.state.fechaHoraBaucher);
+        campos.set('Cantidad', this.state.cantidadPago);
+        campos.set('Fecha Incio', this.state.dateStart);
+        campos.set('Fecha de Termino', this.state.dateFinish);
+        campos.set('Descripcion', this.state.descripcionInput);
+        let msg = "";
+        for (let clave of campos.keys()) {
+            var valor = campos.get(clave);
+            console.log(valor);
+            if (valor === null || valor === "" || valor === false ) {
+                msg = `El campo :${clave} esta vacio`;
+                break;
+            }
+        }
+        if (msg === "") {
+           this.SendData();
+        
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops..',
+                text: msg,
+            })
+        }
+    }
+    SendData(){
+        console.log("Se envia la data ");
+        var url = config.general[0].url + config.general[0].puerto_api + "/Api/CrearPago";
+        var bodyFomrData = new FormData();
+        bodyFomrData.append('ServicioEducativo' , this.state.servicioEducativoOpc);
+        bodyFomrData.append('idServicioEducativo' , this.state.servicioEducativoID);
+        bodyFomrData.append('NumModulo' , this.state.numeroModuloOpc);
+        bodyFomrData.append('alumnosNameCurp' , this.state.alumnoSelect);
+        bodyFomrData.append('comprobantePago' , this.state.comprobantePago);
+        bodyFomrData.append('cedulaFiscal' , this.state.cedulaFiscal);
+        bodyFomrData.append('facturaElectronica' , this.state.isFacturaSelec);
+        bodyFomrData.append('referencia' , this.state.referencia);
+        bodyFomrData.append('fechaHoraBaucher' , this.state.fechaHoraBaucher);
+        bodyFomrData.append('Cantidad' , this.state.cantidadPago);
+        bodyFomrData.append('dateInicio' , this.state.dateStart);
+        bodyFomrData.append('dateFinish' , this.state.dateFinish);
+        bodyFomrData.append('descripcion' , this.state.descripcionInput);
+        axios({
+            method:"POST",
+            url:url,
+            data:bodyFomrData,
+            headers : {
+                'Content-Type': 'application/json'
+            }
+        }).then( function (response) {
+            console.log(response);
+            console.log(response['data'])
+        }).catch(function (e){
+
+        })
+
+    }
     render() {
         var { servicio } = this.state
         var { numModuloPago } = this.state
@@ -304,7 +375,7 @@ class Pagos extends React.Component {
                                     <Col sm >
                                         <Form.Group controlId="formFile">
                                             <Form.Label className="h6 ">Servicio educativo  <small style={{ color: "#600101" }}>*</small> </Form.Label>
-                                            <Form.Select onChange={this.onServicio}  value={this.state.servicioEducativoOpc} >
+                                            <Form.Select onChange={this.onServicio}   >
                                                 <option value="Seleccione una opcion">Seleccione una opcion</option>
                                                 {
 
@@ -318,7 +389,7 @@ class Pagos extends React.Component {
                                     <Col sm >
                                         <Form.Group controlId="formFile">
                                             <Form.Label className="h6 ">Numero de modulo  <small style={{ color: "#600101" }}>*</small> </Form.Label>
-                                            <Form.Select  onChange={this.onChangeNumModulo} value={this.state.numeroModuloOpc}>
+                                            <Form.Select  onChange={this.onChangeNumModulo} >
                                                 <option value="Seleccione una opcion">Seleccione una opcion</option>
                                                 {
                                                     numModuloPago.map(function (item) {
@@ -331,7 +402,7 @@ class Pagos extends React.Component {
                                     <Col sm >
                                         <Form.Group controlId="formFile">
                                             <Form.Label className="h6 ">Alumnos <small style={{ color: "#600101" }}>*</small> </Form.Label>
-                                            <Form.Select  onChange={this.onChangeAlumnos} value={this.state.alumnoSelect}>
+                                            <Form.Select  onChange={this.onChangeAlumnos} >
                                                 <option value="Seleccione una opcion">Seleccione una opcion</option>
                                                 {
                                                     curpData.map(function (item) {
@@ -359,7 +430,6 @@ class Pagos extends React.Component {
                                                 id="custom-switch"
                                                 label="factura electrónica"
                                                 onChange={this.onChangeFactura}
-                                                value={this.state.isFacturaSelec}
                                             />
                                         </Form.Group>
                                        
@@ -367,7 +437,7 @@ class Pagos extends React.Component {
                                     <Col sm >
                                         <Form.Group controlId="formFile" >
                                             <Form.Label className="h6 mb-3" >Anexar cédula fiscal <small> Solo en caso de requerirse </small>  </Form.Label>
-                                            <Form.Control type="file" accept=".pdf" onChange={this.uploadFileComprobante} />
+                                            <Form.Control type="file" accept=".pdf" onChange={this.uploadFileCedulaFiscal} />
                                         </Form.Group>
                                     </Col>
                                    
@@ -381,14 +451,14 @@ class Pagos extends React.Component {
                                     </Col>
                                     <Col sm>
                                         <Form.Group className="mb-3" >
-                                            <Form.Label className="h5">Fecha / Hora en el Baucher</Form.Label>
+                                            <Form.Label className="h5">Fecha / Hora en el Bauche  <small style={{ color: "#600101" }}>*</small></Form.Label>
                                             <Form.Control type="datetime-local" value={this.state.fechaHoraBaucher}  onChange={(evt) => this.formularioSetData(evt, "FechaHora")}  />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
 
                                         <Form.Group >
-                                            <Form.Label className="h5">Cantidad</Form.Label>
+                                            <Form.Label className="h5">Cantidad <small style={{ color: "#600101" }}>*</small> </Form.Label>
                                         </Form.Group>
                                         <InputGroup className="mb-3">
                                             <InputGroup.Text id="basic-addon1">$</InputGroup.Text>
@@ -400,13 +470,13 @@ class Pagos extends React.Component {
                                 <Row className="mt-3">
                                     <Col sm>
                                         <Form.Group className="mb-3" >
-                                            <Form.Label className="h5">Fecha de Inicio </Form.Label>
+                                            <Form.Label className="h5">Fecha de Inicio <small style={{ color: "#600101" }}>*</small>  </Form.Label>
                                             <Form.Control type="date" value={this.state.dateStart}  onChange={(evt) => this.formularioSetData(evt, "FechaInicio")}   />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
                                         <Form.Group className="mb-3" >
-                                            <Form.Label className="h5">Fecha de Termino </Form.Label>
+                                            <Form.Label className="h5">Fecha de Termino  <small style={{ color: "#600101" }}>*</small> </Form.Label>
                                             <Form.Control type="date" value={this.state.dateFinish} onChange={(evt) => this.formularioSetData(evt, "FechaFin")}  />
                                         </Form.Group>
                                     </Col>
@@ -415,7 +485,7 @@ class Pagos extends React.Component {
                                 <Row>
                                     <Col sm>
                                     <Form.Group controlId="formFile" >
-                                            <Form.Label className="h6 mb-3" >Descripcion </Form.Label>
+                                            <Form.Label className="h6 mb-3" >Descripcion <small style={{ color: "#600101" }}>*</small>  </Form.Label>
                                         <textarea
 
                                             className="col-12"
@@ -433,7 +503,9 @@ class Pagos extends React.Component {
                                             &nbsp;&nbsp;Agregar
                                         </Button>&nbsp;&nbsp; */}
                                         <Button className="col-6"
-                                            variant="success"  >
+                                            variant="success"
+                                            onClick={ () => this.validarFormulario() }
+                                            >
                                             <i className="bi bi-plus-circle-fill "></i>
                                             &nbsp;&nbsp;
                                             Enviar

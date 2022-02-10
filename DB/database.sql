@@ -104,11 +104,13 @@ CREATE TABLE PAGOS(
 	idServiciosEduFk bigint references SERVICIOEDUCATIVO(idServiciosEdu),
 	numModulo varchar,
 	comprobantePath  varchar,
+	cedulaPath varchar,
 	referencia varchar,
+	cantidad varchar
 	FechaHoraTicket  timestamp,
-	fechaHoraRegistro timestamp,
 	FECHA_INICIO timestamp,
-	FECHA_TERMINO timestamp
+	FECHA_TERMINO timestamp,
+	fechaHoraRegistro timestamp
 );
 
 CREATE TABLE INFOADICIONAL(

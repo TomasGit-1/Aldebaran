@@ -160,7 +160,7 @@ routes.post('/createRegistro',  (req, res )=> {
     
 });
 
-const save = ( req , dir , sampleFile) =>{
+const save = ( req , dir , sampleFile , isPago=false,complementoName="" ) =>{
     let uploadPath;
     try {
         if (!fs.existsSync(dir)) {
@@ -169,8 +169,11 @@ const save = ( req , dir , sampleFile) =>{
         if(!req.files || Object.keys(req.files).length === 0 ){
             console.log('No file were uploaded');
         }
-
-        uploadPath = dir+objUtil.RandomName()+sampleFile.name;
+        if(isPago){
+            uploadPath = dir+"_"+complementoName+"_"+objUtil.RandomName2()+sampleFile.name;
+        }else{
+            uploadPath = dir+"_"+objUtil.RandomName()+sampleFile.name;
+        }
         sampleFile.mv(uploadPath, function(err) {
             if (err){
                 console.log(err);
@@ -270,5 +273,46 @@ routes.get('/ServiciosLista',  (req, res )=> {
     })
 });
 
+routes.post('/CrearPago',  (req, res )=> {
+    let datos = req.body;
+    let sampleFile;
+    const curp = datos.alumnosNameCurp;
+   
+    //Aqui se empieza a guardar el comprobanye del pago del alumno
+    var dirComprobante = __dirname +  rutas[0]['upload'] +curp+'/';
+    var name = "_Comprobante_"+ datos.ServicioEducativo +"_Modulo_"+datos.NumModulo; 
+    sampleFile = req.files.comprobantePago;
+    dirComprobante =save(req , dirComprobante , sampleFile ,true, name);
+
+
+     //En esta ruta se guardan las fotografias 
+     var dirCedula = __dirname +  rutas[0]['upload'] + curp+'/';
+     sampleFile = req.files.cedulaFiscal;
+     name = "_CedulaFiscal_"+ datos.ServicioEducativo +"_Modulo_"+datos.NumModulo; 
+     if (sampleFile == undefined) {
+        dirCedula=""
+     } else {
+        dirCedula = save(req , dirCedula , sampleFile ,true, name );
+     }
+    data=[
+        curp,
+        datos.idServicioEducativo,
+        datos.NumModulo,
+        dirComprobante,
+        dirCedula,
+        datos.referencia,
+        datos.Cantidad,
+        datos.fechaHoraBaucher,
+        datos.dateInicio,
+        datos.FECHA_TERMINO
+    ]
+    console.log("Se guardo el archivo pdf ");
+    db.setCrearPago(data).then(respuesta =>{
+        res.json({ "status": 200 , "data":respuesta});
+
+    }).catch(error =>{
+        res.json({ "status": 400 , "data":error.message});
+    })
+});
 
 module.exports = routes;
