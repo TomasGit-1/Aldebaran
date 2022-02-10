@@ -110,6 +110,7 @@ CREATE TABLE PAGOS(
 	FechaHoraTicket  timestamp,
 	FECHA_INICIO timestamp,
 	FECHA_TERMINO timestamp,
+	facturacion boolean,
 	fechaHoraRegistro timestamp
 );
 
@@ -164,3 +165,13 @@ CREATE TABLE INFOADICIONAL(
 -- 				'municipio');
 				
 -- SELECT * FROM PERSONAS;
+
+-- SELECT * FROM PERSONAS;
+-- SELECT * FROM FormacionAcademica;
+-- SELECT * FROM SERVICIOEDUCATIVO;
+-- SELECT * FROM FilesPersona;
+-- SELECT * FROM ContactoEmergencia;
+-- SELECT * FROM DATOSLABORALES;
+-- SELECT * FROM FormacionAcademica;
+-- SELECT * FROM INFOADICIONAL;
+-- SELECT * FROM PAGOS;

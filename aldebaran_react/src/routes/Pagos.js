@@ -323,8 +323,24 @@ class Pagos extends React.Component {
                 'Content-Type': 'application/json'
             }
         }).then( function (response) {
-            console.log(response);
-            console.log(response['data'])
+            if(response['data']['status'] == 200){
+
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Alumno agregado',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                setTimeout(window.location.reload(false), 3000);
+
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops..',
+                    text: response['data']['data'] ,
+                })
+            }
         }).catch(function (e){
 
         })

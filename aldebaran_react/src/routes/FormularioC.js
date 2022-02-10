@@ -703,12 +703,7 @@ class FormularioC extends React.Component {
                     showConfirmButton: false,
                     timer: 1500
                 })
-                
                 window.location.reload(false);
-                // this.setState({
-                //     showForm: false,
-                //     showTable: true,
-                // });
             }else{
                 Swal.fire({
                     icon: 'error',
