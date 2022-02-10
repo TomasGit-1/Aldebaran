@@ -26,9 +26,14 @@ const fileUpload = (req  , path ,file ) => {
 };
 
 const RandomName = () => {
-    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    return Math.random().toString(36).substring(2, 12);
+    // return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }
-
+const RandomName2 = () => {
+    return Math.random().toString(36).substring(2, 12);
+}
 module.exports = {
-    RandomName
+    RandomName,
+    RandomName2
+
 };

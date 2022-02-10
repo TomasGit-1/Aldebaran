@@ -106,7 +106,7 @@ CREATE TABLE PAGOS(
 	comprobantePath  varchar,
 	cedulaPath varchar,
 	referencia varchar,
-	cantidad varchar
+	cantidad varchar,
 	FechaHoraTicket  timestamp,
 	FECHA_INICIO timestamp,
 	FECHA_TERMINO timestamp,
