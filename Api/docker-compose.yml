@@ -1,13 +1,26 @@
+# version: "3"
+# services:
+#   node:
+#     image: "node:10"
+#     user: "node"
+#     working_dir: /home/node/app
+#     environment:
+#       - NODE_ENV=production
+#     volumes:
+#       - ./:/home/node/app
+#     expose:
+#       - "5000"
+#     command: "npm start"
 version: "3"
 services:
   node:
-    image: "node:8"
+    image: "node:10"
     user: "node"
-    working_dir: /home/node/app
+    working_dir: /app
     environment:
       - NODE_ENV=production
     volumes:
-      - ./:/home/node/app
+      - ./:/app
     expose:
       - "5000"
-    command: "npm start"
+    # command: "npm start"
