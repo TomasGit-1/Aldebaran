@@ -271,7 +271,7 @@ class Pagos extends React.Component {
         campos.set('Numero de modulo', this.state.numeroModuloOpc);
         campos.set('Alumnos', this.state.alumnoSelect);
         campos.set('Comprobante de pago', this.state.comprobantePago);
-        campos.set('Factura electronica', this.state.isFacturaSelec);
+        // campos.set('Factura electronica', this.state.isFacturaSelec);
         campos.set('Referencia', this.state.referencia);
         campos.set('Fecha / Hora Baucher', this.state.fechaHoraBaucher);
         campos.set('Cantidad', this.state.cantidadPago);

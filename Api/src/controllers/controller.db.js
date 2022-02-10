@@ -213,9 +213,12 @@ const getDataServicios = async () => {
 
 const setCrearPago = async ( data) => {
     var nowDateTime = Date.now();
+    var dat= new Date(); //Obtienes la fecha
+    var dat2 = Date.parse(dat); //Lo parseas para transformarlo
+
     const contacto = await pool.query('INSERT INTO pagos  (idcurpfk , idServiciosEduFk , numModulo ,comprobantePath , cedulaPath ,referencia , cantidad, FechaHoraTicket , FECHA_INICIO , FECHA_TERMINO , fechaHoraRegistro) VALUES ($1, $2 , $3 , $4 , $5 , $6 , $7 , $8 , $9 , $10 , $11)',
     [   
-        data[0],data[1],data[2],data[3],data[4] , data[5] , data[6] , data[7] , data[8] ,  data[9] , nowDateTime
+        data[0],data[1],data[2],data[3],data[4] , data[5] , data[6] , data[7] , data[8] ,  data[9] , dat
      ]);
     
 
