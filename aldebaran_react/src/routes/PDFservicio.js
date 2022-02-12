@@ -4,23 +4,61 @@ import { Page, Text, View, Document, StyleSheet, PDFViewer, Font, Image } from '
 import { useParams } from 'react-router-dom'
 import config from '../config/config.json';
 import axios from 'axios'
-import logo from "../static/LogoBN.jpg";
 import imgTitulo from "../static/titulo.png";
 import Moment from 'moment'
+import logo from "../static/LogoBN.jpg";
+import Swal from 'sweetalert2'
+
 
 class PDFServicio extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             msg: "Primera aplicacion React",
-
+            servicio: []
         }
     }
     componentDidMount() {
-        var  parametros  = this.props.params;
-       console.log(parametros);
+        var parametros = this.props.params;
+        console.log(parametros);
+        this.getDataServicios(parametros.value);
+    }
+    getDataServicios = async (idServicio) => {
+        var url = config.general[0].url + config.general[0].puerto_api + "/Api/DataServicioPDF";
+        var bodyFormData = new FormData();
+        bodyFormData.append('idServicio', idServicio);
+        const respuesta = await axios({
+            method: 'POST',
+            url: url,
+            data: bodyFormData,
+            headers: { 'Content-Type': 'application/json' }
+        }).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops..',
+                text: error.message,
+            })
+        })
+
+        let arrayServicios = [];
+        arrayServicios.push(respuesta[0].idserviciosedu);
+        arrayServicios.push(respuesta[0].registro_academico);
+        arrayServicios.push(respuesta[0].tipo_evento);
+        arrayServicios.push(respuesta[0].programa_academico);
+        arrayServicios.push(respuesta[0].modalidad);
+        arrayServicios.push(respuesta[0].cuota);
+        arrayServicios.push(respuesta[0].habilitado);
+        arrayServicios.push(respuesta[0].nummodulo);
+        arrayServicios.push(respuesta[0].numhoras);
+        console.log(arrayServicios);
+        this.setState({ servicio: arrayServicios });
+
     }
     render() {
+        let { servicio } = this.state
+
         const styles = StyleSheet.create({
             page: {
                 flexDirection: 'row',
@@ -48,7 +86,7 @@ class PDFServicio extends React.Component {
                 flexDirection: 'row',
                 alignItems: 'flex-start', //replace with flex-end or center,
                 // backgroundColor: 'blue',
-                marginBottom: 5
+                marginBottom: 15
                 // marginBottom:20  
             },
             title: {
@@ -93,7 +131,65 @@ class PDFServicio extends React.Component {
                     <Document>
                         <Page size="A4" style={styles.page}>
                             <View style={styles.section}>
-                            <Text style={styles.title}>Servicio</Text>
+                                <Text style={styles.title}>Servicio</Text>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Image
+                                        style={{ alignSelf: 'flex-start', width: 60, height: 70 }}
+                                        src={logo}
+                                    />
+                                    <Image
+                                        style={{ width: "80%", height: 60, marginLeft: 10, marginRight: 5 }}
+                                        src={imgTitulo}
+                                    />
+                                </View>
+
+                                { servicio[6] === true ?
+                                    <Text style={styles.text1}>{"Servicio : Habilitado"}</Text>
+                                    :
+                                    <Text style={styles.text1}>{"Servicio : deshabilitado"}</Text>
+
+                                }
+                                 <Text >{" \n "}  </Text>
+
+                                <View style={styles.container}>
+                                        <Text style={styles.text1}>Registro academico:</Text>
+                                        <div style={{borderBottom : 1,marginLeft:10,width:"60%"}}>
+                                            <Text style={styles.text2}>{ " "+servicio[1]}</Text>
+                                        </div>  
+                                        <Text style={styles.text1}>Numero de modulos:</Text>
+                                        <div style={{borderBottom : 1,marginLeft:10,width:"10%"}}>
+                                            <Text style={styles.text2}>{ " "+servicio[7]}</Text>
+
+                                        </div>   
+                                </View> 
+                                <View style={styles.container}>
+                                        <Text style={styles.text1}>Numero de horas:</Text>
+                                        <div style={{borderBottom : 1,marginLeft:23,width:"10%"}}>
+                                            <Text style={styles.text2}>{ " "+servicio[8]}</Text>
+                                        </div>  
+                                        <Text style={styles.text1}>Tipo de evento:</Text>
+                                        <div style={{borderBottom : 1,marginLeft:15,width:"80%"}}>
+                                            <Text style={styles.text2}>{ " "+servicio[2]}</Text>
+                                        </div>   
+                                </View> 
+                                <View style={styles.container}>
+                                        <Text style={styles.text1}>Modalidad:</Text>
+                                        <div style={{borderBottom : 1,marginLeft:30,width:"40%"}}>
+                                            <Text style={styles.text2}>{ " "+servicio[4]}</Text>
+                                        </div>  
+                                        {/* <div style={{borderBottom : 1,marginLeft:23,width:"60%"}}>
+                                            { servicio[6] === true ?
+                                                <Text style={styles.text2}>{"Habilitado"}</Text>
+                                                :
+                                                <Text style={styles.text2}>{"Deshabilitado"}</Text>
+
+                                            }
+                                        </div>   */}
+                                        <Text style={styles.text1}>Cuota por participante:</Text>
+                                        <div style={{borderBottom : 1,marginLeft:45,width:"80%"}}>
+                                            <Text style={styles.text2}>{ " "+servicio[5]}</Text>
+                                        </div>   
+                                </View> 
 
                             </View >
                         </Page>
@@ -114,4 +210,4 @@ export default (props) => (
         {...props}
         params={useParams()}
     />
-    );
+);

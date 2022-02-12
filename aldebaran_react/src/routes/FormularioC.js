@@ -208,7 +208,7 @@ class FormularioC extends React.Component {
             const response = await fetch(config.general[0].url + config.general[0].puerto_api + "/api/Alumnos");
             var responseJson = await response.json();
             var temp = responseJson;
-            if (temp['status'] == 200) {
+            if (temp['status'] === 200) {
                 responseJson = responseJson['data']
                 let arrayInfo = []
                 for (let index = 0; index < responseJson.length; index++) {
@@ -699,7 +699,7 @@ class FormularioC extends React.Component {
             // console.log(response['status']);
             // console.log(response['data']['status']);
             // console.log(response['data']['data']);
-            if (response['data']['status'] == 200) {
+            if (response['data']['status'] === 200) {
 
                 Swal.fire({
                     position: 'top-end',
@@ -807,9 +807,7 @@ class FormularioC extends React.Component {
     serviciosHabilitados = async () => {
         try {
             console.log("Servicios");
-            var id = [];
             var Servicios = [];
-            var habilitado = [];
             const response = await fetch(config.general[0].url + config.general[0].puerto_api + "/api/ServiciosLista")
             var responseJson = await response.json();
             var temp = responseJson;

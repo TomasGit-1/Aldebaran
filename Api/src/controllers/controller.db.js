@@ -225,7 +225,14 @@ const setCrearPago = async ( data) => {
     return {"mensaje" :'Pago registrado'};
 }
 
-
+getDataServicioPDF  = async ( idServicio) => {
+    var idServicio = idServicio;
+    const resp = await pool.query('SELECT * FROM SERVICIOEDUCATIVO WHERE idServiciosEdu = $1' ,[idServicio]);
+    var data = resp.rows;
+    return {
+        "data":data
+    }
+}
 module.exports = {
     Home,
     getServicios,
@@ -238,5 +245,6 @@ module.exports = {
     getDataUsers,
     getPagos,
     getDataServicios,
-    setCrearPago
+    setCrearPago,
+    getDataServicioPDF
 };

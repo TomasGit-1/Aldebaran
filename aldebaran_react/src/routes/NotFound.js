@@ -1,12 +1,7 @@
 import React from 'react';
-import NavbarMain from '../Components/NavbarS';
-import { Table, Container, Col, Row, Form, Button, Dropdown, ButtonGroup, InputGroup ,  CloseButton , OverlayTrigger , Tooltip } from 'react-bootstrap';
-import axios from 'axios'
-import Swal from 'sweetalert2'
-import $ from 'jquery';
-import config from '../config/config.json';
-import {StyleSheet } from '@react-pdf/renderer';
-import { Link } from "react-router-dom";
+import { Image} from 'react-bootstrap';
+import { StyleSheet } from '@react-pdf/renderer';
+import imgNotFound from "../static/404-error.jpg";
 
 class NotFound extends React.Component {
     constructor(props) {
@@ -14,21 +9,32 @@ class NotFound extends React.Component {
         this.state = {
             msg: "Primera aplicacion React",
             url: "",
-          
+
         }
-     
+
     }
-  
+
     render() {
-       
+        const styles = StyleSheet.create({
+            container: {
+                alignself:'center'                
+
+                
+            },
+            logo: {
+              width: 300,
+              height: 400,
+            },
+          });
+          
         return (
-            <main>
-                <h2>
-                Pagina no encontrada
-                </h2>
+            <div style={styles.container}>
+                <Image
+                    width="400" className="rounded mx-auto d-block"
+                    src={imgNotFound}
+                />
 
-
-            </main>
+            </div>
         )
     }
 }
