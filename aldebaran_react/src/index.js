@@ -12,7 +12,7 @@ import Servicios from "./routes/Servicios";
 import PDFalumno from "./routes/PDFalumno";
 import PDFservicio from "./routes/PDFservicio";
 import PDFpago from "./routes/PDFservicio";
-import NotFound from '../pages/NotFound'
+import NotFound from './routes/NotFound'
 const rootElement = document.getElementById("root");
 render(
   <BrowserRouter>
