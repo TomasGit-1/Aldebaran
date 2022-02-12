@@ -7,14 +7,14 @@ import axios from 'axios'
 import logo from "../static/LogoBN.jpg";
 import imgTitulo from "../static/titulo.png";
 import Moment from 'moment'
+import Swal from 'sweetalert2'
 
-
-// import styled from 'styled-components'
 class PDFAlumno extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             curp:"",
+            servicioAcademico:"",
             msg: "Primera aplicacion React",
             imagen_base64:"",
             informacion:[],
@@ -25,10 +25,12 @@ class PDFAlumno extends React.Component {
         }
     }
     componentDidMount() {
-        const curpid  = this.props.params;
-        console.log(curpid.value);
-        this.setState({ curp : curpid.value });
-        this.getInfoAlmno_join(curpid.value);
+        var  curpid  = this.props.params;
+        curpid = curpid.value;
+        var data = curpid.split(",");
+        this.setState({ curp : data[0] });
+        this.setState({ servicioAcademico : data[1] });
+        this.getInfoAlmno_join(data[0]);
     }
     getInfoAlmno_join = async (curp) => {
         var url = config.general[0].url + config.general[0].puerto_api + "/Api/AlumnoJoin";
@@ -42,7 +44,11 @@ class PDFAlumno extends React.Component {
          }).then(function (response) {
             return response.data;
         }).catch(function (error) {
-            console.log(error.message)
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops..',
+                text: error.message,
+            })
         })
         let arrayPersonales = [];
 
@@ -82,9 +88,9 @@ class PDFAlumno extends React.Component {
         datosContactoEmer.push(respuesta[1][0].telefono_contacto);
      
         let datoFormacionAcademica = [];
-        console.log("Data");
-        console.log(respuesta);
-        console.log(respuesta[2][0]);
+        // console.log("Data");
+        // console.log(respuesta);
+        // console.log(respuesta[2][0]);
         datoFormacionAcademica.push(respuesta[2][0].n_max_estudios);
         datoFormacionAcademica.push(respuesta[2][0].s_academica_actual);
         datoFormacionAcademica.push(respuesta[2][0].insteducativa);
@@ -115,7 +121,7 @@ class PDFAlumno extends React.Component {
         this.setState({ imagen_base64: imagen.message });
         this.setState({ datosPersonales:  arrayPersonales});
         this.setState({ datosContactoEmer:  datosContactoEmer});
-        this.setState({ datoFormacionAcademica:  datoFormacionAcademica});
+        return 0;
 
     }
     render() {
@@ -123,6 +129,7 @@ class PDFAlumno extends React.Component {
         let { datosPersonales } = this.state
         let { datosContactoEmer } = this.state
         let { datoFormacionAcademica } = this.state
+        let { servicioAcademico } = this.state
         
         const styles = StyleSheet.create({
             page: {
@@ -223,7 +230,7 @@ class PDFAlumno extends React.Component {
                                 </View>
                                 
                                 <Text style={styles.title}>Solicitud de inscripción</Text>
-                                <Text style={styles.title}>{"Falta agregar el Curso"}</Text>
+                                <Text style={styles.title}>{ servicioAcademico }</Text>
                                 <View style={styles.mainContainer}>
 
                                     <Text style={styles.title}>*Datos personales</Text>

@@ -1,15 +1,14 @@
 import React from 'react'
 import axios from 'axios'
-import { Button, Form, Container, Row, Col, ButtonGroup, Table, Dropdown , CloseButton , OverlayTrigger , Tooltip } from 'react-bootstrap'
+import { Button, Form, Container, Row, Col, ButtonGroup, Table, Dropdown, CloseButton, OverlayTrigger, Tooltip, Modal } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2'
 import Moment from 'moment'
 import NavbarMain from '../Components/NavbarS'
-import PDFAlumno from './PDFalumno'
 import $ from 'jquery';
 import config from '../config/config.json';
 import download from 'downloadjs';
-import {StyleSheet } from '@react-pdf/renderer';
+import { StyleSheet } from '@react-pdf/renderer';
 
 
 class FormularioC extends React.Component {
@@ -51,8 +50,6 @@ class FormularioC extends React.Component {
                 "Otro"
             ],
             informacion: [],
-            data_form_uno: [],
-            data_form_dos: [],
             //File load
             file_fotografia: null,
             fileCurp_Alumno: null,
@@ -126,14 +123,20 @@ class FormularioC extends React.Component {
             showF_dos: false,
             showF_tres: false,
             showF_cuatro: false,
-
+            showGenerarPDF:false,
             //Validacion
             fileValCurp: false,
             fileValImg: false,
             fileValIpn: false,
 
 
-            activateSend:false
+            activateSend: false,
+
+
+            isShowModal: false,
+            seleccionModalCurp: "",
+            servicio: [],
+            servicioEducativoOpc: ""
 
         };
         //Funciones para el primero formulario
@@ -151,7 +154,9 @@ class FormularioC extends React.Component {
         this.AceptoCheck = this.AceptoCheck.bind(this);
         this.filterInput = this.filterInput.bind(this);
         this.getDownloadFile = this.getDownloadFile.bind(this);
-        
+        this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
+        this.onServicio = this.onServicio.bind(this);
     }
     componentDidMount() {
         this.apiAlumnos();
@@ -166,7 +171,7 @@ class FormularioC extends React.Component {
             })
         })
     }
-    getDownloadFile  = async (curp , tipo) => {
+    getDownloadFile = async (curp, tipo) => {
         var formData = new FormData();
         formData.append('curp', curp);
         formData.append('tipo', tipo);
@@ -177,20 +182,20 @@ class FormularioC extends React.Component {
                 body: formData, // data can be `string` or {object}!
             }
         )
-        .catch(function(error){
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops..',
-                text: error.message,
-            })
-        });
+            .catch(function (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops..',
+                    text: error.message,
+                })
+            });
         console.log(res);
         console.log(res.body);
-        if(res.ok){
+        if (res.ok) {
             const blob = await res.blob();
             // download(blob , 'dlText.jpeg' , "image/jpeg");
-            download(blob );
-        }else{
+            download(blob);
+        } else {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops..',
@@ -393,12 +398,13 @@ class FormularioC extends React.Component {
                     icon: 'error',
                     title: 'Oops..',
                     text: "No se encuntra la opcion",
-                })        }
+                })
+        }
     }
     uploadFileEvidencia(event) {
         var evidencia = event.target.value;
         if (evidencia === "") {
-           this.setState({ fileValIpn: false});
+            this.setState({ fileValIpn: false });
         } else {
             this.setState({ fileEvideciaIPN: event.target.files[0] });
         }
@@ -445,9 +451,9 @@ class FormularioC extends React.Component {
             this.setState({ comoseenterodelcurso: event.target.value });
         }
     }
-    AceptoCheck(event){
+    AceptoCheck(event) {
         var env = event.target.checked;
-        this.setState({ activateSend: env});
+        this.setState({ activateSend: env });
 
         // activateSend
     }
@@ -504,8 +510,8 @@ class FormularioC extends React.Component {
             }
         }
     }
-    fun_esEmail(correoElectronico){
-        const esCorreoElectronico =/\S+@\S+/.test(correoElectronico);
+    fun_esEmail(correoElectronico) {
+        const esCorreoElectronico = /\S+@\S+/.test(correoElectronico);
         // const esCorreoElectronico =  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(correoElectronico);
         return esCorreoElectronico;
     }
@@ -521,16 +527,16 @@ class FormularioC extends React.Component {
         if (msg === "") {
             var email = mapData.get('email');
             var esEmail = this.fun_esEmail(email);
-            if (esEmail){
+            if (esEmail) {
                 this.ShowViewX(pos);
-            }else{
+            } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops..',
                     text: "El campo email no es valido Ejemplo :email@gmail.com",
                 })
             }
-        
+
         } else {
             Swal.fire({
                 icon: 'error',
@@ -551,16 +557,16 @@ class FormularioC extends React.Component {
         if (msg === "") {
             var email = mapData.get('email');
             var esEmail = this.fun_esEmail(email);
-            if (esEmail){
+            if (esEmail) {
                 this.ShownextView(pos);
-            }else{
+            } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops..',
                     text: "El campo email no es valido Ejemplo :email@gmail.com",
                 })
             }
-        
+
 
 
         } else {
@@ -588,7 +594,7 @@ class FormularioC extends React.Component {
         campos.set('Telefono de Celular', this.state.recomendacionCursotelce);
         this.dataMessage(campos);
     }
-    dataMessage(mapData){
+    dataMessage(mapData) {
         let msg = "";
         for (let clave of mapData.keys()) {
             var valor = mapData.get(clave);
@@ -603,9 +609,9 @@ class FormularioC extends React.Component {
             console.log(mapData);
             console.log(mapData.get('email'));
             var esEmail = this.fun_esEmail(email);
-            if (esEmail){
-                this.sendData();    
-            }else{
+            if (esEmail) {
+                this.sendData();
+            } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops..',
@@ -620,7 +626,7 @@ class FormularioC extends React.Component {
             })
         }
     }
-    sendData(){
+    sendData() {
         var url = config.general[0].url + config.general[0].puerto_api + "/Api/createRegistro";
         // var nacimiento = Moment(this.state.fechaNac_Alumno);
         // var hoy = Moment();
@@ -639,7 +645,7 @@ class FormularioC extends React.Component {
         bodyFormData.append('telParticularAlum', this.state.telPar_Alumno);
         bodyFormData.append('telCelularAlum', this.state.telCel_Alumno);
         bodyFormData.append('lugarNacimiento', this.state.lugarNacimiento);
-        
+
         bodyFormData.append('calle', this.state.calle_Alumno);
         bodyFormData.append('NumeroDom', this.state.num_Alumno);
         bodyFormData.append('colonia', this.state.col_Alumno);
@@ -653,7 +659,7 @@ class FormularioC extends React.Component {
         bodyFormData.append('telEmergencia', this.state.telContacto_Emerge);
         bodyFormData.append('emailEmergencia', this.state.email_Emerge);
 
-        
+
         //Datos laborales
         bodyFormData.append('nombreInst', this.state.nombInstLaboral);
         bodyFormData.append('domicilioInst', this.state.domicilioLaboral);
@@ -681,7 +687,6 @@ class FormularioC extends React.Component {
         bodyFormData.append('recomendacionCursoemail', this.state.recomendacionCursoemail);
         bodyFormData.append('recomendacionCursotelce', this.state.recomendacionCursotelce);
 
-
         axios({
             method: 'POST',
             url: url,
@@ -694,7 +699,7 @@ class FormularioC extends React.Component {
             // console.log(response['status']);
             // console.log(response['data']['status']);
             // console.log(response['data']['data']);
-            if(response['data']['status'] == 200){
+            if (response['data']['status'] == 200) {
 
                 Swal.fire({
                     position: 'top-end',
@@ -704,11 +709,11 @@ class FormularioC extends React.Component {
                     timer: 1500
                 })
                 window.location.reload(false);
-            }else{
+            } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops..',
-                    text: response['data']['data'] ,
+                    text: response['data']['data'],
                 })
             }
         }).catch(function (e) {
@@ -721,7 +726,7 @@ class FormularioC extends React.Component {
 
 
     }
-    recolectamosData(){
+    recolectamosData() {
         return 1;
     }
     ShowView(num) {
@@ -788,7 +793,82 @@ class FormularioC extends React.Component {
             });
         }
     }
+    showModal(curp) {
+        console.log(curp);
+        this.serviciosHabilitados();
+        this.setState({ isShowModal: true });
+        this.setState({ seleccionModalCurp: curp });
 
+    };
+
+    hideModal = async () => {
+        this.setState({ isShowModal: false });
+    };
+    serviciosHabilitados = async () => {
+        try {
+            console.log("Servicios");
+            var id = [];
+            var Servicios = [];
+            var habilitado = [];
+            const response = await fetch(config.general[0].url + config.general[0].puerto_api + "/api/ServiciosLista")
+            var responseJson = await response.json();
+            var temp = responseJson;
+
+            if (temp['status'] === 200) {
+                var responseData = responseJson['data'];
+                for (var i = 0; i < responseData.length; i++) {
+                    if (responseData[i].habilitado === true) {
+                        var tempArray = [];
+                        tempArray.push(responseData[i].idserviciosedu);
+                        tempArray.push(responseData[i].registro_academico);
+                        tempArray.push(responseData[i].tipo_evento);
+                        tempArray.push(responseData[i].programa_academico);
+                        tempArray.push(responseData[i].modalidad);
+                        tempArray.push(responseData[i].cuota);
+                        tempArray.push(responseData[i].habilitado);
+                        tempArray.push(responseData[i].nummodulo);
+                        tempArray.push(responseData[i].numhoras);
+
+                        Servicios.push(tempArray);
+                    }
+                }
+
+                // this.setState({ id: id });
+                this.setState({ servicio: Servicios });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops..',
+                    text: temp['data'],
+                })
+            }
+        } catch (e) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops..',
+                text: e,
+            })
+        }
+    }
+    onServicio(event) {
+        var select = event.target.value;
+        if (select === "null") {
+            console.log("hjshdb");
+            this.setState({ showGenerarPDF: false});
+
+        } else {
+            select = parseInt(event.target.value);
+            var servicios = this.state.servicio;
+            for (let index = 0; index < servicios.length; index++) {
+                if (servicios[index][0] === select) {
+                    this.setState({ servicioEducativoOpc: servicios[index][3] });
+                    this.setState({ showGenerarPDF: true});
+                    break;
+                }
+            }
+        }
+
+    }
     render() {
         let { showForm } = this.state
         let { showTable } = this.state
@@ -798,8 +878,11 @@ class FormularioC extends React.Component {
         let { showF_tres } = this.state
         let { showF_cuatro } = this.state
         let { activateSend } = this.state
-        let { data_form_uno } = this.state
-        let { data_form_dos } = this.state
+        let { isShowModal } = this.state
+        let { seleccionModalCurp } = this.state
+        let { servicio } = this.state
+        let { servicioEducativoOpc } = this.state
+        let { showGenerarPDF } = this.state
 
         let { MaxEstudiosOp } = this.state
         let { situacionAcademica } = this.state
@@ -807,31 +890,31 @@ class FormularioC extends React.Component {
         let { MedioInformacion } = this.state
         const styles = StyleSheet.create({
             buttonNext: {
-                backgroundColor:" #ceac00 ",
-                color:" #000",
+                backgroundColor: " #ceac00 ",
+                color: " #000",
                 border: "none",
                 height: 39
             },
-            buttonPrevious:{
-                backgroundColor:"#600101",
-                color:" #FFF",
+            buttonPrevious: {
+                backgroundColor: "#600101",
+                color: " #FFF",
                 border: "none",
                 height: 45
             },
-            buttonSend:{
-                backgroundColor:"#00a01b ",
-                color:" #000",
+            buttonSend: {
+                backgroundColor: "#00a01b ",
+                color: " #000",
                 border: "none",
                 height: 45
             },
-            buttonClose:{
+            buttonClose: {
                 // backgroundColor:"#600101 ",
-                color:"red",
+                color: "red",
                 border: "none",
                 height: 45
             }
-        
-        
+
+
         })
 
         return (
@@ -839,40 +922,69 @@ class FormularioC extends React.Component {
                 <header>
                     <NavbarMain />
                 </header>
+                <section style={{ marginTop: 80 }} >
+                    <Modal show={isShowModal} animation={false} >
+                        <Modal.Header >
+                            <Modal.Title>Seleccione el Servicio educativo para continuar</Modal.Title>
+                            <div >
+                                <OverlayTrigger
+                                    placement="right"
+                                    delay={{ show: 250, hide: 400 }}
+                                    overlay={<Tooltip id="button-tooltip-2">Cerrar</Tooltip>}
+                                >
+                                    <CloseButton style={styles.buttonClose} onClick={() => this.hideModal()} />
+                                </OverlayTrigger>
+                            </div>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Row >
+                                <Col sm >
+                                    <Form.Group controlId="formFile">
+                                        <Form.Select onChange={this.onServicio}   >
+                                            <option value="null">Seleccione una opcion</option>
+                                            {
+
+                                                servicio.map(function (item) {
+                                                    return <option key={item[0]} value={item[0]}>{item[3]}</option>;
+                                                })
+                                            }
+                                        </Form.Select>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+
+                            <Row className="mt-3">
+                                <Col sm >
+                                    {
+                                        showGenerarPDF?
+                                            <Dropdown.Item style={{ backgroundColor:"#575757" , color:"white", marginLeft:100 , marginRight:100 , width:250 }}  as={Link} to={`/PDFalumno/${seleccionModalCurp},${servicioEducativoOpc}`} target="_blank"  >
+                                                <i className="bi bi-cloud-download"></i>&nbsp;&nbsp;Generar PDF
+                                            </Dropdown.Item>
+
+                                        :         <Dropdown.Item style={{ backgroundColor:"#575757" , color:"white", marginLeft:100 , marginRight:100 , width:250 }}  disabled >
+                                        <i className="bi bi-cloud-download"></i>&nbsp;&nbsp;Generar PDF
+                                            </Dropdown.Item>
+
+                                    }
+                                </Col>
+                            </Row>
+
+                        </Modal.Body>
+                    </Modal>
+                </section >
                 {showForm ?
 
                     <section style={{ marginTop: 80 }} >
                         <Container className="mt-3 mb-3 border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2">
-                            <div >                               
-                                 {/* <CloseButton style={styles.buttonClose} onClick={() => this.ShowForm(0)} /> */}
-                                 {/* <OverlayTrigger
-                                        placement="bottom"
-                                        overlay={<Tooltip id="button-tooltip-2">Cerrar</Tooltip>}
-                                    >
-                                        {({ ref, ...triggerHandler }) => (
-                                        <Button
-                                            variant="light"
-                                            {...triggerHandler}
-                                            className="d-inline-flex align-items-center"
-                                        >
-                                            <Image
-                                            ref={ref}
-                                            roundedCircle
-                                            src="holder.js/20x20?text=J&bg=28a745&fg=FFF"
-                                            />
-                                            <span className="ms-1">Hover to see</span>
-                                        </Button>
-                                        
-                                        )}
-                                    </OverlayTrigger>, */}
-                                    <OverlayTrigger
-                                        placement="right"
-                                        delay={{ show: 250, hide: 400 }}
-                                        overlay={<Tooltip id="button-tooltip-2">Cerrar</Tooltip>}
-                                    >
+                            <div >
+                                <OverlayTrigger
+                                    placement="right"
+                                    delay={{ show: 250, hide: 400 }}
+                                    overlay={<Tooltip id="button-tooltip-2">Cerrar</Tooltip>}
+                                >
                                     <CloseButton style={styles.buttonClose} onClick={() => window.location.reload(false)} />
-                                        {/* <Button variant="success">Hover me to see</Button> */}
-                                    </OverlayTrigger>
+                                    {/* <Button variant="success">Hover me to see</Button> */}
+                                </OverlayTrigger>
                             </div>
 
                             {
@@ -1005,7 +1117,7 @@ class FormularioC extends React.Component {
                                                 <Col sm>
                                                     <Button className="col-6" style={styles.buttonNext} onClick={() => this.existeCurpAlum(1)}>
                                                         Siguiente &nbsp;<i className="bi bi-arrow-right-circle"></i>
-                                                        
+
                                                     </Button>
 
                                                 </Col>
@@ -1091,14 +1203,14 @@ class FormularioC extends React.Component {
                                             </Row>
                                             <Row  >
                                                 <Col sm>
-                                                    <Button className="col-12" style={styles.buttonNext}  onClick={() => this.form2Validacion(2)}>
+                                                    <Button className="col-12" style={styles.buttonNext} onClick={() => this.form2Validacion(2)}>
                                                         Siguiente &nbsp;<i className="bi bi-arrow-right-circle"></i>
                                                     </Button>
                                                 </Col>
                                                 <Col sm >
-                                                    <Button className="col-12"  variant="danger" onClick={() => this.ShowView(0)}>
-                                                        
-                                                        <i className="bi bi-arrow-left-circle"></i> &nbsp; Anterior 
+                                                    <Button className="col-12" variant="danger" onClick={() => this.ShowView(0)}>
+
+                                                        <i className="bi bi-arrow-left-circle"></i> &nbsp; Anterior
 
                                                     </Button>
                                                 </Col>
@@ -1121,7 +1233,7 @@ class FormularioC extends React.Component {
                                                 <Col sm className="mt-3">
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">Nivel maximo de estudios</Form.Label>
-                                                        <Form.Select onChange={this.SeleccMaxEstudios} value={this.state.n_max_estudios}> 
+                                                        <Form.Select onChange={this.SeleccMaxEstudios} value={this.state.n_max_estudios}>
                                                             <option>Seleccione una opcion</option>
 
                                                             {
@@ -1166,7 +1278,7 @@ class FormularioC extends React.Component {
                                                 <Col sm>
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">Otro </Form.Label>
-                                                        <Form.Control type="text" placeholder="Otro"  value={this.state.sistemaProcendenciaOtro}  onChange={(evt) => this.dataoForm_tres(evt, "sistemaEducativoOtro")} />
+                                                        <Form.Control type="text" placeholder="Otro" value={this.state.sistemaProcendenciaOtro} onChange={(evt) => this.dataoForm_tres(evt, "sistemaEducativoOtro")} />
                                                     </Form.Group>
                                                 </Col>
                                             </Row>
@@ -1181,7 +1293,7 @@ class FormularioC extends React.Component {
                                                 <Col sm>
                                                     <Form.Group className="mb-3" >
                                                         <Form.Label className="h6">Año de egreso</Form.Label>
-                                                        <Form.Control type="number"  value={this.state.anioEgresoi} onChange={(evt) => this.dataoForm_tres(evt, "anioegreso")} />
+                                                        <Form.Control type="number" value={this.state.anioEgresoi} onChange={(evt) => this.dataoForm_tres(evt, "anioegreso")} />
                                                     </Form.Group>
                                                 </Col>
                                             </Row>
@@ -1199,13 +1311,13 @@ class FormularioC extends React.Component {
                                                 <Col sm>
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">Universidad a la que aspiras ingresar</Form.Label>
-                                                        <Form.Control type="text" placeholder="Institucion Educativa"  value={this.state.UniversidadAspira}  onChange={(evt) => this.dataoForm_tres(evt, "universidadAspira")} />
+                                                        <Form.Control type="text" placeholder="Institucion Educativa" value={this.state.UniversidadAspira} onChange={(evt) => this.dataoForm_tres(evt, "universidadAspira")} />
                                                     </Form.Group>
                                                 </Col>
                                                 <Col sm>
                                                     <Form.Group className="mb-3" >
                                                         <Form.Label className="h6">Carrera a la que aspiras ingresar </Form.Label>
-                                                        <Form.Control type="text"   placeholder="Carrera a la que aspiras ingresar" value={this.state.CarreraApira} onChange={(evt) => this.dataoForm_tres(evt, "carreraAspiras")} />
+                                                        <Form.Control type="text" placeholder="Carrera a la que aspiras ingresar" value={this.state.CarreraApira} onChange={(evt) => this.dataoForm_tres(evt, "carreraAspiras")} />
                                                     </Form.Group>
                                                 </Col>
                                             </Row>
@@ -1213,17 +1325,17 @@ class FormularioC extends React.Component {
 
                                         <Row  >
                                             <Col sm>
-                                                <Button className="col-12" style={styles.buttonNext}  onClick={() => this.ShownextView(3)}>
+                                                <Button className="col-12" style={styles.buttonNext} onClick={() => this.ShownextView(3)}>
                                                     Siguiente &nbsp;<i className="bi bi-arrow-right-circle"></i>
 
-                                                    
+
                                                 </Button>
                                             </Col>
                                             <Col sm >
-                                                <Button className="col-12"   variant="danger"  onClick={() => this.ShownextView(1)}>
-                                                    <i className="bi bi-arrow-left-circle"></i> &nbsp; Anterior 
+                                                <Button className="col-12" variant="danger" onClick={() => this.ShownextView(1)}>
+                                                    <i className="bi bi-arrow-left-circle"></i> &nbsp; Anterior
 
-                                                    
+
                                                 </Button>
                                             </Col>
                                         </Row>
@@ -1236,7 +1348,7 @@ class FormularioC extends React.Component {
                                 showF_cuatro ?
                                     <div>
                                         <Form>
-            
+
                                             <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
                                                 Acceso vehicular
                                             </div>
@@ -1244,13 +1356,13 @@ class FormularioC extends React.Component {
                                                 <Col sm>
                                                     <Form.Group className="mb-3" >
                                                         <Form.Label className="h6">Marca y Modelo</Form.Label>
-                                                        <Form.Control type="text" placeholder="Marca y Modelo"  value={this.state.marca_modelo}  onChange={(evt) => this.dataoForm_cuatro(evt, "marca_modelo")} />
+                                                        <Form.Control type="text" placeholder="Marca y Modelo" value={this.state.marca_modelo} onChange={(evt) => this.dataoForm_cuatro(evt, "marca_modelo")} />
                                                     </Form.Group>
                                                 </Col>
                                                 <Col sm>
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">Placas</Form.Label>
-                                                        <Form.Control type="text" placeholder="Placas" value={this.state.placas}   onChange={(evt) => this.dataoForm_cuatro(evt, "Placas")} />
+                                                        <Form.Control type="text" placeholder="Placas" value={this.state.placas} onChange={(evt) => this.dataoForm_cuatro(evt, "Placas")} />
                                                     </Form.Group>
                                                 </Col>
                                             </Row>
@@ -1259,28 +1371,28 @@ class FormularioC extends React.Component {
                                             </div>
                                             <Row>
                                                 <Col sm>
-            
+
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">¿Cómo se enteró del curso? *</Form.Label>
-                                                        <Form.Select onChange={this.SeleccMedioInformacio}  value={this.state.comoseenterodelcurso} >
+                                                        <Form.Select onChange={this.SeleccMedioInformacio} value={this.state.comoseenterodelcurso} >
                                                             <option>Seleccione una opcion</option>
-            
+
                                                             {
                                                                 MedioInformacion.map((index) =>
                                                                     <option value={index} key={index}>{index}</option>
                                                                 )
                                                             }
-            
+
                                                         </Form.Select>
                                                     </Form.Group>
                                                 </Col>
                                                 <Col sm>
                                                     <Form.Group className="mb-3" >
                                                         <Form.Label className="h6">En caso de seleccionar "Otro" ¿Cómo fue?</Form.Label>
-                                                        <Form.Control type="text" placeholder="Otro" value={this.state.comoseenterodelcursoOtro}   onChange={(evt) => this.dataoForm_cuatro(evt, "otro")} />
+                                                        <Form.Control type="text" placeholder="Otro" value={this.state.comoseenterodelcursoOtro} onChange={(evt) => this.dataoForm_cuatro(evt, "otro")} />
                                                     </Form.Group>
                                                 </Col>
-                                                
+
                                             </Row>
                                             <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
                                                 ¿A quién recomendaría este curso?
@@ -1304,41 +1416,41 @@ class FormularioC extends React.Component {
                                                         <Form.Control type="text" placeholder="Telefono de celular" value={this.state.recomendacionCursotelce} onChange={(evt) => this.dataoForm_cuatro(evt, "telcel")} />
                                                     </Form.Group>
                                                 </Col>
-            
+
                                             </Row>
                                             <div className="alert alert-danger  mt-2 " role="alert" >
-                                            <h2>
-                                                ¡Importante!
-                                            </h2>
-                                            {"\n"}
-                                                El Centro de Vinculación y Desarrollo Regional Unidad Oaxaca se reserva el derecho de cancelar o posponer el programa 
-                                                académico si no se cumple con el mínimo de participantes a la fecha de inicio del programa. 
+                                                <h2>
+                                                    ¡Importante!
+                                                </h2>
+                                                {"\n"}
+                                                El Centro de Vinculación y Desarrollo Regional Unidad Oaxaca se reserva el derecho de cancelar o posponer el programa
+                                                académico si no se cumple con el mínimo de participantes a la fecha de inicio del programa.
                                             </div>
                                             <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                                <Form.Check type="checkbox" label="Si , acepto"  onChange={this.AceptoCheck}   />
+                                                <Form.Check type="checkbox" label="Si , acepto" onChange={this.AceptoCheck} />
                                             </Form.Group>
                                             <Row  >
                                                 <Col sm>
-                                                    <Button className="col-12"  variant="danger" onClick={() => this.ShownextView(2)}>
-                                                        
-                                                    <i className="bi bi-arrow-left-circle"></i> &nbsp; Anterior 
+                                                    <Button className="col-12" variant="danger" onClick={() => this.ShownextView(2)}>
 
-                                                    
+                                                        <i className="bi bi-arrow-left-circle"></i> &nbsp; Anterior
+
+
                                                     </Button>
                                                 </Col>
                                                 <Col sm >
-                                                    {  activateSend ? 
-                                                            <Button className="col-12" variant="success" onClick={ () => this.form3Validacion() }>Enviar</Button>
-                                                        
+                                                    {activateSend ?
+                                                        <Button className="col-12" variant="success" onClick={() => this.form3Validacion()}>Enviar</Button>
+
                                                         :
-                                                            <Button className="col-12" variant="success" disabled>Enviar</Button>                                            
+                                                        <Button className="col-12" variant="success" disabled>Enviar</Button>
                                                     }
                                                 </Col>
                                             </Row>
 
                                         </Form>
                                     </div>
-            
+
                                     : null
                             }
                         </Container>
@@ -1354,7 +1466,7 @@ class FormularioC extends React.Component {
                             </Container>
                         </section>
                         <Container className="border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2" >
-                        <h3>Alumnos</h3>
+                            <h3>Alumnos</h3>
 
                             <Row className="mt-3 mb-3"   >
                                 <Col sm >
@@ -1429,10 +1541,12 @@ class FormularioC extends React.Component {
                                                                 <Dropdown.Item onClick={() => this.getDownloadFile(index[1], 2)}                                                                >
                                                                     <i className="bi bi-file-earmark-pdf"></i>&nbsp;&nbsp;Evidencia IPN
                                                                 </Dropdown.Item>
-                                                                <Dropdown.Item as={Link} to={`/PDFalumno/${index[1]}`} target="_blank" >
+                                                                {/* <Dropdown.Item as={Link} to={`/PDFalumno/${index[1]}`} target="_blank" >
                                                                     <i className="bi bi-cloud-download"></i>&nbsp;&nbsp;PDF
+                                                                </Dropdown.Item> */}
+                                                                <Dropdown.Item onClick={() => this.showModal(index[1])}  >
+                                                                    <i className="bi bi-cloud-download"></i>&nbsp;&nbsp;Solicitud de registro
                                                                 </Dropdown.Item>
-
 
                                                             </Dropdown.Menu>
                                                         </Dropdown>
