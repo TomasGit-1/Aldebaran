@@ -7,6 +7,8 @@ import config from '../config/config.json';
 import Moment from 'moment'
 import { StyleSheet } from '@react-pdf/renderer';
 import axios from 'axios';
+import { Link } from "react-router-dom";
+
 
 
 class Pagos extends React.Component {
@@ -133,9 +135,9 @@ class Pagos extends React.Component {
                     arrayTemp.push(responseJson[i].programa_academico);
                     arrayTemp.push(responseJson[i].cuota);
 
-                    var fechahoraticket = new Moment(responseJson[i].fechahoraticket).format('DD/MM/YYYY');
+                    var fechahoraticket = new Moment(responseJson[i].fechahoraticket).format('DD/MM/YYYY HH:mm');
                     arrayTemp.push(fechahoraticket);
-                    var fechahoraregistro = new Moment(responseJson[i].fechahoraregistro).format('DD/MM/YYYY');
+                    var fechahoraregistro = new Moment(responseJson[i].fechahoraregistro).format('DD/MM/YYYY HH:mm');
                     arrayTemp.push(fechahoraregistro);
 
 
@@ -315,35 +317,57 @@ class Pagos extends React.Component {
         bodyFomrData.append('dateInicio' , this.state.dateStart);
         bodyFomrData.append('dateFinish' , this.state.dateFinish);
         bodyFomrData.append('descripcion' , this.state.descripcionInput);
-        axios({
-            method:"POST",
-            url:url,
-            data:bodyFomrData,
-            headers : {
-                'Content-Type': 'application/json'
-            }
-        }).then( function (response) {
-            if(response['data']['status'] == 200){
+        Swal.fire({
+            title: "¿Estas seguro de agregar un nuevo pago?",
+            text: "¡No podrás revertir esto!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Continuar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios({
+                    method:"POST",
+                    url:url,
+                    data:bodyFomrData,
+                    headers : {
+                        'Content-Type': 'application/json'
+                    }
+                }).then( function (response) {
+                    if(response['data']['status'] == 200){
+        
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Alumno agregado',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
 
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'success',
-                    title: 'Alumno agregado',
-                    showConfirmButton: false,
-                    timer: 1500
+                        setTimeout(window.location.reload(false), 7000);
+                        
+        
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops..',
+                            text: response['data']['data'] ,
+                        })
+                    }
+                }).catch(function (e){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops..',
+                        text: e,
+                    })
                 })
-                setTimeout(window.location.reload(false), 3000);
+               
 
-            }else{
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops..',
-                    text: response['data']['data'] ,
-                })
             }
-        }).catch(function (e){
-
         })
+       
+       
 
     }
     render() {
@@ -440,7 +464,7 @@ class Pagos extends React.Component {
                                     </Col>
                                     <Col sm>
                                     <Form.Group className="mb-3">
-                                            <Form.Label className="h5"> ¿Requiere factura electrónica? <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                            <Form.Label className="h5"> ¿Requiere factura electrónica? </Form.Label>
                                             <Form.Check 
                                                 type="switch"
                                                 id="custom-switch"
@@ -612,7 +636,9 @@ class Pagos extends React.Component {
                                                                 <Dropdown.Item>
                                                                     <i className="bi bi-file-earmark-pdf"></i>&nbsp;&nbsp;Curp
                                                                 </Dropdown.Item>
-
+                                                                <Dropdown.Item as={Link} to={`/PDFpago/${index[0]}`} target="_blank" >
+                                                                <i className="bi bi-cloud-download"></i>&nbsp;&nbsp; Generar pdf
+                                                                </Dropdown.Item>
 
                                                             </Dropdown.Menu>
                                                         </Dropdown>

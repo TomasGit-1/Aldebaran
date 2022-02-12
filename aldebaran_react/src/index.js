@@ -12,6 +12,7 @@ import Servicios from "./routes/Servicios";
 import PDFalumno from "./routes/PDFalumno";
 import PDFservicio from "./routes/PDFservicio";
 import PDFpago from "./routes/PDFservicio";
+import NotFound from '../pages/NotFound'
 const rootElement = document.getElementById("root");
 render(
   <BrowserRouter>
@@ -23,6 +24,7 @@ render(
       <Route path="PDFalumno/:value" element={<PDFalumno />} />
       <Route path="PDFservicio/:value" element={<PDFservicio />} />
       <Route path="PDFpago/:value" element={<PDFpago />} />
+      <Route path="*" element={<NotFound/>}/>
 ¿    </Routes>
   </BrowserRouter>,
   

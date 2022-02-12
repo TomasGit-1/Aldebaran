@@ -6,6 +6,8 @@ import Swal from 'sweetalert2'
 import $ from 'jquery';
 import config from '../config/config.json';
 import {StyleSheet } from '@react-pdf/renderer';
+import { Link } from "react-router-dom";
+
 
 
 
@@ -504,9 +506,8 @@ class Servicios extends React.Component {
                                     </thead>
                                     <tbody>
                                         {id.map((_, index) => (
-
                                             <tr key={index}>
-                                                <td >{index}</td>
+                                                <td >{id[index]}</td>
                                                 <td>{registro[index]}</td>
                                                 <td>{evento[index]}</td>
                                                 <td >{programaAcademico[index]}</td>
@@ -533,6 +534,9 @@ class Servicios extends React.Component {
                                                                         : <label><i className="bi bi-toggle-on"></i>&nbsp;&nbsp;Habilitar</label>
                                                                 }
 
+                                                            </Dropdown.Item>
+                                                            <Dropdown.Item as={Link} to={`/PDFservicio/${id[index]}`} target="_blank" >
+                                                                <i className="bi bi-cloud-download"></i>&nbsp;&nbsp; Generar pdf
                                                             </Dropdown.Item>
 
                                                         </Dropdown.Menu>

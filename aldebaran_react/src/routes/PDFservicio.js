@@ -8,16 +8,17 @@ import logo from "../static/LogoBN.jpg";
 import imgTitulo from "../static/titulo.png";
 import Moment from 'moment'
 
-
-
-// import styled from 'styled-components'
-class PDFPagos extends React.Component {
+class PDFServicio extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             msg: "Primera aplicacion React",
 
         }
+    }
+    componentDidMount() {
+        var  parametros  = this.props.params;
+       console.log(parametros);
     }
     render() {
         const styles = StyleSheet.create({
@@ -92,6 +93,8 @@ class PDFPagos extends React.Component {
                     <Document>
                         <Page size="A4" style={styles.page}>
                             <View style={styles.section}>
+                            <Text style={styles.title}>Servicio</Text>
+
                             </View >
                         </Page>
                     </Document>
@@ -107,8 +110,8 @@ class PDFPagos extends React.Component {
 
 
 export default (props) => (
-                <PDFPagos
-                    {...props}
-                    params={useParams()}
-                />
-                );
+    <PDFServicio
+        {...props}
+        params={useParams()}
+    />
+    );
