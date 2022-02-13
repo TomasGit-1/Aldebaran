@@ -126,6 +126,7 @@ class Pagos extends React.Component {
             if (temp['status'] === 200) {
                 responseJson = responseJson['data'];
                 let arrayInfo = [];
+                console.log(responseJson);
                 for (let i = 0; i < responseJson.length; i++) {
                     let arrayTemp = [];
                     arrayTemp.push(responseJson[i].idpagos);
@@ -141,12 +142,17 @@ class Pagos extends React.Component {
                     arrayTemp.push(fechahoraregistro);
 
 
-                    arrayTemp.push(responseJson[i].nummodulo);
+                    // arrayTemp.push(responseJson[i].nummodulo);
+
+                    if(responseJson[i].facturacion === true)
+                        arrayTemp.push("Si");
+                    else arrayTemp.push("No");
+                    
                     arrayTemp.push(responseJson[i].idserviciosedufk);
                     arrayTemp.push(responseJson[i].comprobantepath);
                     arrayTemp.push(responseJson[i].modalidad);
                     arrayTemp.push(responseJson[i].fecha_inicio);
-                    arrayTemp.push(responseJson[i].fecha_tÉrmin);
+                    arrayTemp.push(responseJson[i].fecha_termino);
                     arrayTemp.push(responseJson[i].idserviciosedu);
                     arrayTemp.push(responseJson[i].tipo_evento);
                     arrayTemp.push(responseJson[i].numhoras);
@@ -154,6 +160,7 @@ class Pagos extends React.Component {
 
                     arrayInfo.push(arrayTemp);
                 }
+                console.log(arrayInfo);
                 this.setState({ dataPagos: arrayInfo });
 
             } else {
@@ -598,10 +605,12 @@ class Pagos extends React.Component {
                                             <th>Curp</th>
                                             <th>Referencia</th>
                                             <th>Registro Academico</th>
-                                            <th>Nombre</th>
+                                            <th>Servicio</th>
                                             <th>Cuota</th>
-                                            <th>Fecha en ticket</th>
-                                            <th>Fecha de registro</th>
+                                            <th>Fecha y Hora en ticket</th>
+                                            <th>Fecha y Hora de registro</th>
+                                            <th>Facturación</th>
+                                            {/* <th>Modulo</th> */}
                                             <th>Opciones</th>
                                         </tr>
                                     </thead>
@@ -617,6 +626,8 @@ class Pagos extends React.Component {
                                                     <td >{index[5]}</td>
                                                     <td >{index[6]}</td>
                                                     <td >{index[7]}</td>
+                                                    <td >{index[8]}</td>
+                                                    {/* <td >{index[9]}</td> */}
                                                     <td>
                                                         <Dropdown>
                                                             <Dropdown.Toggle id="dropdown-basic">

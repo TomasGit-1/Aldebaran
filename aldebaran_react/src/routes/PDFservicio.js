@@ -131,7 +131,6 @@ class PDFServicio extends React.Component {
                     <Document>
                         <Page size="A4" style={styles.page}>
                             <View style={styles.section}>
-                                <Text style={styles.title}>Servicio</Text>
                                 <View style={{ flexDirection: 'row' }}>
                                     <Image
                                         style={{ alignSelf: 'flex-start', width: 60, height: 70 }}

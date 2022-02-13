@@ -111,7 +111,8 @@ CREATE TABLE PAGOS(
 	FECHA_INICIO timestamp,
 	FECHA_TERMINO timestamp,
 	facturacion boolean,
-	fechaHoraRegistro timestamp
+	fechaHoraRegistro timestamp,
+	descripcion varchar 
 );
 
 CREATE TABLE INFOADICIONAL(

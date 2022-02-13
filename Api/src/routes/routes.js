@@ -329,6 +329,16 @@ routes.post('/DataServicioPDF',  (req, res )=> {
     })
 });
 
+routes.post('/DataPagosPDF',  (req, res )=> {
+    var idPago = req.body.idPago;
+
+    db.getDataPagosPDF(idPago).then(respuesta =>{
+        // res.json({ "status": 200 , "Servicios":respuesta});
+        res.json(respuesta);
+    }).catch(error =>{
+        console.log(error);
+    })
+});
 
 
 module.exports = routes;

@@ -11,7 +11,7 @@ import Ingresos from "./routes/FormularioC";
 import Servicios from "./routes/Servicios";
 import PDFalumno from "./routes/PDFalumno";
 import PDFservicio from "./routes/PDFservicio";
-import PDFpago from "./routes/PDFservicio";
+import PDFpago from "./routes/PDFpago";
 import NotFound from './routes/NotFound'
 const rootElement = document.getElementById("root");
 render(

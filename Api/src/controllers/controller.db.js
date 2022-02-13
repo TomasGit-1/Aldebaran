@@ -233,6 +233,28 @@ getDataServicioPDF  = async ( idServicio) => {
         "data":data
     }
 }
+
+getDataPagosPDF  = async ( idPagos) => {
+    var idPagos = idPagos;
+    const resp = await pool.query('SELECT * FROM pagos WHERE idPagos = $1' ,[idPagos]);
+    var dataPagos = resp.rows;
+    
+    var curpAlum = dataPagos[0].idcurpfk;
+    const respAlu = await pool.query('SELECT * FROM Personas WHERE Curp = $1' ,[curpAlum]);
+    var dataAlum = respAlu.rows;
+
+    var servicioEduc = dataPagos[0].idserviciosedufk;
+    const respServicio = await pool.query('SELECT * FROM SERVICIOEDUCATIVO WHERE idServiciosEdu = $1' ,[servicioEduc]);
+    var dataServicio = respServicio.rows;
+    
+    
+    return {
+        "pago":dataPagos,
+        "alumno":dataAlum,
+        "servicio":dataServicio
+      
+    }
+}
 module.exports = {
     Home,
     getServicios,
@@ -246,5 +268,6 @@ module.exports = {
     getPagos,
     getDataServicios,
     setCrearPago,
-    getDataServicioPDF
+    getDataServicioPDF,
+    getDataPagosPDF
 };
