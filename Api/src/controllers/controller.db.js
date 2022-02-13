@@ -51,7 +51,7 @@ const getServicios = async () => {
     return {"id":id, "registro":registro , "evento":evento , "programaAcademico":programaAcademico, "habilitado":habilitado , "modalidad":modalidad,"cuota":cuota , "numModulo":numModulo , "numHoras":numHoras  };
 };
 const getAlumnos = async () => {
-    const response = await pool.query('SELECT * FROM personas  ORDER BY idPersona ASC');
+    const response = await pool.query('SELECT * FROM personas  ORDER BY idPersona DESC');
     var data = response.rows;
     var bdAlumnos = []
     for (let index = 0; index < data.length; index++) {
@@ -166,8 +166,11 @@ const getDataUsers = async ( curp ) => {
     
     const response3 = await pool.query('SELECT * FROM datoslaborales WHERE idcurpfk = $1' ,[curp]);
     var data_laborales = response3.rows;
+
+    const response4 = await pool.query('SELECT * FROM INFOADICIONAL WHERE idcurpfk = $1' ,[curp]);
+    var data_infoAdicional = response4.rows;
     
-    var data_Full =[data_persona,data_contacto,data_formacionacademicia,data_laborales]
+    var data_Full =[data_persona,data_contacto,data_formacionacademicia,data_laborales , data_infoAdicional]
 
     return {
         "data":data_Full
