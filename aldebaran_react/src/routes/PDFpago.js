@@ -1,5 +1,4 @@
 import React from 'react';
-import { Container } from 'react-bootstrap'
 import { Page, Text, View, Document, StyleSheet, PDFViewer, Font, Image } from '@react-pdf/renderer';
 import { useParams } from 'react-router-dom'
 import config from '../config/config.json';
@@ -26,7 +25,6 @@ class PDFPago extends React.Component {
     }
     componentDidMount() {
         var parametros = this.props.params;
-        console.log(parametros);
         this.setState({ folio: parametros.value });
 
         this.getDataServicios(parametros.value);
@@ -49,7 +47,6 @@ class PDFPago extends React.Component {
                 text: error.message,
             })
         })
-        console.log(respuesta.pago);
 
         var pagos = respuesta.pago;
         var alumno = respuesta.alumno;

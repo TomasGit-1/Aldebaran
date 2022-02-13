@@ -8,9 +8,6 @@ import config from '../config/config.json';
 import {StyleSheet } from '@react-pdf/renderer';
 import { Link } from "react-router-dom";
 
-
-
-
 class Servicios extends React.Component {
     constructor(props) {
         super(props)
@@ -79,7 +76,6 @@ class Servicios extends React.Component {
         }
     }
     onSeleccion(event) {
-        console.log(event.target.value);
         this.setState({ modalidad: event.target.value });
     }
     dataForm0(event, data) {
@@ -108,12 +104,7 @@ class Servicios extends React.Component {
             numModulo: this.state.numModulo,
             numHoras: this.state.numHoras
         }
-        console.log(validacion);
-        console.log(validacion.registro);
-        console.log(validacion.evento);
-        console.log(validacion.nombre);
-        console.log(validacion.cuota);
-        console.log(validacion.modalidad);
+    
         if (validacion.registro === "") {
             Swal.fire({
                 icon: 'error',
@@ -163,8 +154,6 @@ class Servicios extends React.Component {
                         validacion,
                     })
                         .then(res => {
-                            console.log(res);
-                            console.log(res.data);
                             this.apiServicios();
                             Swal.fire({
                                 position: 'top-end',
@@ -190,7 +179,6 @@ class Servicios extends React.Component {
         }
     }
     editar(b) {
-        console.log(b);
         let validacion = {
             id: this.state.id,
             servicio: this.state.servicio,
@@ -198,7 +186,6 @@ class Servicios extends React.Component {
         }
         var msg = "";
         var opcion = false;
-        console.log(validacion['habilitado'][b]);
         if (validacion['habilitado'][b] === "Habilitado") {
             msg = "¿Desahabilitar el servicio?";
             opcion = false;
@@ -223,8 +210,7 @@ class Servicios extends React.Component {
                     data,
                 })
                     .then(res => {
-                        console.log(res);
-                        console.log(res.data);
+                       
                         this.apiServicios();
                         Swal.fire({
                             position: 'top-end',
@@ -264,7 +250,6 @@ class Servicios extends React.Component {
             const response = await fetch(config.general[0].url + config.general[0].puerto_api + "/api/Servicios")
             var responseJson = await response.json();
             var temp = responseJson;
-            console.log(temp);
             if (temp['status'] === 200) {
                 responseJson = responseJson['data'];
                 for (var i = 0; i < responseJson.id.length; i++) {
@@ -273,10 +258,8 @@ class Servicios extends React.Component {
                     evento.push(responseJson.evento[i]);
                     programaAcademico.push(responseJson.programaAcademico[i]);
                     if (responseJson.habilitado[i] === "true") {
-                        console.log("Habilitado");
                         habilitado.push("Habilitado");
                     } else {
-                        console.log("Deshabilidato");
                         habilitado.push("Deshabilidato");
                     }
                     modalidadArray.push(responseJson.modalidad[i]);
@@ -284,9 +267,6 @@ class Servicios extends React.Component {
                     moduloArray.push(responseJson.numModulo[i]);
                     HorasArray.push(responseJson.numHoras[i]);
                 }
-                // console.log(responseJson['id']);
-                // console.log(responseJson['Servicios']);
-                // console.log(responseJson['habilitado']);
                 this.setState({ id: id });
                 this.setState({ registro: registro });
                 this.setState({ evento: evento });

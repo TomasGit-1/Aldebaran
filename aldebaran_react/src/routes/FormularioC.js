@@ -189,8 +189,7 @@ class FormularioC extends React.Component {
                     text: error.message,
                 })
             });
-        console.log(res);
-        console.log(res.body);
+    
         if (res.ok) {
             const blob = await res.blob();
             // download(blob , 'dlText.jpeg' , "image/jpeg");
@@ -605,9 +604,6 @@ class FormularioC extends React.Component {
         }
         if (msg === "") {
             var email = mapData.get('email');
-            console.log("validamos el tercer email");
-            console.log(mapData);
-            console.log(mapData.get('email'));
             var esEmail = this.fun_esEmail(email);
             if (esEmail) {
                 this.sendData();
@@ -695,10 +691,6 @@ class FormularioC extends React.Component {
             headers: { 'Content-Type': 'application/json' }
 
         }).then(function (response) {
-            // console.log(response['data']);
-            // console.log(response['status']);
-            // console.log(response['data']['status']);
-            // console.log(response['data']['data']);
             if (response['data']['status'] === 200) {
 
                 Swal.fire({
@@ -794,7 +786,6 @@ class FormularioC extends React.Component {
         }
     }
     showModal(curp) {
-        console.log(curp);
         this.serviciosHabilitados();
         this.setState({ isShowModal: true });
         this.setState({ seleccionModalCurp: curp });
@@ -806,7 +797,6 @@ class FormularioC extends React.Component {
     };
     serviciosHabilitados = async () => {
         try {
-            console.log("Servicios");
             var Servicios = [];
             const response = await fetch(config.general[0].url + config.general[0].puerto_api + "/api/ServiciosLista")
             var responseJson = await response.json();
@@ -851,7 +841,6 @@ class FormularioC extends React.Component {
     onServicio(event) {
         var select = event.target.value;
         if (select === "null") {
-            console.log("hjshdb");
             this.setState({ showGenerarPDF: false});
 
         } else {

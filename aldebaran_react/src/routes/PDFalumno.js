@@ -88,9 +88,6 @@ class PDFAlumno extends React.Component {
         datosContactoEmer.push(respuesta[1][0].telefono_contacto);
      
         let datoFormacionAcademica = [];
-        // console.log("Data");
-        // console.log(respuesta);
-        // console.log(respuesta[2][0]);
         datoFormacionAcademica.push(respuesta[2][0].n_max_estudios);
         datoFormacionAcademica.push(respuesta[2][0].s_academica_actual);
         datoFormacionAcademica.push(respuesta[2][0].insteducativa);
@@ -114,10 +111,13 @@ class PDFAlumno extends React.Component {
          }).then(function (response) {
             return response.data;
         }).catch(function (error) {
-            console.log(error.message)
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops..',
+                text: error.message,
+            })
         })
-        // console.log("Imagen");
-        // console.log(imagen.message);
+       
         this.setState({ imagen_base64: imagen.message });
         this.setState({ datosPersonales:  arrayPersonales});
         this.setState({ datosContactoEmer:  datosContactoEmer});

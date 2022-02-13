@@ -84,7 +84,6 @@ class Pagos extends React.Component {
                 for (let i = 0; i < servicios[index][7]; i++) {
                     array.push(i + 1);
                 }
-                console.log(servicios[index]);
                 this.setState({ numModuloPago: array });
                 this.setState({ cantidadPago: servicios[index][5] });
                 this.setState({ servicioEducativoOpc : servicios[index][3] });
@@ -126,7 +125,6 @@ class Pagos extends React.Component {
             if (temp['status'] === 200) {
                 responseJson = responseJson['data'];
                 let arrayInfo = [];
-                console.log(responseJson);
                 for (let i = 0; i < responseJson.length; i++) {
                     let arrayTemp = [];
                     arrayTemp.push(responseJson[i].idpagos);
@@ -160,7 +158,6 @@ class Pagos extends React.Component {
 
                     arrayInfo.push(arrayTemp);
                 }
-                console.log(arrayInfo);
                 this.setState({ dataPagos: arrayInfo });
 
             } else {
@@ -176,9 +173,7 @@ class Pagos extends React.Component {
     }
     serviciosHabilitados = async () => {
         try {
-            var id = [];
             var Servicios = [];
-            var habilitado = [];
             const response = await fetch(config.general[0].url + config.general[0].puerto_api + "/api/ServiciosLista")
             var responseJson = await response.json();
             var temp = responseJson;
@@ -241,13 +236,15 @@ class Pagos extends React.Component {
                 this.setState({ descripcionInput: event.target.value });
                 break;
             default:
-            console.log("No se encuntra la opcion")
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops..',
+                    text: "No se encuentra la opcion",
+                })
         }
     }
     uploadFileComprobante(event) {
-        console.log("Comprobante");
         var comprobante = event.target.value;
-        console.log(comprobante);
 
         if (comprobante === "") {
             this.setState({ isFileComprobante: false });
@@ -290,7 +287,6 @@ class Pagos extends React.Component {
         let msg = "";
         for (let clave of campos.keys()) {
             var valor = campos.get(clave);
-            console.log(valor);
             if (valor === null || valor === "" || valor === false ) {
                 msg = `El campo :${clave} esta vacio`;
                 break;
@@ -308,7 +304,6 @@ class Pagos extends React.Component {
         }
     }
     SendData(){
-        console.log("Se envia la data ");
         var url = config.general[0].url + config.general[0].puerto_api + "/Api/CrearPago";
         var bodyFomrData = new FormData();
         bodyFomrData.append('ServicioEducativo' , this.state.servicioEducativoOpc);
@@ -342,7 +337,7 @@ class Pagos extends React.Component {
                         'Content-Type': 'application/json'
                     }
                 }).then( function (response) {
-                    if(response['data']['status'] == 200){
+                    if(response['data']['status'] === 200){
         
                         Swal.fire({
                             position: 'top-end',

@@ -1,11 +1,9 @@
 import React from 'react';
-import { Container } from 'react-bootstrap'
 import { Page, Text, View, Document, StyleSheet, PDFViewer, Font, Image } from '@react-pdf/renderer';
 import { useParams } from 'react-router-dom'
 import config from '../config/config.json';
 import axios from 'axios'
 import imgTitulo from "../static/titulo.png";
-import Moment from 'moment'
 import logo from "../static/LogoBN.jpg";
 import Swal from 'sweetalert2'
 
@@ -20,7 +18,6 @@ class PDFServicio extends React.Component {
     }
     componentDidMount() {
         var parametros = this.props.params;
-        console.log(parametros);
         this.getDataServicios(parametros.value);
     }
     getDataServicios = async (idServicio) => {
@@ -52,7 +49,6 @@ class PDFServicio extends React.Component {
         arrayServicios.push(respuesta[0].habilitado);
         arrayServicios.push(respuesta[0].nummodulo);
         arrayServicios.push(respuesta[0].numhoras);
-        console.log(arrayServicios);
         this.setState({ servicio: arrayServicios });
 
     }
