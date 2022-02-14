@@ -155,8 +155,6 @@ class Pagos extends React.Component {
                     arrayTemp.push(responseJson[i].numhoras);
                     arrayTemp.push(responseJson[i].habilitado);
                     arrayTemp.push(responseJson[i].descripcion);
-                    console.log(arrayTemp);
-                    console.log(arrayTemp.length);
                     arrayInfo.push(arrayTemp);
                 }
                 this.setState({ dataPagos: arrayInfo });

@@ -40,7 +40,6 @@ class PDFServicio extends React.Component {
         })
 
         let arrayServicios = [];
-        console.log(respuesta[0]);
         arrayServicios.push(respuesta[0].idserviciosedu);
         arrayServicios.push(respuesta[0].registro_academico);
         arrayServicios.push(respuesta[0].tipo_evento);
