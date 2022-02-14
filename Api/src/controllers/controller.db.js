@@ -206,7 +206,10 @@ const getDataServicios = async () => {
     data = responsePersona.rows;
     var bdAlumnos = []
     for (let index = 0; index < data.length; index++) {
-        bdAlumnos.push(data[index].curp);
+        var array =[];
+        array.push(data[index].curp);
+        array.push(data[index].nombre+" "+ data[index].apppat+" "+data[index].appmat );
+        bdAlumnos.push(array);
     }
     
 
@@ -219,9 +222,9 @@ const setCrearPago = async ( data) => {
     var dat= new Date(); //Obtienes la fecha
     var dat2 = Date.parse(dat); //Lo parseas para transformarlo
 
-    const contacto = await pool.query('INSERT INTO pagos  (idcurpfk , idServiciosEduFk , numModulo ,comprobantePath , cedulaPath ,referencia , cantidad, FechaHoraTicket , FECHA_INICIO , FECHA_TERMINO ,facturacion ,fechaHoraRegistro) VALUES ($1, $2 , $3 , $4 , $5 , $6 , $7 , $8 , $9 , $10 , $11 , $12)',
+    const contacto = await pool.query('INSERT INTO pagos  (idcurpfk , idServiciosEduFk , numModulo ,comprobantePath , cedulaPath ,referencia , cantidad, FechaHoraTicket , FECHA_INICIO , FECHA_TERMINO ,facturacion ,fechaHoraRegistro , descripcion) VALUES ($1, $2 , $3 , $4 , $5 , $6 , $7 , $8 , $9 , $10 , $11 , $12 , $13)',
     [   
-        data[0],data[1],data[2],data[3],data[4] , data[5] , data[6] , data[7] , data[8] ,  data[9] ,data[10], dat
+        data[0],data[1],data[2],data[3],data[4] , data[5] , data[6] , data[7] , data[8] ,  data[9] ,data[10], dat , data[11]
      ]);
     
 

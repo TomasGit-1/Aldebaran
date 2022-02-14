@@ -305,7 +305,8 @@ routes.post('/CrearPago',  (req, res )=> {
         datos.fechaHoraBaucher,
         datos.dateInicio,
         datos.dateFinish,
-        datos.facturaElectronica
+        datos.facturaElectronica,
+        datos.descripcion
     ]
     console.log("Se guardo el archivo pdf ");
     db.setCrearPago(data).then(respuesta =>{

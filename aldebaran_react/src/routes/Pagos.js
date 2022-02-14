@@ -145,7 +145,6 @@ class Pagos extends React.Component {
                     if(responseJson[i].facturacion === true)
                         arrayTemp.push("Si");
                     else arrayTemp.push("No");
-                    
                     arrayTemp.push(responseJson[i].idserviciosedufk);
                     arrayTemp.push(responseJson[i].comprobantepath);
                     arrayTemp.push(responseJson[i].modalidad);
@@ -155,7 +154,9 @@ class Pagos extends React.Component {
                     arrayTemp.push(responseJson[i].tipo_evento);
                     arrayTemp.push(responseJson[i].numhoras);
                     arrayTemp.push(responseJson[i].habilitado);
-
+                    arrayTemp.push(responseJson[i].descripcion);
+                    console.log(arrayTemp);
+                    console.log(arrayTemp.length);
                     arrayInfo.push(arrayTemp);
                 }
                 this.setState({ dataPagos: arrayInfo });
@@ -448,7 +449,7 @@ class Pagos extends React.Component {
                                                 <option value="Seleccione una opcion">Seleccione una opcion</option>
                                                 {
                                                     curpData.map(function (item) {
-                                                        return <option key={item} value={item}>{item}</option>;
+                                                        return <option key={item[0]} value={item[0]}>{item[1] +" / " + item[0]}</option>;
                                                     })
                                                 }
                                             </Form.Select>
@@ -605,7 +606,7 @@ class Pagos extends React.Component {
                                             <th>Fecha y Hora en ticket</th>
                                             <th>Fecha y Hora de registro</th>
                                             <th>Facturación</th>
-                                            {/* <th>Modulo</th> */}
+                                            <th>Descripcion</th>
                                             <th>Opciones</th>
                                         </tr>
                                     </thead>
@@ -622,6 +623,7 @@ class Pagos extends React.Component {
                                                     <td >{index[6]}</td>
                                                     <td >{index[7]}</td>
                                                     <td >{index[8]}</td>
+                                                    <td >{index[18]}</td>
                                                     {/* <td >{index[9]}</td> */}
                                                     <td>
                                                         <Dropdown>

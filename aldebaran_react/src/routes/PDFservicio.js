@@ -40,6 +40,7 @@ class PDFServicio extends React.Component {
         })
 
         let arrayServicios = [];
+        console.log(respuesta[0]);
         arrayServicios.push(respuesta[0].idserviciosedu);
         arrayServicios.push(respuesta[0].registro_academico);
         arrayServicios.push(respuesta[0].tipo_evento);
@@ -145,7 +146,12 @@ class PDFServicio extends React.Component {
 
                                 }
                                  <Text >{" \n "}  </Text>
-
+                                 <View style={styles.container}>
+                                        <Text style={styles.text1}>Programa academico:</Text>
+                                        <div style={{borderBottom : 1,marginLeft:20,width:"100%"}}>
+                                            <Text style={styles.text2}>{ " "+servicio[3]}</Text>
+                                        </div>  
+                                </View> 
                                 <View style={styles.container}>
                                         <Text style={styles.text1}>Registro academico:</Text>
                                         <div style={{borderBottom : 1,marginLeft:10,width:"60%"}}>

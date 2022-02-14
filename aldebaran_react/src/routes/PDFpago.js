@@ -77,14 +77,14 @@ class PDFPago extends React.Component {
         var fechahoraregistro = new Moment(pagos[0].fechahoraregistro).format('DD/MM/YYYY HH:mm');
         arrayPago.push(fechahoraregistro);
 
-        var fecha_inicio = new Moment(pagos[0].fecha_inicio).format('DD/MM/YYYY HH:mm');
+        var fecha_inicio = new Moment(pagos[0].fecha_inicio).format('DD/MM/YYYY');
         arrayPago.push(fecha_inicio);
 
-        var fecha_termino = new Moment(pagos[0].fecha_termino).format('DD/MM/YYYY HH:mm');
+        var fecha_termino = new Moment(pagos[0].fecha_termino).format('DD/MM/YYYY');
         arrayPago.push(fecha_termino);
 
         arrayPago.push(pagos[0].cantidad);
-
+        arrayPago.push(pagos[0].descripcion);
 
         this.setState({ pagos: arrayPago });
         this.setState({ alumno: arrayAlumno });
@@ -272,15 +272,15 @@ class PDFPago extends React.Component {
                                 </View>
                                 <View style={styles.container}>
                                     <Text style={styles.text1}> Cantidad:</Text>
-                                    <div style={{ borderBottom: 1, marginLeft: 15, width: "100%" }}>
+                                    <div style={{ borderBottom: 1, marginLeft: 10, width: "100%" }}>
                                         <Text style={styles.text2}>{" " + pagos[7]}</Text>
                                     </div>
                                    
                                 </View>
                                 <View style={styles.container}>
                                     <Text style={styles.text1}> Falta descripcion:</Text>
-                                    <div style={{ borderBottom: 1, marginLeft: 15, width: "30%" }}>
-                                        <Text style={styles.text2}>{" " + pagos[7]}</Text>
+                                    <div style={{ borderBottom: 1, marginLeft: 10, width: "100%" }}>
+                                        <Text style={styles.text2}>{" " + pagos[8]}</Text>
                                     </div>
                                    
                                 </View>
