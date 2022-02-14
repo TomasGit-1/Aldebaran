@@ -18,7 +18,7 @@ class MainApp extends React.Component {
         return (
             <main style={{ marginTop:80}} >
                 <CardGroup>
-                    <Card style={{ borderColor: "#A80000" }}>
+                    <Card style={{ borderColor: "#6c1d45" }}>
                         <Card.Img
                             variant="top"
                             src={imgServicio}
@@ -38,7 +38,7 @@ class MainApp extends React.Component {
                         </Card.Footer>
                     </Card>
 
-                    <Card style={{ borderColor: "#A80000" }}>
+                    <Card style={{ borderColor: "#6c1d45" }}>
                         <Card.Img
                             variant="top"
                             src={imgAlum}
@@ -59,7 +59,7 @@ class MainApp extends React.Component {
                         </Card.Footer>
                     </Card>
 
-                    <Card style={{ borderColor: "#A80000" }}>
+                    <Card style={{ borderColor: "#6c1d45" }}>
                         <Card.Img
                             variant="top"
                             src={imgDolar}
