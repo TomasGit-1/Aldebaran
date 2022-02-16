@@ -178,7 +178,7 @@ class PDFPago extends React.Component {
                                         src={logo}
                                     />
                                     <Image
-                                        style={{ width: "80%", height: 60, marginLeft: 10, marginRight: 5 }}
+                                        style={{ width: "90%", height: 60, marginLeft: 10, marginRight: 5 }}
                                         src={imgTitulo}
                                     />
                                 </View>

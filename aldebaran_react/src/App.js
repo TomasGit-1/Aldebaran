@@ -1,6 +1,5 @@
 import React  from 'react'
 import NavbarMain from './Components/NavbarS'
-import FooterMain from './Components/Footer'
 import Menu from './Components/Menu'
 import {Container} from 'react-bootstrap';
 
@@ -11,7 +10,6 @@ export default function App() {
       <Container style={{ marginTop:100 , marginBottom:80 }}>
         <Menu/>
       </Container>
-      {/* <FooterMain/> */}
     </div>
   );
 }

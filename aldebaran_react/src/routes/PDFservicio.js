@@ -129,19 +129,19 @@ class PDFServicio extends React.Component {
                             <View style={styles.section}>
                                 <View style={{ flexDirection: 'row' }}>
                                     <Image
-                                        style={{ alignSelf: 'flex-start', width: 60, height: 70 }}
+                                        style={{ alignSelf: 'flex-start', width: 50, height: 70 }}
                                         src={logo}
                                     />
                                     <Image
-                                        style={{ width: "80%", height: 60, marginLeft: 10, marginRight: 5 }}
+                                        style={{ width: "90%", height: 60, marginLeft: 10, marginRight: 0 }}
                                         src={imgTitulo}
                                     />
                                 </View>
 
                                 { servicio[6] === true ?
-                                    <Text style={styles.text1}>{"Servicio : Habilitado"}</Text>
+                                    <Text  style={{ fontSize: 14, textAlign: 'center',alignItems: 'center',fontFamily: 'Oswald',}}>{"Servicio : Habilitado"}</Text>
                                     :
-                                    <Text style={styles.text1}>{"Servicio : deshabilitado"}</Text>
+                                    <Text  style={{ fontSize: 14,textAlign: 'center',alignItems: 'center',fontFamily: 'Oswald',}}>{"Servicio : deshabilitado"}</Text>
 
                                 }
                                  <Text >{" \n "}  </Text>

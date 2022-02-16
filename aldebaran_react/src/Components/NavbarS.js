@@ -1,6 +1,6 @@
 import React from 'react';
 import {Navbar ,Container} from 'react-bootstrap';
-import img from '../static/ipn.png';
+// import img from '../static/ipn.png';
 
 // import ServicoEducativo from "./FormServicioEducativo";
 

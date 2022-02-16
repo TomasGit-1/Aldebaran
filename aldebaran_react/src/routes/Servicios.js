@@ -689,8 +689,8 @@ class Servicios extends React.Component {
                                     : null
                             }
                             <div className="table-responsive " style={{ height: "500px" }}>
-                                <Table className="table-hover" id="myTable" striped bordered hover>
-                                    <thead>
+                                <Table className="table-hover" id="myTable" striped bordered hover >
+                                    <thead  >
                                         <tr>
                                             <th>#</th>
                                             <th>Registro academico</th>
@@ -718,10 +718,10 @@ class Servicios extends React.Component {
                                                 <td>{HorasArray[index]}</td>
                                                 <td>
                                                     <Dropdown>
-                                                        <Dropdown.Toggle id="dropdown-basic">
+                                                        <Dropdown.Toggle id="dropdown-basic" variant="secondary" >
                                                             <i className="bi bi-three-dots-vertical"></i>
                                                         </Dropdown.Toggle>
-                                                        <Dropdown.Menu>
+                                                        <Dropdown.Menu variant="dark">
                                                             <Dropdown.Item onClick={() => this.ShowForm(id[index], true)} >
                                                                 {/* <Button onClick={() => this.editar(index)}><i className="bi bi-pencil"></i></Button> */}
                                                                 <i className="bi bi-pencil"></i> &nbsp;&nbsp;Editar
