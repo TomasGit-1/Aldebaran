@@ -44,8 +44,8 @@ class Servicios extends React.Component {
             nombreServicio: "",
             modalidad: "",
             cuota: "",
-            numModulo: 0,
-            numHoras: 0,
+            numModulo: 1,
+            numHoras: 1,
 
         }
         this.SendDatos = this.SendDatos.bind(this);
@@ -187,6 +187,7 @@ class Servicios extends React.Component {
                                 this.setState({
                                     showForm: false,
                                     showTable: true,
+                                    showisUpdate: false,
                                 });
                             }).catch(function (e) {
                                 Swal.fire({
@@ -226,6 +227,7 @@ class Servicios extends React.Component {
                                 this.setState({
                                     showForm: false,
                                     showTable: true,
+                                    showisUpdate: false,
                                 });
                             }).catch(function (e) {
                                 Swal.fire({
@@ -513,7 +515,7 @@ class Servicios extends React.Component {
                             <Row className="mt-3 ">
                                 <Col>
                                     <Button className="col-6"
-                                        variant="success" onClick={() => this.SendDatos(false)}>
+                                        variant="secondary" onClick={() => this.SendDatos(false)}>
                                         <i className="bi bi-plus-circle-fill "></i>
                                         &nbsp;&nbsp;
                                         Enviar
@@ -640,7 +642,7 @@ class Servicios extends React.Component {
                                 <Col>
 
                                     <Button className="col-6"
-                                        variant="success" onClick={() => this.SendDatos(true)}>
+                                        variant="secondary" onClick={() => this.SendDatos(true)}>
                                         <i className="bi bi-plus-circle-fill "></i>
                                         &nbsp;&nbsp;
                                         Enviar

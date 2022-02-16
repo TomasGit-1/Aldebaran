@@ -6,7 +6,7 @@ import img from '../static/ipn.png';
 
 const NavbarMain = ({brand}) => {
     return(
-        <Navbar fixed="top" style={{background: '#6c1d45 ' ,  color: '#FFFFFF' , width: '100%' , height:"45px"}}>
+        <Navbar fixed="top" style={{background: '#6c1d45 ' ,  color: '#FFFFFF' , width: '100%' , height:"60px"}}>
             <Container>
                 <Navbar.Brand style={{color: '#FFFFFF'}}>
                     {/* <img
