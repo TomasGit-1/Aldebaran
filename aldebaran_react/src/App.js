@@ -11,7 +11,7 @@ export default function App() {
       <Container style={{ marginTop:100 , marginBottom:80 }}>
         <Menu/>
       </Container>
-      <FooterMain/>
+      {/* <FooterMain/> */}
     </div>
   );
 }

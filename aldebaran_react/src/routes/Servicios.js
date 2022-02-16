@@ -1,11 +1,11 @@
 import React from 'react';
 import NavbarMain from '../Components/NavbarS';
-import { Table, Container, Col, Row, Form, Button, Dropdown, ButtonGroup, InputGroup ,  CloseButton , OverlayTrigger , Tooltip } from 'react-bootstrap';
+import { Table, Container, Col, Row, Form, Button, Dropdown, ButtonGroup, InputGroup, CloseButton, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import $ from 'jquery';
 import config from '../config/config.json';
-import {StyleSheet } from '@react-pdf/renderer';
+import { StyleSheet } from '@react-pdf/renderer';
 import { Link } from "react-router-dom";
 
 class Servicios extends React.Component {
@@ -36,13 +36,17 @@ class Servicios extends React.Component {
             show: false,
             showForm: false,
             showTable: true,
+            showisUpdate: false,
+
+            idServicio:-1,
             resAcademico: "",
             tipoEvento: "",
             nombreServicio: "",
             modalidad: "",
             cuota: "",
-            numModulo: 1,
-            numHoras: 1
+            numModulo: 0,
+            numHoras: 0,
+
         }
         this.SendDatos = this.SendDatos.bind(this);
         this.dataForm0 = this.dataForm0.bind(this);
@@ -50,7 +54,7 @@ class Servicios extends React.Component {
         this.ShowForm = this.ShowForm.bind(this);
         this.onSeleccion = this.onSeleccion.bind(this);
         this.filterInput = this.filterInput.bind(this);
-
+        this.getUpdateServicios = this.getUpdateServicios.bind(this);
     }
     filterInput() {
         $(document).ready(function () {
@@ -62,20 +66,37 @@ class Servicios extends React.Component {
             })
         })
     }
-    ShowForm(num) {
-        if (num === 1) {
-            this.setState({
-                showForm: true,
-                showTable: false,
-            });
-        } else if (num === 0) {
+    ShowForm(num, isActualizar = false) {
+        if (!isActualizar) {
+            console.log("Agregamos");
+            if (num === 1) {
+                this.setState({
+                    showForm: true,
+                    showTable: false,
+                    showisUpdate: false
+                });
+            } else if (num === 0) {
+                this.setState({
+                    showForm: false,
+                    showTable: true,
+                    showisUpdate: false
+                });
+            }
+        } else {
+            console.log("Actualizamos");
+            
             this.setState({
                 showForm: false,
-                showTable: true,
+                showTable: false,
+                showisUpdate: true,
             });
+            this.getUpdateServicios(num);
+
+
         }
     }
     onSeleccion(event) {
+        console.log(event.target.value);
         this.setState({ modalidad: event.target.value });
     }
     dataForm0(event, data) {
@@ -94,8 +115,9 @@ class Servicios extends React.Component {
         }
     }
 
-    SendDatos() {
+    SendDatos( isUpdate ) {
         let validacion = {
+            idServicio: this.state.idServicio,
             registro: this.state.resAcademico,
             evento: this.state.tipoEvento,
             nombre: this.state.nombreServicio,
@@ -104,12 +126,12 @@ class Servicios extends React.Component {
             numModulo: this.state.numModulo,
             numHoras: this.state.numHoras
         }
-    
+
         if (validacion.registro === "") {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops..',
-                text: 'El campo resgitro academico esta vacio',
+                text: 'El campo registro academico esta vacio',
             })
         } else if (validacion.evento === "") {
             Swal.fire({
@@ -121,7 +143,7 @@ class Servicios extends React.Component {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops..',
-                text: 'El camppo Nombre del programa academico esta vacio',
+                text: 'El campo Nombre del programa academico esta vacio',
             })
         } else if (validacion.cuota === "") {
             Swal.fire({
@@ -136,46 +158,86 @@ class Servicios extends React.Component {
                 text: 'Seleccione una opcion de modalidad',
             })
         } else {
-            var msg = '¿Estas seguro de agregar\n - ' + validacion.registro + '- como servicio?';
-            Swal.fire({
-                title: msg,
-                text: "¡No podrás revertir esto!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Continuar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // let data = {
-                    //     servicioNew: this.state.servicioNew,
-                    // }
-                    axios.post(config.general[0].url + config.general[0].puerto_api + '/api/createServicio', {
-                        validacion,
-                    })
-                        .then(res => {
-                            this.apiServicios();
-                            Swal.fire({
-                                position: 'top-end',
-                                icon: 'success',
-                                title: 'Servicio agregado',
-                                showConfirmButton: false,
-                                timer: 1500
-                            })
-                            this.setState({
-                                showForm: false,
-                                showTable: true,
-                            });
-                        }).catch(function (e) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops..',
-                                text: e,
-                            })
-                        });
+            if(isUpdate){
+                //Actualizamos los datos
+                var msg = '¿Estas seguro de actualizar el servicio ?';
+                Swal.fire({
+                    title: msg,
+                    text: "Actualizar",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Continuar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
 
-                }
-            })
+                        axios.post(config.general[0].url + config.general[0].puerto_api + '/api/UpdateServicios', {
+                            validacion,
+                        })
+                            .then(res => {
+                                this.apiServicios();
+                                Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    title: 'Servicio agregado',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                                this.setState({
+                                    showForm: false,
+                                    showTable: true,
+                                });
+                            }).catch(function (e) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops..',
+                                    text: e,
+                                })
+                            });
+    
+                    }
+                }) 
+            }else{
+                //Insertamos datos
+                var msg = '¿Estas seguro de agregar\n - ' + validacion.registro + '- como servicio?';
+                Swal.fire({
+                    title: msg,
+                    text: "¡No podrás revertir esto!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Continuar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.post(config.general[0].url + config.general[0].puerto_api + '/api/createServicio', {
+                            validacion,
+                        })
+                            .then(res => {
+                                this.apiServicios();
+                                Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    title: 'Servicio agregado',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                                this.setState({
+                                    showForm: false,
+                                    showTable: true,
+                                });
+                            }).catch(function (e) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops..',
+                                    text: e,
+                                })
+                            });
+    
+                    }
+                })
+            }
         }
     }
     editar(b) {
@@ -210,7 +272,7 @@ class Servicios extends React.Component {
                     data,
                 })
                     .then(res => {
-                       
+
                         this.apiServicios();
                         Swal.fire({
                             position: 'top-end',
@@ -234,6 +296,46 @@ class Servicios extends React.Component {
     }
     componentDidMount() {
         this.apiServicios();
+    }
+    getUpdateServicios = async (idServicio) => {
+        var url = config.general[0].url + config.general[0].puerto_api + "/Api/getUpdateServicios";
+        var bodyFormData = new FormData();
+        bodyFormData.append('idServicio', idServicio);
+        const respuesta = await axios({
+            method: 'POST',
+            url: url,
+            data: bodyFormData,
+            headers: { 'Content-Type': 'application/json' }
+        }).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops..',
+                text: error.message,
+            })
+        })
+
+        let arrayServicios = [];
+        arrayServicios.push(respuesta[0].idserviciosedu);
+        arrayServicios.push(respuesta[0].registro_academico);
+        arrayServicios.push(respuesta[0].tipo_evento);
+        arrayServicios.push(respuesta[0].programa_academico);
+        arrayServicios.push(respuesta[0].modalidad);
+        arrayServicios.push(respuesta[0].cuota);
+        arrayServicios.push(respuesta[0].habilitado);
+        arrayServicios.push(respuesta[0].nummodulo);
+        arrayServicios.push(respuesta[0].numhoras);
+
+        this.setState({ idServicio: respuesta[0].idserviciosedu });
+        this.setState({ resAcademico: respuesta[0].registro_academico });
+        this.setState({ tipoEvento: respuesta[0].tipo_evento });
+        this.setState({ nombreServicio: respuesta[0].programa_academico });
+        this.setState({ modalidad: respuesta[0].modalidad });
+        this.setState({ cuota: respuesta[0].cuota });
+        this.setState({ numModulo: respuesta[0].nummodulo });
+        this.setState({ numHoras: respuesta[0].numhoras });
+
     }
     apiServicios = async () => {
         try {
@@ -304,22 +406,24 @@ class Servicios extends React.Component {
         let { HorasArray } = this.state
         let { showForm } = this.state
         let { showTable } = this.state
+        let { showisUpdate } = this.state
+        let { modalidad } = this.state
         const styles = StyleSheet.create({
-            
-            buttonSend:{
-                backgroundColor:"#00a01b ",
-                color:" #000",
+
+            buttonSend: {
+                backgroundColor: "#00a01b ",
+                color: " #000",
                 border: "none",
                 height: 45
             },
-            buttonClose:{
+            buttonClose: {
                 // backgroundColor:"#600101 ",
-                color:"red",
+                color: "red",
                 border: "none",
                 height: 45
             }
-        
-        
+
+
         })
         return (
             <main>
@@ -337,7 +441,7 @@ class Servicios extends React.Component {
                                 {/* <Button variant="success">Hover me to see</Button> */}
                             </OverlayTrigger>
                             <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
-                                Servicios educativos                           
+                                Servicios educativos
                             </div>
                             <Row className="mt-3 mb-3">
                                 <Col sm >
@@ -408,28 +512,142 @@ class Servicios extends React.Component {
                             </Row>
                             <Row className="mt-3 ">
                                 <Col>
-                                    {/* <Button className="col-6" variant="outline-primary" onClick={() => this.SendDatos()}>
-                                        <i className="bi bi-plus-circle-fill "></i>
-                                        &nbsp;&nbsp;Agregar
-                                    </Button>&nbsp;&nbsp; */}
                                     <Button className="col-6"
-                                        variant="success"onClick={ () => this.SendDatos() }>
+                                        variant="success" onClick={() => this.SendDatos(false)}>
                                         <i className="bi bi-plus-circle-fill "></i>
                                         &nbsp;&nbsp;
                                         Enviar
                                     </Button>
-{/* 
-                                    <Button className="col-6" variant="outline-primary" onClick={() => this.SendDatos()}>
-                                        <i className="bi bi-plus-circle-fill "></i>
-                                        &nbsp;&nbsp;Agregar
-                                    </Button>&nbsp;&nbsp; */}
                                 </Col>
-                                {/* <Col sm >
-                                    <Button className="col-12" variant="outline-danger" onClick={() => this.ShowForm(0)}>
+                            </Row>
+                        </Container>
+                    </section>
+                    : null
+                }
+                {showisUpdate ?
+                    <section style={{ marginTop: 80 }} >
+                        <Container className="mt-3 mb-3 border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2" >
+                            <OverlayTrigger
+                                placement="right"
+                                delay={{ show: 250, hide: 400 }}
+                                overlay={<Tooltip id="button-tooltip-2">Cerrar</Tooltip>}
+                            >
+                                <CloseButton style={styles.buttonClose} onClick={() => window.location.reload(false)} />
+                                {/* <Button variant="success">Hover me to see</Button> */}
+                            </OverlayTrigger>
+                            <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
+                                Servicios educativos  Actualizamos
+                            </div>
+                            <Row className="mt-3 mb-3">
+                                <Col sm >
+                                    <Form.Group >
+                                        <Form.Label className="h5">Registro academico</Form.Label>
+                                        <Form.Control type="text" placeholder="Registro academico" value={this.state.resAcademico} onChange={(evt) => this.dataForm0(evt, "resgitroid")} />
+                                    </Form.Group>
+                                </Col>
+                                <Col sm >
+                                    <Form.Group >
+                                        <Form.Label className="h5">Numero de Modulos (1, 2, 3...)</Form.Label>
+                                        <Form.Control type="number" placeholder="Numero de modulos" value={this.state.numModulo} onChange={(evt) => this.dataForm0(evt, "numModulo")} min={1} />
+                                    </Form.Group>
+                                </Col>
+                                <Col sm >
+                                    <Form.Group >
+                                        <Form.Label className="h5">Numero de horas </Form.Label>
+                                        <Form.Control type="number" placeholder="Numero de horas" value={this.state.numHoras} onChange={(evt) => this.dataForm0(evt, "numHoras")} min={1} />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <Row >
+                                <Col sm >
+                                    <Form.Group >
+                                        <Form.Label className="h5">Tipo de evento</Form.Label>
+                                        <Form.Control type="text" placeholder="Evento" value={this.state.tipoEvento} onChange={(evt) => this.dataForm0(evt, "evento")} />
+                                    </Form.Group>
+                                </Col>
+                                <Col sm >
+                                    <Form.Group >
+                                        <Form.Label className="h5">Nombre del programa academico</Form.Label>
+                                        <Form.Control type="text" placeholder="Programa academico" value={this.state.nombreServicio} onChange={(evt) => this.dataForm0(evt, "nombre")} />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <Row className="mt-3 mb-3">
+                                <Col sm >
+                                    <Row>
+                                        <Form.Label className="h5">Modalidad *</Form.Label>
+                                    </Row>
+                                    {modalidad === "Virtual" ?
+                                        <div>
+
+                                            <Form.Check
+                                                inline
+                                                label="Virtual"
+                                                name="modalidad"
+                                                type="radio"
+                                                value="Virtual"
+                                                defaultChecked
+                                                onClick={this.onSeleccion}
+
+                                            />
+                                            <Form.Check
+                                                inline
+                                                label="Presencial"
+                                                name="modalidad"
+                                                type="radio"
+                                                value="Presencial"
+                                                onClick={this.onSeleccion}
+                                            />
+
+                                        </div>
+                                        :
+                                        <div>
+
+                                            <Form.Check
+                                                inline
+                                                label="Virtual"
+                                                name="modalidad"
+                                                type="radio"
+                                                value="Virtual"
+                                                onClick={this.onSeleccion}
+
+                                            />
+                                            <Form.Check
+                                                inline
+                                                label="Presencial"
+                                                name="modalidad"
+                                                type="radio"
+                                                value="Presencial"
+                                                onClick={this.onSeleccion}
+                                                defaultChecked
+                                            />
+
+                                        </div>
+                                    }
+                                </Col>
+
+                                <Col sm >
+                                    <Form.Group >
+                                        <Form.Label className="h5">Cuota por participante</Form.Label>
+                                    </Form.Group>
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Text id="basic-addon1">$</InputGroup.Text>
+                                        <Form.Control type="text" placeholder="Cuota por participante" value={this.state.cuota} onChange={(evt) => this.dataForm0(evt, "cuota")} />
+                                    </InputGroup>
+                                </Col>
+                            </Row>
+                            <Row className="mt-3 ">
+                                <Col>
+
+                                    <Button className="col-6"
+                                        variant="success" onClick={() => this.SendDatos(true)}>
                                         <i className="bi bi-plus-circle-fill "></i>
-                                        &nbsp;&nbsp;Cancelar
+                                        &nbsp;&nbsp;
+                                        Enviar
                                     </Button>
-                                </Col> */}
+
+                                </Col>
+
                             </Row>
                         </Container>
                     </section>
@@ -502,7 +720,7 @@ class Servicios extends React.Component {
                                                             <i className="bi bi-three-dots-vertical"></i>
                                                         </Dropdown.Toggle>
                                                         <Dropdown.Menu>
-                                                            <Dropdown.Item onClick={() => this.editar(index)} >
+                                                            <Dropdown.Item onClick={() => this.ShowForm(id[index], true)} >
                                                                 {/* <Button onClick={() => this.editar(index)}><i className="bi bi-pencil"></i></Button> */}
                                                                 <i className="bi bi-pencil"></i> &nbsp;&nbsp;Editar
                                                             </Dropdown.Item>

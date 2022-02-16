@@ -261,6 +261,23 @@ getDataPagosPDF  = async ( idPagos) => {
       
     }
 }
+
+
+const UpdateServicio = async (req) => {
+    let datos = req.body;
+    var idServicio = datos.validacion.idServicio;
+    let registroAcade = datos.validacion.registro;
+    let evento = datos.validacion.evento;
+    let nombreAcademico = datos.validacion.nombre;
+    let modalidad = datos.validacion.modalidad;
+    let cuota = datos.validacion.cuota;
+    let numModulo = datos.validacion.numModulo;
+    let numHoras = datos.validacion.numHoras;
+    const response = await pool.query('UPDATE servicioeducativo SET  registro_academico = $1 , tipo_evento = $2 , programa_academico = $3 , modalidad = $4 , cuota = $5 , nummodulo  = $6 , numHoras = $7  WHERE idServiciosEdu = $8' , [registroAcade,evento,nombreAcademico, modalidad ,cuota,numModulo , numHoras , idServicio]);
+    // console.log(response);
+    return {"mensaje" :'Servicio actualizado'};
+};
+
 module.exports = {
     Home,
     getServicios,
@@ -275,5 +292,6 @@ module.exports = {
     getDataServicios,
     setCrearPago,
     getDataServicioPDF,
-    getDataPagosPDF
+    getDataPagosPDF,
+    UpdateServicio
 };

@@ -341,5 +341,26 @@ routes.post('/DataPagosPDF',  (req, res )=> {
     })
 });
 
+routes.post('/getUpdateServicios',  (req, res )=> {
+    var idServicio = req.body.idServicio;
+
+    db.getDataServicioPDF(idServicio).then(respuesta =>{
+        // res.json({ "status": 200 , "Servicios":respuesta});
+        res.json(respuesta['data']);
+    }).catch(error =>{
+        console.log(error);
+    })
+});
+
+
+routes.post('/UpdateServicios',  (req, res )=> {
+    db.UpdateServicio(req).then(respuesta =>{
+        // res.json({ "status": 200 , "Servicios":respuesta});
+        res.json(respuesta['data']);
+    }).catch(error =>{
+        console.log(error);
+    })
+});
+
 
 module.exports = routes;
