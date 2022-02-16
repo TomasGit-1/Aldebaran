@@ -68,7 +68,6 @@ class Servicios extends React.Component {
     }
     ShowForm(num, isActualizar = false) {
         if (!isActualizar) {
-            console.log("Agregamos");
             if (num === 1) {
                 this.setState({
                     showForm: true,
@@ -83,7 +82,6 @@ class Servicios extends React.Component {
                 });
             }
         } else {
-            console.log("Actualizamos");
             
             this.setState({
                 showForm: false,
@@ -96,7 +94,6 @@ class Servicios extends React.Component {
         }
     }
     onSeleccion(event) {
-        console.log(event.target.value);
         this.setState({ modalidad: event.target.value });
     }
     dataForm0(event, data) {
