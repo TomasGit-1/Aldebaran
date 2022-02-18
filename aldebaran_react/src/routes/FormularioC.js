@@ -172,28 +172,15 @@ class FormularioC extends React.Component {
         })
     }
     getDownloadFile = async (curp, tipo) => {
-        var formData = new FormData();
-        formData.append('curp', curp);
-        formData.append('tipo', tipo);
-        const res = await fetch(
-            config.general[0].url + config.general[0].puerto_api + "/api/downloadFile",
-            {
-                method: 'POST', // or 'PUT'
-                body: formData, // data can be `string` or {object}!
-            }
-        )
-            .catch(function (error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops..',
-                    text: error.message,
-                })
-            });
-    
+        let url = new URL(config.general[0].url + config.general[0].puerto_api + '/api/downloadFile');
+        const params = {curp: curp , tipo:tipo};
+        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+        var res = await fetch(url , params);
         if (res.ok) {
             const blob = await res.blob();
-            // download(blob , 'dlText.jpeg' , "image/jpeg");
+
             download(blob);
+
         } else {
             Swal.fire({
                 icon: 'error',

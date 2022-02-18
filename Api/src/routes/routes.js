@@ -186,9 +186,11 @@ const save = ( req , dir , sampleFile , isPago=false,complementoName="" ) =>{
     }
 
 }
-routes.post('/downloadFile',  (req, res )=> {
-    var curp = req.body.curp;
-    var tipo = parseInt(req.body.tipo);
+routes.get('/downloadFile',  (req, res )=> {
+    // var curp = req.body.curp;
+    // var tipo = parseInt(req.body.tipo);
+    var curp = req.query.curp;
+    var tipo = parseInt(req.query.tipo);
     db.getPathFile(curp).then(respuesta =>{
         let file_path = "";
         if(tipo == 0){
@@ -198,17 +200,17 @@ routes.post('/downloadFile',  (req, res )=> {
         }else{
             file_path = respuesta['Info'][0].evidenciaipnpdf
         }
-        var file_name = file_path.replace(/^.*[\\\/]/, '');
-        var extension = file_name.split('.').pop();
-        file_name = curp+'.'+extension;
+        // var file_name = file_path.replace(/^.*[\\\/]/, '');
+        // var extension = file_name.split('.').pop();
+        // file_name = curp+'.'+extension;
         if(file_path === ''){
             // res.status(404);
             res.status(404).send("Not found");
         }else{
             // res.download(file_path , file_name); // Set disposition and send it.
-            res.download(file_path, 'report.pdf', (err) => {
+            res.download(file_path, (err) => {
                 if (err) {
-                  res.status(500).send({
+                  res.status(200).send({
                     message: "Could not download the file. " + err,
                   });
                 }
@@ -219,6 +221,8 @@ routes.post('/downloadFile',  (req, res )=> {
         console.log(error);
     })
 });
+
+
 
 routes.post('/imagen64' ,  (req, res) =>{
     var curp = req.body.curp;
@@ -362,5 +366,37 @@ routes.post('/UpdateServicios',  (req, res )=> {
     })
 });
 
+
+routes.get('/downloadFilePagos',  (req, res )=> {
+    var idPago = req.query.idPago;
+    var tipo = parseInt(req.query.tipo);
+    db.getPathPagos(idPago).then(respuesta =>{
+        let file_path = "";
+        if(tipo == 0){
+            file_path = respuesta['Info'][0].comprobantepath
+        }else if (tipo == 1){
+            file_path = respuesta['Info'][0].cedulapath
+        }
+        // var file_name = file_path.replace(/^.*[\\\/]/, '');
+        // var extension = file_name.split('.').pop();
+        // file_name = curp+'.'+extension;
+        if(file_path === ''){
+            // res.status(404);
+            res.status(404).send("Not found");
+        }else{
+            // res.download(file_path , file_name); // Set disposition and send it.
+            res.download(file_path, (err) => {
+                if (err) {
+                  res.status(500).send({
+                    message: "Could not download the file. " + err,
+                  });
+                }
+            });
+        }
+        // const file = '/home/tomas/Documentos/Aldebaran/Aldebaran/Api/src/routes/resource/image/curpalumno/2xz1k0at7124279eeecnw9índice.jpeg';
+    }).catch(error =>{
+        console.log(error);
+    })
+});
 
 module.exports = routes;

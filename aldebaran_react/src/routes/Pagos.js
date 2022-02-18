@@ -8,6 +8,7 @@ import Moment from 'moment'
 import { StyleSheet } from '@react-pdf/renderer';
 import axios from 'axios';
 import { Link } from "react-router-dom";
+import download from 'downloadjs';
 
 
 
@@ -60,6 +61,7 @@ class Pagos extends React.Component {
         this.uploadFileComprobante = this.uploadFileComprobante.bind(this);
         this.SendData = this.SendData.bind(this);
         this.validarFormulario = this.validarFormulario.bind(this);
+        this.getDownloadFile = this.getDownloadFile.bind(this);
     }
     /*  
     ===========================================================================
@@ -93,6 +95,24 @@ class Pagos extends React.Component {
             }
         }
 
+    }
+    getDownloadFile = async (idPago, tipo) => {
+        console.log(idPago);
+        console.log(tipo);
+        let url = new URL(config.general[0].url + config.general[0].puerto_api + '/api/downloadFilePagos');
+        const params = {idPago: idPago , tipo:tipo};
+        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+        var res = await fetch(url , params);
+        if (res.ok) {
+            const blob = await res.blob();
+            download(blob);
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops..',
+                text: "No se encontro el archivo",
+            })
+        }
     }
     ShowForm(num) {
         if (num === 1) {
@@ -539,12 +559,9 @@ class Pagos extends React.Component {
                                 </Row>
                                 <Row className="mt-3 ">
                                     <Col sm>
-                                        {/* <Button className="col-6" variant="outline-primary" onClick={() => this.SendDatos()}>
-                                            <i className="bi bi-plus-circle-fill "></i>
-                                            &nbsp;&nbsp;Agregar
-                                        </Button>&nbsp;&nbsp; */}
+                                      
                                         <Button className="col-6"
-                                            variant="success"
+                                            variant="secondary"
                                             onClick={ () => this.validarFormulario() }
                                             >
                                             <i className="bi bi-plus-circle-fill "></i>
@@ -552,12 +569,7 @@ class Pagos extends React.Component {
                                             Enviar
                                         </Button>
                                     </Col>
-                                    {/* <Col sm >
-                                        <Button className="col-12" variant="outline-danger" onClick={() => this.ShowForm(0)}>
-                                            <i className="bi bi-plus-circle-fill "></i>
-                                            &nbsp;&nbsp;Cancelar
-                                        </Button>
-                                    </Col> */}
+
                                 </Row>
                             </Form>
                         </Container>
@@ -625,22 +637,21 @@ class Pagos extends React.Component {
                                                     {/* <td >{index[9]}</td> */}
                                                     <td>
                                                         <Dropdown>
-                                                            <Dropdown.Toggle id="dropdown-basic">
+                                                            <Dropdown.Toggle id="dropdown-basic" variant="secondary">
                                                                 <i className="bi bi-three-dots-vertical"></i>
                                                             </Dropdown.Toggle>
-                                                            <Dropdown.Menu>
+                                                            <Dropdown.Menu variant="dark"> 
                                                                 <Dropdown.Item >
                                                                     <i className="bi bi-pencil"></i> &nbsp;&nbsp;Editar
                                                                 </Dropdown.Item>
                                                                 <Dropdown.Divider />
                                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i className="bi bi-cloud-download"></i>&nbsp;&nbsp;Download
                                                                 <Dropdown.Divider />
-                                                                <Dropdown.Item  >
-                                                                    <i className="bi bi-images"></i>&nbsp;&nbsp;Fotografia
+                                                                <Dropdown.Item  onClick={() => this.getDownloadFile(index[0], 0)} >
+                                                                    <i className="bi bi-file-earmark-pdf"></i>&nbsp;&nbsp;Comprobante de pago
                                                                 </Dropdown.Item>
-
-                                                                <Dropdown.Item>
-                                                                    <i className="bi bi-file-earmark-pdf"></i>&nbsp;&nbsp;Curp
+                                                                <Dropdown.Item  onClick={() => this.getDownloadFile(index[0], 1)}>
+                                                                    <i className="bi bi-file-earmark-pdf"></i>&nbsp;&nbsp;Cédula fiscal
                                                                 </Dropdown.Item>
                                                                 <Dropdown.Item as={Link} to={`/PDFpago/${index[0]}`} target="_blank" >
                                                                 <i className="bi bi-cloud-download"></i>&nbsp;&nbsp; Generar pdf

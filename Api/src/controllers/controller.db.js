@@ -262,6 +262,11 @@ getDataPagosPDF  = async ( idPagos) => {
     }
 }
 
+const getPathPagos = async ( data ) => {
+    var idPagos = data;
+    const response = await pool.query('SELECT * FROM pagos WHERE idPagos = $1' ,[idPagos]);
+    return {"Info":response.rows};
+};
 
 const UpdateServicio = async (req) => {
     let datos = req.body;
@@ -293,5 +298,6 @@ module.exports = {
     setCrearPago,
     getDataServicioPDF,
     getDataPagosPDF,
-    UpdateServicio
+    UpdateServicio,
+    getPathPagos
 };
