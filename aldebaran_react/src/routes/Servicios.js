@@ -642,7 +642,7 @@ class Servicios extends React.Component {
                                         variant="secondary" onClick={() => this.SendDatos(true)}>
                                         <i className="bi bi-plus-circle-fill "></i>
                                         &nbsp;&nbsp;
-                                        Enviar
+                                        Actualizar
                                     </Button>
 
                                 </Col>

@@ -25,6 +25,8 @@ class Pagos extends React.Component {
             servicioPago: "",
             showForm: false,
             showTable: true,
+            showisUpdate: false,
+
             dataPagos: [],
             numModuloPago: [],
             curpData:[],
@@ -47,7 +49,12 @@ class Pagos extends React.Component {
             descripcionInput:"",
 
             dateStart :"",
-            dateFinish:""
+            dateFinish:"",
+
+            //Campos update extras
+
+            servicioPos_cero:[]
+
 
         };
         this.onModalida = this.onModalida.bind(this);
@@ -62,6 +69,7 @@ class Pagos extends React.Component {
         this.SendData = this.SendData.bind(this);
         this.validarFormulario = this.validarFormulario.bind(this);
         this.getDownloadFile = this.getDownloadFile.bind(this);
+        this.getUpdatePagos = this.getUpdatePagos.bind(this);
     }
     /*  
     ===========================================================================
@@ -79,6 +87,7 @@ class Pagos extends React.Component {
     }
     onServicio(event) {
         var select = parseInt(event.target.value);
+        console.log(select);
         var servicios = this.state.servicio;
         for (let index = 0; index < servicios.length; index++) {
             if (servicios[index][0] === select) {
@@ -86,6 +95,8 @@ class Pagos extends React.Component {
                 for (let i = 0; i < servicios[index][7]; i++) {
                     array.push(i + 1);
                 }
+               
+                
                 this.setState({ numModuloPago: array });
                 this.setState({ cantidadPago: servicios[index][5] });
                 this.setState({ servicioEducativoOpc : servicios[index][3] });
@@ -94,11 +105,8 @@ class Pagos extends React.Component {
                 break;
             }
         }
-
     }
     getDownloadFile = async (idPago, tipo) => {
-        console.log(idPago);
-        console.log(tipo);
         let url = new URL(config.general[0].url + config.general[0].puerto_api + '/api/downloadFilePagos');
         const params = {idPago: idPago , tipo:tipo};
         Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
@@ -114,18 +122,115 @@ class Pagos extends React.Component {
             })
         }
     }
-    ShowForm(num) {
-        if (num === 1) {
-            this.setState({
-                showForm: true,
-                showTable: false,
-            });
-        } else if (num === 0) {
+    ShowForm(num , isActualizar) {
+        if(!isActualizar){
+            if (num === 1) {
+                this.setState({
+                    showForm: true,
+                    showTable: false,
+                    showisUpdate:false
+                });
+            } else if (num === 0) {
+                this.setState({
+                    showForm: false,
+                    showTable: true,
+                    showisUpdate:false
+                });
+            }
+        }else{
             this.setState({
                 showForm: false,
-                showTable: true,
+                showTable: false,
+                showisUpdate: true,
             });
+            this.getUpdatePagos(num);
         }
+
+    }
+    getUpdatePagos = async (idPago) => {
+        var url = config.general[0].url + config.general[0].puerto_api + "/Api/getUpdatePagos";
+        var bodyFormData = new FormData();
+        bodyFormData.append('idPago', idPago);
+        const respuesta = await axios({
+            method: 'POST',
+            url: url,
+            data: bodyFormData,
+            headers: { 'Content-Type': 'application/json' }
+        }).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops..',
+                text: error.message,
+            })
+        })
+
+        var pagos = respuesta.pago[0];
+        var alumno = respuesta.alumno[0];
+        var servicio = respuesta.servicio[0];
+
+        var fechahoraticket = new Moment(pagos.fechahoraticket).format('YYYY-MM-DD HH:mm');
+        var fecha_inicio = new Moment(pagos.fecha_inicio).format('YYYY-MM-DD');
+        var fecha_termino = new Moment(pagos.fecha_termino).format('YYYY-MM-DD');
+        console.log(pagos);
+            
+        this.setState({ isFacturaSelec: pagos.facturacion});
+        this.setState({ referencia: pagos.referencia});
+        this.setState({ fechaHoraBaucher: fechahoraticket});
+        this.setState({ dateStart: fecha_inicio});
+        this.setState({ dateFinish: fecha_termino});
+        this.setState({ descripcionInput: pagos.descripcion});
+        this.setState({ numeroModuloOpc:pagos.nummodulo });
+        //Servicios
+        var tempArray=[];
+        
+        tempArray.push(servicio.idserviciosedu);
+        tempArray.push(servicio.registro_academico);
+        tempArray.push(servicio.tipo_evento);
+        tempArray.push(servicio.programa_academico);
+        tempArray.push(servicio.modalidad);             
+        tempArray.push(servicio.cuota);
+        tempArray.push(servicio.habilitado);
+        tempArray.push(servicio.nummodulo);
+        tempArray.push(servicio.numhoras);
+
+        let arrayServicios = this.state.servicio;
+        let arrayTemp =[];
+        for (let i = 0; i < arrayServicios.length; i++){
+            var temp = arrayServicios[i];
+            if(temp[0] !== tempArray[0]){
+                arrayTemp.push(temp);
+            }
+        }
+        arrayTemp.unshift(tempArray);
+        this.setState({ servicio: arrayTemp });
+        this.setState({ cantidadPago: tempArray[5] });
+        this.setState({ servicioEducativoOpc : tempArray[3] });
+        this.setState({ servicioEducativoID : tempArray[0]});
+
+        //Alumnos
+        console.log(alumno);
+        var tempArrayAlum=[];
+        tempArrayAlum.push(alumno.curp);
+        tempArrayAlum.push(alumno.nombre+" "+ alumno.apppat +" "+alumno.appmat);
+        let arrayAlumnos = this.state.curpData;
+        console.log(arrayAlumnos);
+        let arrayTemp2 =[];
+        for (let i = 0; i < arrayAlumnos.length; i++){
+            var temp = arrayAlumnos[i];
+            if(temp[0] !== tempArrayAlum[0]){
+                arrayTemp2.push(temp);
+            }
+        }
+        console.log(arrayTemp2);
+        arrayTemp2.unshift(tempArrayAlum);
+        this.setState({ curpData: arrayTemp2 });
+        this.setState({ alumnoSelect: tempArrayAlum[0] });
+
+        
+
+
     }
     filterInput() {
         $(document).ready(function () {
@@ -219,6 +324,7 @@ class Pagos extends React.Component {
                 this.setState({curpData : curpData})
                 // this.setState({ id: id });
                 this.setState({ servicio: Servicios });
+
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -235,6 +341,7 @@ class Pagos extends React.Component {
         }
     }
     formularioSetData = (event, data) => {
+        console.log(event.target.value);
         switch (data) {
             case "referencia":
                 this.setState({ referencia: event.target.value });
@@ -282,44 +389,80 @@ class Pagos extends React.Component {
         }
     }
     onChangeFactura( event ){
+        console.log( event.target.checked);
         this.setState({ isFacturaSelec: event.target.checked });
     }
     onChangeAlumnos( event ){
+        console.log(event.target.value);
         this.setState({ alumnoSelect: event.target.value });
     }
     onChangeNumModulo(event){
+        console.log(event.target.value);
         this.setState({ numeroModuloOpc: event.target.value });
     }
-    validarFormulario(){
-        var campos = new Map();
-        campos.set('Servicio educativo', this.state.servicioEducativoOpc);
-        campos.set('Numero de modulo', this.state.numeroModuloOpc);
-        campos.set('Alumnos', this.state.alumnoSelect);
-        campos.set('Comprobante de pago', this.state.comprobantePago);
-        // campos.set('Factura electronica', this.state.isFacturaSelec);
-        campos.set('Referencia', this.state.referencia);
-        campos.set('Fecha / Hora Baucher', this.state.fechaHoraBaucher);
-        campos.set('Cantidad', this.state.cantidadPago);
-        campos.set('Fecha Incio', this.state.dateStart);
-        campos.set('Fecha de Termino', this.state.dateFinish);
-        campos.set('Descripcion', this.state.descripcionInput);
-        let msg = "";
-        for (let clave of campos.keys()) {
-            var valor = campos.get(clave);
-            if (valor === null || valor === "" || valor === false ) {
-                msg = `El campo :${clave} esta vacio`;
-                break;
+    validarFormulario( isUpdate=false){
+        if(isUpdate){
+            var campos = new Map();
+            // campos.set('Servicio educativo', this.state.servicioEducativoOpc);
+            // campos.set('Numero de modulo', this.state.numeroModuloOpc);
+            // campos.set('Alumnos', this.state.alumnoSelect);
+            // campos.set('Comprobante de pago', this.state.comprobantePago);
+            // campos.set('Factura electronica', this.state.isFacturaSelec);
+            campos.set('Referencia', this.state.referencia);
+            campos.set('Fecha / Hora Baucher', this.state.fechaHoraBaucher);
+            campos.set('Cantidad', this.state.cantidadPago);
+            campos.set('Fecha Incio', this.state.dateStart);
+            campos.set('Fecha de Termino', this.state.dateFinish);
+            campos.set('Descripcion', this.state.descripcionInput);
+            let msg = "";
+            for (let clave of campos.keys()) {
+                var valor = campos.get(clave);
+                if (valor === null || valor === "" || valor === false ) {
+                    msg = `El campo :${clave} esta vacio`;
+                    break;
+                }
             }
-        }
-        if (msg === "") {
-           this.SendData();
-        
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops..',
-                text: msg,
-            })
+            if (msg === "") {
+            //    this.SendData();
+            
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops..',
+                    text: msg,
+                })
+            }
+        }else{
+            var campos = new Map();
+            campos.set('Servicio educativo', this.state.servicioEducativoOpc);
+            campos.set('Numero de modulo', this.state.numeroModuloOpc);
+            campos.set('Alumnos', this.state.alumnoSelect);
+            campos.set('Comprobante de pago', this.state.comprobantePago);
+            // campos.set('Factura electronica', this.state.isFacturaSelec);
+            campos.set('Referencia', this.state.referencia);
+            campos.set('Fecha / Hora Baucher', this.state.fechaHoraBaucher);
+            campos.set('Cantidad', this.state.cantidadPago);
+            campos.set('Fecha Incio', this.state.dateStart);
+            campos.set('Fecha de Termino', this.state.dateFinish);
+            campos.set('Descripcion', this.state.descripcionInput);
+            let msg = "";
+            for (let clave of campos.keys()) {
+                var valor = campos.get(clave);
+                if (valor === null || valor === "" || valor === false ) {
+                    msg = `El campo :${clave} esta vacio`;
+                    break;
+                }
+            }
+            if (msg === "") {
+               this.SendData();
+            
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops..',
+                    text: msg,
+                })
+            }
         }
     }
     SendData(){
@@ -387,17 +530,81 @@ class Pagos extends React.Component {
 
             }
         })
-       
-       
+    }
+    SendUpdate(){
+        var url = config.general[0].url + config.general[0].puerto_api + "/Api/UpdatePagos";
+        var bodyFomrData = new FormData();
+        bodyFomrData.append('ServicioEducativo' , this.state.servicioEducativoOpc);
+        bodyFomrData.append('idServicioEducativo' , this.state.servicioEducativoID);
+        bodyFomrData.append('NumModulo' , this.state.numeroModuloOpc);
+        bodyFomrData.append('alumnosNameCurp' , this.state.alumnoSelect);
+        bodyFomrData.append('comprobantePago' , this.state.comprobantePago);
+        bodyFomrData.append('cedulaFiscal' , this.state.cedulaFiscal);
+        bodyFomrData.append('facturaElectronica' , this.state.isFacturaSelec);
+        bodyFomrData.append('referencia' , this.state.referencia);
+        bodyFomrData.append('fechaHoraBaucher' , this.state.fechaHoraBaucher);
+        bodyFomrData.append('Cantidad' , this.state.cantidadPago);
+        bodyFomrData.append('dateInicio' , this.state.dateStart);
+        bodyFomrData.append('dateFinish' , this.state.dateFinish);
+        bodyFomrData.append('descripcion' , this.state.descripcionInput);
+        Swal.fire({
+            title: "¿Estas seguro de actualizar",
+            text: "¡No podrás revertir esto!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Continuar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios({
+                    method:"POST",
+                    url:url,
+                    data:bodyFomrData,
+                    headers : {
+                        'Content-Type': 'application/json'
+                    }
+                }).then( function (response) {
+                    if(response['data']['status'] === 200){
+        
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Alumno agregado',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
 
+                        setTimeout(window.location.reload(false), 7000);
+                        
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops..',
+                            text: response['data']['data'] ,
+                        })
+                    }
+                }).catch(function (e){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops..',
+                        text: e,
+                    })
+                })
+               
+
+            }
+        })
     }
     render() {
         var { servicio } = this.state
         var { numModuloPago } = this.state
         let { showTable } = this.state
         let { showForm } = this.state
+        let { showisUpdate } = this.state
         let { dataPagos } = this.state
         let { curpData } = this.state
+        let { isFacturaSelec } = this.state
         const styles = StyleSheet.create({
             buttonSend: {
                 backgroundColor: "#00a01b ",
@@ -562,7 +769,7 @@ class Pagos extends React.Component {
                                       
                                         <Button className="col-6"
                                             variant="secondary"
-                                            onClick={ () => this.validarFormulario() }
+                                            onClick={ () => this.validarFormulario(false) }
                                             >
                                             <i className="bi bi-plus-circle-fill "></i>
                                             &nbsp;&nbsp;
@@ -577,8 +784,191 @@ class Pagos extends React.Component {
                     </section>
                     : null
                 }
+                { showisUpdate?
+                        // Formulario para actualizar los valores de los pagos
 
+                      <section style={{ marginTop: 80 }} >
+                      <Container className="mt-3 mb-3 border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2" >
+                          <OverlayTrigger
+                              placement="right"
+                              delay={{ show: 250, hide: 400 }}
+                              overlay={<Tooltip id="button-tooltip-2">Cerrar</Tooltip>}
+                          >
+                              <CloseButton style={styles.buttonClose} onClick={() => window.location.reload(false)} />
+                              {/* <Button variant="success">Hover me to see</Button> */}
+                          </OverlayTrigger>
+                          <Form>
 
+                              <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
+                                  Comprobante de pago update
+                              </div>
+                              <Row className="mt-3">
+                                  <Col sm >
+                                      <Form.Group controlId="formFile">
+                                          <Form.Label className="h6 ">Servicio educativo  <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                          <Form.Select onChange={this.onServicio}   >
+
+                                              {
+                                                  servicio.map(function (item ,pos) {
+                                                      return <option key={pos} value={item[0]}>{item[3]}</option>;
+                                                  })
+                                              }
+                                          </Form.Select>
+                                      </Form.Group>
+                                  </Col>
+                                  <Col sm >
+                                      <Form.Group controlId="formFile">
+                                          <Form.Label className="h6 ">Numero de modulo  <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                          <Form.Select  onChange={this.onChangeNumModulo} >
+                                              <option value="Seleccione una opcion">Seleccione una opcion</option>
+                                              {
+                                                  numModuloPago.map(function (item) {
+                                                      return <option key={item} value={item}>{item}</option>;
+                                                  })
+                                              }
+                                          </Form.Select>
+                                      </Form.Group>
+                                  </Col>
+                                  <Col sm >
+                                      <Form.Group controlId="formFile">
+                                          <Form.Label className="h6 ">Alumnos <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                          <Form.Select  onChange={this.onChangeAlumnos} >
+                                              {/* <option value="Seleccione una opcion">Seleccione una opcion</option> */}
+                                              {
+                                                  curpData.map(function (item , pos) {
+                                                      return <option key={pos} value={item[0]}>{item[1] +" / " + item[0]}</option>;
+                                                  })
+                                              }
+                                          </Form.Select>
+                                      </Form.Group>
+                                  </Col>
+
+                              </Row>
+
+                              <Row className="mt-3">
+                                  <Col sm >
+                                      <Form.Group controlId="formFile" >
+                                          <Form.Label className="h6 mb-1 " >Comprobante de pago  <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                          <Form.Control type="file" accept=".pdf" className="mt-1" onChange={this.uploadFileComprobante} />
+                                      </Form.Group>
+                                  </Col>
+                                  <Col sm>
+                                  <Form.Group className="mb-3">
+                                          <Form.Label className="h5"> ¿Requiere factura electrónica? </Form.Label>
+                                          
+                                          { 
+                                             isFacturaSelec === true ?
+
+                                                <Form.Check 
+                                                    type="switch"
+                                                    id="custom-switch"
+                                                    label="factura electrónica"
+                                                    defaultChecked={true} 
+                                                    onChange={this.onChangeFactura}
+                                                />
+                                                :null
+                                          }
+
+{ 
+                                             isFacturaSelec === false ?
+
+                                                <Form.Check 
+                                                    type="switch"
+                                                    id="custom-switch"
+                                                    label="factura electrónica"
+                                                    defaultChecked={false} 
+                                                    onChange={this.onChangeFactura}
+                                                />
+                                            : null
+                                          }
+
+                                      </Form.Group>
+                                     
+                                  </Col>
+                                  <Col sm >
+                                      <Form.Group controlId="formFile" >
+                                          <Form.Label className="h6 mb-3" >Anexar cédula fiscal <small> Solo en caso de requerirse </small>  </Form.Label>
+                                          <Form.Control type="file" accept=".pdf" onChange={this.uploadFileCedulaFiscal} />
+                                      </Form.Group>
+                                  </Col>
+                                 
+                              </Row>
+                              <Row className="mt-3">
+                                  <Col sm>
+                                  <Form.Group className="mb-3">
+                                          <Form.Label className="h5">Referencia  <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                          <Form.Control type="text" placeholder="Referencia"   value={this.state.referencia}  onChange={(evt) => this.formularioSetData(evt, "referencia")}  />
+                                      </Form.Group>
+                                  </Col>
+                                  <Col sm>
+                                      <Form.Group className="mb-3" >
+                                          <Form.Label className="h5">Fecha / Hora en el Bauche  <small style={{ color: "#600101" }}>*</small></Form.Label>
+                                          <Form.Control type="datetime-local" value={this.state.fechaHoraBaucher}  onChange={(evt) => this.formularioSetData(evt, "FechaHora")}  />
+                                      </Form.Group>
+                                  </Col>
+                                  <Col sm>
+
+                                      <Form.Group >
+                                          <Form.Label className="h5">Cantidad <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                      </Form.Group>
+                                      <InputGroup className="mb-3">
+                                          <InputGroup.Text id="basic-addon1">$</InputGroup.Text>
+                                          <Form.Control type="text" placeholder="Cantidad" value={this.state.cantidadPago} onChange={(evt) => this.formularioSetData(evt, "cantidadPago")} />
+                                      </InputGroup>
+                                  </Col>
+                              </Row>
+
+                              <Row className="mt-3">
+                                  <Col sm>
+                                      <Form.Group className="mb-3" >
+                                          <Form.Label className="h5">Fecha de Inicio <small style={{ color: "#600101" }}>*</small>  </Form.Label>
+                                          <Form.Control type="date" value={this.state.dateStart}  onChange={(evt) => this.formularioSetData(evt, "FechaInicio")}   />
+                                      </Form.Group>
+                                  </Col>
+                                  <Col sm>
+                                      <Form.Group className="mb-3" >
+                                          <Form.Label className="h5">Fecha de Termino  <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                          <Form.Control type="date" value={this.state.dateFinish} onChange={(evt) => this.formularioSetData(evt, "FechaFin")}  />
+                                      </Form.Group>
+                                  </Col>
+                              </Row>
+
+                              <Row>
+                                  <Col sm>
+                                  <Form.Group controlId="formFile" >
+                                          <Form.Label className="h6 mb-3" >Descripcion <small style={{ color: "#600101" }}>*</small>  </Form.Label>
+                                      <textarea
+
+                                          className="col-12"
+                                          value = {this.state.descripcionInput}
+                                          onChange={(evt) => this.formularioSetData(evt, "descripcion")}
+                                      />
+                                      </Form.Group>
+
+                                  </Col>
+                              </Row>
+                              <Row className="mt-3 ">
+                                  <Col sm>
+                                    
+                                      <Button className="col-6"
+                                          variant="secondary"
+                                          onClick={ () => this.validarFormulario(true) }
+                                          >
+                                          <i className="bi bi-plus-circle-fill "></i>
+                                          &nbsp;&nbsp;
+                                          Actualizar
+                                      </Button>
+                                  </Col>
+
+                              </Row>
+                          </Form>
+                      </Container>
+
+                  </section>
+
+                    :null
+
+                }
                 {showTable ?
 
                     <section style={{ marginTop: 80 }} >
@@ -641,7 +1031,7 @@ class Pagos extends React.Component {
                                                                 <i className="bi bi-three-dots-vertical"></i>
                                                             </Dropdown.Toggle>
                                                             <Dropdown.Menu variant="dark"> 
-                                                                <Dropdown.Item >
+                                                                <Dropdown.Item onClick={ () => this.ShowForm(index[0] , true)} >
                                                                     <i className="bi bi-pencil"></i> &nbsp;&nbsp;Editar
                                                                 </Dropdown.Item>
                                                                 <Dropdown.Divider />

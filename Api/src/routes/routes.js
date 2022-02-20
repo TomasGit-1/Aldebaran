@@ -399,4 +399,30 @@ routes.get('/downloadFilePagos',  (req, res )=> {
     })
 });
 
+
+
+routes.post('/getUpdatePagos',  (req, res )=> {
+    var idPago = req.body.idPago;
+    db.getDataPagosPDF(idPago).then(respuesta =>{
+        // res.json({ "status": 200 , "Servicios":respuesta});
+        res.json(respuesta);
+    }).catch(error =>{
+        console.log(error);
+    })
+});
+
+
+
+routes.post('/UpdatePagos',  (req, res )=> {
+    console.log(req);
+    // var idPago = req.body.idPago;
+    // db.getDataPagosPDF(idPago).then(respuesta =>{
+    //     // res.json({ "status": 200 , "Servicios":respuesta});
+    //     res.json(respuesta);
+    // }).catch(error =>{
+    //     console.log(error);
+    // })
+});
+
+
 module.exports = routes;
