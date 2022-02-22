@@ -564,7 +564,7 @@ class Pagos extends React.Component {
         bodyFomrData.append('idPagoUpdate' , this.state.idPagoUpdate);
         Swal.fire({
             title: "¿Estas seguro de actualizar",
-            text: "¡No podrás revertir esto!",
+            text: "Actualizar",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -660,7 +660,7 @@ class Pagos extends React.Component {
                                                 {
 
                                                     servicio.map(function (item) {
-                                                        return <option key={item[0]} value={item[0]}>{item[3]}</option>;
+                                                        return <option key={item[0]} value={item[0]}>{item[3]+ " / "+ item[1]}</option>;
                                                     })
                                                 }
                                             </Form.Select>
@@ -686,7 +686,7 @@ class Pagos extends React.Component {
                                                 <option value="Seleccione una opcion">Seleccione una opcion</option>
                                                 {
                                                     curpData.map(function (item) {
-                                                        return <option key={item[0]} value={item[0]}>{item[1] +" / " + item[0]}</option>;
+                                                        return <option key={item[0]} value={item[0]}>{item[1] +"  /  " + item[0]}</option>;
                                                     })
                                                 }
                                             </Form.Select>
@@ -822,7 +822,7 @@ class Pagos extends React.Component {
 
                                               {
                                                   servicio.map(function (item ,pos) {
-                                                      return <option key={pos} value={item[0]}>{item[3]}</option>;
+                                                      return <option key={pos} value={item[0]}>{item[3]+  "  /  "+ item[1] }</option>;
                                                   })
                                               }
                                           </Form.Select>
