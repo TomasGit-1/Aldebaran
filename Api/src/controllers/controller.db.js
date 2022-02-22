@@ -1,6 +1,6 @@
 const { Pool } = require('pg');
 const fileUpload = require('express-fileupload');
-const multer  = require('multer')
+const multer = require('multer')
 // const upload = multer({ dest: './resource/data/' })
 
 var fs = require('fs');
@@ -10,34 +10,34 @@ let json = require('../config/configApi.json');
 let rutas = json['rutas'];
 let conexion = json['postgresql'];
 const config = {
-    host:conexion[0]['host'],
-    user:conexion[0]['user'],
-    password:conexion[0]['password'],
-    database:conexion[0]['database'],
-    port:conexion[0]['port'],
+    host: conexion[0]['host'],
+    user: conexion[0]['user'],
+    password: conexion[0]['password'],
+    database: conexion[0]['database'],
+    port: conexion[0]['port'],
     max: 10,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 2000,
 }
 const pool = new Pool(config);
 
-const Home = async () =>{
+const Home = async () => {
     // console.log("Hola Bd");
     return 200;
 };
 const getServicios = async () => {
     const response = await pool.query('SELECT * FROM SERVICIOEDUCATIVO ORDER BY idServiciosEdu DESC');
     var data = response.rows;
-    let id =[]
+    let id = []
     let registro = []
     let evento = []
-    let programaAcademico =[]
-    let habilitado =[]
-    let modalidad =[]
-    let cuota =[]
-    let numModulo =[]
-    let numHoras =[]
-    data.map(row =>{
+    let programaAcademico = []
+    let habilitado = []
+    let modalidad = []
+    let cuota = []
+    let numModulo = []
+    let numHoras = []
+    data.map(row => {
         id.push(row['idserviciosedu']);
         registro.push(row['registro_academico']);
         evento.push(row['tipo_evento']);
@@ -48,7 +48,7 @@ const getServicios = async () => {
         numModulo.push(row['nummodulo']);
         numHoras.push(row['numhoras']);
     })
-    return {"id":id, "registro":registro , "evento":evento , "programaAcademico":programaAcademico, "habilitado":habilitado , "modalidad":modalidad,"cuota":cuota , "numModulo":numModulo , "numHoras":numHoras  };
+    return { "id": id, "registro": registro, "evento": evento, "programaAcademico": programaAcademico, "habilitado": habilitado, "modalidad": modalidad, "cuota": cuota, "numModulo": numModulo, "numHoras": numHoras };
 };
 const getAlumnos = async () => {
     const response = await pool.query('SELECT * FROM personas  ORDER BY idPersona DESC');
@@ -57,25 +57,25 @@ const getAlumnos = async () => {
     for (let index = 0; index < data.length; index++) {
         bdAlumnos.push(data[index]);
     }
-    return {"Info":bdAlumnos};
+    return { "Info": bdAlumnos };
 };
 const updateHabilitado = async (req) => {
     let datos = req.body;
     let id = datos.data.id;
     let newhabilitadp = datos.data.habilitado;
-    const response =await pool.query('UPDATE SERVICIOEDUCATIVO SET habilitado = $1   WHERE idServiciosEdu = $2', [
+    const response = await pool.query('UPDATE SERVICIOEDUCATIVO SET habilitado = $1   WHERE idServiciosEdu = $2', [
         newhabilitadp,
         id,
     ]);
-    return {"mensaje" :'User Updated Successfully'};
+    return { "mensaje": 'User Updated Successfully' };
 };
-const getCurp = async (req)  => {
+const getCurp = async (req) => {
     let datos = req.body;
     let curp = datos.validacion.curpAlum;
-    const response = await pool.query('SELECT * FROM personas WHERE curp = $1' ,[curp]);
-    if(response.rowCount == 0){
+    const response = await pool.query('SELECT * FROM personas WHERE curp = $1', [curp]);
+    if (response.rowCount == 0) {
         return 0
-    }else{
+    } else {
         return 1
     }
 };
@@ -89,96 +89,96 @@ const createServicio = async (req) => {
     let cuota = datos.validacion.cuota;
     let numModulo = datos.validacion.numModulo;
     let numHoras = datos.validacion.numHoras;
-    const response = await pool.query('INSERT INTO servicioeducativo  (registro_academico , tipo_evento , programa_academico ,modalidad , cuota , habilitado , nummodulo , numHoras) VALUES ($1, $2 , $3 , $4 , $5 , $6 , $7 , $8)', [registroAcade,evento,nombreAcademico, modalidad ,cuota, 1 ,numModulo , numHoras]);
+    const response = await pool.query('INSERT INTO servicioeducativo  (registro_academico , tipo_evento , programa_academico ,modalidad , cuota , habilitado , nummodulo , numHoras) VALUES ($1, $2 , $3 , $4 , $5 , $6 , $7 , $8)', [registroAcade, evento, nombreAcademico, modalidad, cuota, 1, numModulo, numHoras]);
     console.log(response);
-    return {"mensaje" :'Servicio agregado'};
+    return { "mensaje": 'Servicio agregado' };
 };
 
 
-const createIngreso = async (personas , emergencia , datoslaborales , filespath , formacionAcademica , InfoAdicional  ) => {
+const createIngreso = async (personas, emergencia, datoslaborales, filespath, formacionAcademica, InfoAdicional) => {
     console.log("Empezamos a guardar la informacion")
     const persona = await pool.query('INSERT INTO personas  (Curp , email, Nombre , AppPat ,AppMat  , Sexo ,  FechaNacimiento  , TelPar , TelCel , Calle , Colonia , CodigoPostal ,Municipio , numDomicilio ,lugarNacimiento ) VALUES ($1, $2 , $3 , $4 , $5 , $6 ,$7 , $8 , $9 , $10 , $11 , $12 , $13 , $14, $15)',
-    [   
-        personas[0],
-        personas[1],
-        personas[2],
-        personas[3],
-        personas[4],
-        personas[5],
-        personas[6],
-        personas[7],
-        personas[8],
-        personas[9],
-        personas[10],
-        personas[11],
-        personas[12],
-        personas[13],
-        personas[14],
-    ]);
-    
+        [
+            personas[0],
+            personas[1],
+            personas[2],
+            personas[3],
+            personas[4],
+            personas[5],
+            personas[6],
+            personas[7],
+            personas[8],
+            personas[9],
+            personas[10],
+            personas[11],
+            personas[12],
+            personas[13],
+            personas[14],
+        ]);
+
     const files = await pool.query('INSERT INTO FilesPersona  (idcurpfk , FotografiaImg , CurpPdf ,EvidenciaipnPdf) VALUES ($1, $2 , $3 , $4 )',
-        [   
-            personas[0],filespath[0],filespath[1],filespath[2]
+        [
+            personas[0], filespath[0], filespath[1], filespath[2]
         ]
     );
 
     const contacto = await pool.query('INSERT INTO contactoemergencia  (idcurpfk , Nombre , AppPat ,AppMat , telefono_contacto ,email) VALUES ($1, $2 , $3 , $4 , $5 , $6 )',
-    [   
-        personas[0],emergencia[0],emergencia[1],emergencia[2],emergencia[3],emergencia[4]
-    ]);
+        [
+            personas[0], emergencia[0], emergencia[1], emergencia[2], emergencia[3], emergencia[4]
+        ]);
 
 
     const formacion = await pool.query('INSERT INTO formacionacademica  (idcurpfk , n_max_estudios , s_academica_actual ,sistemaeducativoprocedencia,sistemaeducativoprocedenciaOtro , insteducativa , anioegreso , uniAspiraIngresar , carrerarAspirasIngresar) VALUES ($1, $2 , $3 , $4 , $5 , $6 , $7 , $8 , $9 )',
-        [   
-            personas[0],formacionAcademica[0],formacionAcademica[1],formacionAcademica[2],formacionAcademica[3] , formacionAcademica[4] ,formacionAcademica[5] , formacionAcademica[6] ,  formacionAcademica[7] 
+        [
+            personas[0], formacionAcademica[0], formacionAcademica[1], formacionAcademica[2], formacionAcademica[3], formacionAcademica[4], formacionAcademica[5], formacionAcademica[6], formacionAcademica[7]
         ]
     );
     const datoslabo = await pool.query('INSERT INTO datoslaborales  (idcurpfk , nombre_institucion , direccion ,puesto , telefono) VALUES ($1, $2 , $3 , $4 , $5 )',
-        [   
-            personas[0],datoslaborales[0],datoslaborales[1],datoslaborales[2],datoslaborales[3]
+        [
+            personas[0], datoslaborales[0], datoslaborales[1], datoslaborales[2], datoslaborales[3]
         ]
     );
     const infoAdic = await pool.query('INSERT INTO infoadicional (idcurpfk , marca_modelo_Vehiculo , placas_Vehiculo ,comoseenterodelcuros , comoseenterodelcurosOtro , recomendacion_Nombre , recomendacion_Email ,recomendacion_telCel ) VALUES ($1, $2 , $3 , $4 , $5 ,$6 , $7 , $8 )',
-        [   
-            personas[0],InfoAdicional[0],InfoAdicional[1],InfoAdicional[2],InfoAdicional[3] , InfoAdicional[4] , InfoAdicional[5] ,InfoAdicional[6]
+        [
+            personas[0], InfoAdicional[0], InfoAdicional[1], InfoAdicional[2], InfoAdicional[3], InfoAdicional[4], InfoAdicional[5], InfoAdicional[6]
         ]
     );
 
 
-    return {"mensaje" :'Servicio agregado'};
+    return { "mensaje": 'Servicio agregado' };
 }
-const getPathFile = async ( data ) => {
+const getPathFile = async (data) => {
     var curp = data;
-    const response = await pool.query('SELECT * FROM filespersona WHERE idcurpfk = $1' ,[curp]);
-    return {"Info":response.rows};
+    const response = await pool.query('SELECT * FROM filespersona WHERE idcurpfk = $1', [curp]);
+    return { "Info": response.rows };
 };
-const getDataUsers = async ( curp ) => {
+const getDataUsers = async (curp) => {
     var curp = curp;
     // const response = await pool.query('SELECT * FROM personas FULL JOIN formacionacademica ON personas.curp = formacionacademica.idcurpfk FULL JOIN filespersona ON  personas.curp =  filespersona.idcurpfk FULL JOIN datoslaborales ON personas.curp = datoslaborales.idcurpfk FULL JOIN contactoemergencia ON personas.curp = contactoemergencia.idcurpfk WHERE personas.curp = $1',[curp]);
-    const response0 = await pool.query('SELECT * FROM personas WHERE curp = $1' ,[curp]);
+    const response0 = await pool.query('SELECT * FROM personas WHERE curp = $1', [curp]);
     var data_persona = response0.rows;
-    
-    const response1 = await pool.query('SELECT * FROM contactoemergencia WHERE idcurpfk = $1' ,[curp]);
+
+    const response1 = await pool.query('SELECT * FROM contactoemergencia WHERE idcurpfk = $1', [curp]);
     var data_contacto = response1.rows;
-    
-    const response2 = await pool.query('SELECT * FROM formacionacademica WHERE idcurpfk = $1' ,[curp]);
+
+    const response2 = await pool.query('SELECT * FROM formacionacademica WHERE idcurpfk = $1', [curp]);
     var data_formacionacademicia = response2.rows;
-    
-    const response3 = await pool.query('SELECT * FROM datoslaborales WHERE idcurpfk = $1' ,[curp]);
+
+    const response3 = await pool.query('SELECT * FROM datoslaborales WHERE idcurpfk = $1', [curp]);
     var data_laborales = response3.rows;
 
-    const response4 = await pool.query('SELECT * FROM INFOADICIONAL WHERE idcurpfk = $1' ,[curp]);
+    const response4 = await pool.query('SELECT * FROM INFOADICIONAL WHERE idcurpfk = $1', [curp]);
     var data_infoAdicional = response4.rows;
-    
-    var data_Full =[data_persona,data_contacto,data_formacionacademicia,data_laborales , data_infoAdicional]
+
+    var data_Full = [data_persona, data_contacto, data_formacionacademicia, data_laborales, data_infoAdicional]
 
     return {
-        "data":data_Full
+        "data": data_Full
     }
 }
 const getPagos = async () => {
     // const response = await pool.query('SELECT * FROM pagos  ORDER BY idpagos DESC');
-    var querySQL ='SELECT * FROM pagos INNER JOIN ServicioEducativo ON   pagos.idserviciosedufk = ServicioEducativo.idserviciosedu ORDER BY idpagos DESC;';
+    var querySQL = 'SELECT * FROM pagos INNER JOIN ServicioEducativo ON   pagos.idserviciosedufk = ServicioEducativo.idserviciosedu ORDER BY idpagos DESC;';
     const response = await pool.query(querySQL);
 
     var data = response.rows;
@@ -186,7 +186,7 @@ const getPagos = async () => {
     for (let index = 0; index < data.length; index++) {
         bdPagos.push(data[index]);
     }
-    return {"Info":bdPagos};
+    return { "Info": bdPagos };
 };
 
 const getDataServicios = async () => {
@@ -206,66 +206,66 @@ const getDataServicios = async () => {
     data = responsePersona.rows;
     var bdAlumnos = []
     for (let index = 0; index < data.length; index++) {
-        var array =[];
+        var array = [];
         array.push(data[index].curp);
-        array.push(data[index].nombre+" "+ data[index].apppat+" "+data[index].appmat );
+        array.push(data[index].nombre + " " + data[index].apppat + " " + data[index].appmat);
         bdAlumnos.push(array);
     }
-    
 
-    return {"Info":bdServicios , "Curp":bdAlumnos};
+
+    return { "Info": bdServicios, "Curp": bdAlumnos };
 };
 
 
-const setCrearPago = async ( data) => {
+const setCrearPago = async (data) => {
     var nowDateTime = Date.now();
-    var dat= new Date(); //Obtienes la fecha
+    var dat = new Date(); //Obtienes la fecha
     var dat2 = Date.parse(dat); //Lo parseas para transformarlo
 
     const contacto = await pool.query('INSERT INTO pagos  (idcurpfk , idServiciosEduFk , numModulo ,comprobantePath , cedulaPath ,referencia , cantidad, FechaHoraTicket , FECHA_INICIO , FECHA_TERMINO ,facturacion ,fechaHoraRegistro , descripcion) VALUES ($1, $2 , $3 , $4 , $5 , $6 , $7 , $8 , $9 , $10 , $11 , $12 , $13)',
-    [   
-        data[0],data[1],data[2],data[3],data[4] , data[5] , data[6] , data[7] , data[8] ,  data[9] ,data[10], dat , data[11]
-     ]);
-    
+        [
+            data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], dat, data[11]
+        ]);
 
-    return {"mensaje" :'Pago registrado'};
+
+    return { "mensaje": 'Pago registrado' };
 }
 
-getDataServicioPDF  = async ( idServicio) => {
+getDataServicioPDF = async (idServicio) => {
     var idServicio = idServicio;
-    const resp = await pool.query('SELECT * FROM SERVICIOEDUCATIVO WHERE idServiciosEdu = $1' ,[idServicio]);
+    const resp = await pool.query('SELECT * FROM SERVICIOEDUCATIVO WHERE idServiciosEdu = $1', [idServicio]);
     var data = resp.rows;
     return {
-        "data":data
+        "data": data
     }
 }
 
-getDataPagosPDF  = async ( idPagos) => {
+getDataPagosPDF = async (idPagos) => {
     var idPagos = idPagos;
-    const resp = await pool.query('SELECT * FROM pagos WHERE idPagos = $1' ,[idPagos]);
+    const resp = await pool.query('SELECT * FROM pagos WHERE idPagos = $1', [idPagos]);
     var dataPagos = resp.rows;
-    
+
     var curpAlum = dataPagos[0].idcurpfk;
-    const respAlu = await pool.query('SELECT * FROM Personas WHERE Curp = $1' ,[curpAlum]);
+    const respAlu = await pool.query('SELECT * FROM Personas WHERE Curp = $1', [curpAlum]);
     var dataAlum = respAlu.rows;
 
     var servicioEduc = dataPagos[0].idserviciosedufk;
-    const respServicio = await pool.query('SELECT * FROM SERVICIOEDUCATIVO WHERE idServiciosEdu = $1' ,[servicioEduc]);
+    const respServicio = await pool.query('SELECT * FROM SERVICIOEDUCATIVO WHERE idServiciosEdu = $1', [servicioEduc]);
     var dataServicio = respServicio.rows;
-    
-    
+
+
     return {
-        "pago":dataPagos,
-        "alumno":dataAlum,
-        "servicio":dataServicio
-      
+        "pago": dataPagos,
+        "alumno": dataAlum,
+        "servicio": dataServicio
+
     }
 }
 
-const getPathPagos = async ( data ) => {
+const getPathPagos = async (data) => {
     var idPagos = data;
-    const response = await pool.query('SELECT * FROM pagos WHERE idPagos = $1' ,[idPagos]);
-    return {"Info":response.rows};
+    const response = await pool.query('SELECT * FROM pagos WHERE idPagos = $1', [idPagos]);
+    return { "Info": response.rows };
 };
 
 const UpdateServicio = async (req) => {
@@ -278,9 +278,16 @@ const UpdateServicio = async (req) => {
     let cuota = datos.validacion.cuota;
     let numModulo = datos.validacion.numModulo;
     let numHoras = datos.validacion.numHoras;
-    const response = await pool.query('UPDATE servicioeducativo SET  registro_academico = $1 , tipo_evento = $2 , programa_academico = $3 , modalidad = $4 , cuota = $5 , nummodulo  = $6 , numHoras = $7  WHERE idServiciosEdu = $8' , [registroAcade,evento,nombreAcademico, modalidad ,cuota,numModulo , numHoras , idServicio]);
+    const response = await pool.query('UPDATE servicioeducativo SET  registro_academico = $1 , tipo_evento = $2 , programa_academico = $3 , modalidad = $4 , cuota = $5 , nummodulo  = $6 , numHoras = $7  WHERE idServiciosEdu = $8', [registroAcade, evento, nombreAcademico, modalidad, cuota, numModulo, numHoras, idServicio]);
     // console.log(response);
-    return {"mensaje" :'Servicio actualizado'};
+    return { "mensaje": 'Servicio actualizado' };
+};
+
+const UpdatePagos = async (query, data) => {
+
+    const response = await pool.query(query, data);
+    // console.log(response);
+    return { "mensaje": 'Pago actualizado' };
 };
 
 module.exports = {
@@ -299,5 +306,6 @@ module.exports = {
     getDataServicioPDF,
     getDataPagosPDF,
     UpdateServicio,
-    getPathPagos
+    getPathPagos,
+    UpdatePagos
 };

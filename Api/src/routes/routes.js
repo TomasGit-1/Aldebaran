@@ -360,9 +360,9 @@ routes.post('/getUpdateServicios',  (req, res )=> {
 routes.post('/UpdateServicios',  (req, res )=> {
     db.UpdateServicio(req).then(respuesta =>{
         // res.json({ "status": 200 , "Servicios":respuesta});
-        res.json(respuesta['data']);
+        res.json(respuesta);
     }).catch(error =>{
-        console.log(error);
+        res.json(error);
     })
 });
 
@@ -415,13 +415,74 @@ routes.post('/getUpdatePagos',  (req, res )=> {
 
 routes.post('/UpdatePagos',  (req, res )=> {
     console.log(req);
-    // var idPago = req.body.idPago;
-    // db.getDataPagosPDF(idPago).then(respuesta =>{
-    //     // res.json({ "status": 200 , "Servicios":respuesta});
-    //     res.json(respuesta);
-    // }).catch(error =>{
-    //     console.log(error);
-    // })
+    let datos = req.body;
+    let sampleFile;
+    const curp = datos.alumnosNameCurp;
+    let query ="";
+    let data = [];
+    // const response = await pool.query('UPDATE servicioeducativo SET  registro_academico = $1 , tipo_evento = $2 , programa_academico = $3 , modalidad = $4 , cuota = $5 , nummodulo  = $6 , numHoras = $7  WHERE idServiciosEdu = $8' , [registroAcade,evento,nombreAcademico, modalidad ,cuota,numModulo , numHoras , idServicio]);
+    // const contacto = await pool.query('INSERT INTO pagos  (idcurpfk , idServiciosEduFk , numModulo ,comprobantePath , cedulaPath ,referencia , cantidad, FechaHoraTicket , FECHA_INICIO , FECHA_TERMINO ,facturacion ,fechaHoraRegistro , descripcion) VALUES ($1, $2 , $3 , $4 , $5 , $6 , $7 , $8 , $9 , $10 , $11 , $12 , $13)',
+
+    data =[
+        curp,
+        datos.idServicioEducativo,
+        datos.NumModulo,
+        datos.referencia,
+        datos.Cantidad,
+        datos.fechaHoraBaucher,
+        datos.dateInicio,
+        datos.dateFinish,
+        datos.facturaElectronica,
+        datos.descripcion
+    ]
+    query ='UPDATE pagos SET idcurpfk = $1 , idServiciosEduFk = $2 , numModulo = $3 , referencia = $4 ,  cantidad = $5 , FechaHoraTicket = $6 , FECHA_INICIO = $7 , FECHA_TERMINO = $8 , facturacion = $9 ,  descripcion = $10  ';
+
+    if(req.files !== null){
+        //Ninguno de los dos archivo estan cargados
+        let iscomprobante = false;
+        //Aqui se empieza a guardar el comprobanye del pago del alumno
+        var dirComprobante = __dirname +  rutas[0]['upload'] +curp+'/';
+        var name = "_Comprobante_"+ datos.ServicioEducativo +"_Modulo_"+datos.NumModulo; 
+        sampleFile = req.files.comprobantePago;
+        if (sampleFile !== undefined) {
+            dirComprobante =save(req , dirComprobante , sampleFile ,true, name);
+            query = query + ' ,comprobantePath = $11';
+            data.push(dirComprobante);
+            iscomprobante = true;
+        }
+
+        var dirCedula = __dirname +  rutas[0]['upload'] + curp+'/';
+        sampleFile = req.files.cedulaFiscal;
+        var name = "_CedulaFiscal_"+ datos.ServicioEducativo +"_Modulo_"+datos.NumModulo; 
+        if (sampleFile !== undefined) {
+            dirCedula = save(req , dirCedula , sampleFile ,true, name );
+            if(iscomprobante){
+                query = query + ' , cedulaPath = $12'  
+                query = query + '  WHERE idPagos = $13'  
+            }
+            else{
+                query = query + ' , cedulaPath = $11'
+                query = query + '  WHERE idPagos = $12'  
+            }
+
+            data.push(dirCedula);
+            data.push(datos.idPagoUpdate);    
+        }else{
+            query = query + '  WHERE idPagos = $12' ;
+            data.push(datos.idPagoUpdate);    
+        }
+    }else{
+        query = query + '  WHERE idPagos = $11'  
+        data.push(datos.idPagoUpdate);    
+    }
+
+ 
+    db.UpdatePagos(query , data).then(respuesta =>{
+        res.json(respuesta);
+    }).catch(error =>{
+        res.json(error.message);
+    })
+
 });
 
 

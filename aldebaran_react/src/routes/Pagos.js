@@ -53,7 +53,8 @@ class Pagos extends React.Component {
 
             //Campos update extras
 
-            servicioPos_cero:[]
+            servicioPos_cero:[],
+            idPagoUpdate:""
 
 
         };
@@ -70,6 +71,8 @@ class Pagos extends React.Component {
         this.validarFormulario = this.validarFormulario.bind(this);
         this.getDownloadFile = this.getDownloadFile.bind(this);
         this.getUpdatePagos = this.getUpdatePagos.bind(this);
+        this.SendUpdate = this.SendUpdate.bind(this);
+        this.apiGetPagos = this.apiGetPagos.bind(this);
     }
     /*  
     ===========================================================================
@@ -148,6 +151,8 @@ class Pagos extends React.Component {
 
     }
     getUpdatePagos = async (idPago) => {
+        this.setState({ idPagoUpdate: idPago});
+
         var url = config.general[0].url + config.general[0].puerto_api + "/Api/getUpdatePagos";
         var bodyFormData = new FormData();
         bodyFormData.append('idPago', idPago);
@@ -292,6 +297,11 @@ class Pagos extends React.Component {
                 })
             }
         } catch (e) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops..',
+                text: e,
+            })
 
         }
     }
@@ -423,7 +433,7 @@ class Pagos extends React.Component {
                 }
             }
             if (msg === "") {
-            //    this.SendData();
+                this.SendUpdate();
             
             } else {
                 Swal.fire({
@@ -466,7 +476,7 @@ class Pagos extends React.Component {
         }
     }
     SendData(){
-        var url = config.general[0].url + config.general[0].puerto_api + "/Api/CrearPago";
+        var url = config.general[0].url + config.general[0].puerto_api + "/api/CrearPago";
         var bodyFomrData = new FormData();
         bodyFomrData.append('ServicioEducativo' , this.state.servicioEducativoOpc);
         bodyFomrData.append('idServicioEducativo' , this.state.servicioEducativoID);
@@ -498,19 +508,23 @@ class Pagos extends React.Component {
                     headers : {
                         'Content-Type': 'application/json'
                     }
-                }).then( function (response) {
+                }).then((response) => {
                     if(response['data']['status'] === 200){
         
+                        // this.apiGetPagos();
                         Swal.fire({
                             position: 'top-end',
                             icon: 'success',
-                            title: 'Alumno agregado',
+                            title: 'Pago agregado',
                             showConfirmButton: false,
-                            timer: 1500
+                            timer: 500
                         })
-
+                        this.setState({
+                            showForm: false,
+                            showTable: true,
+                            showisUpdate: false,
+                        });
                         setTimeout(window.location.reload(false), 7000);
-                        
         
                     }else{
                         Swal.fire({
@@ -532,7 +546,7 @@ class Pagos extends React.Component {
         })
     }
     SendUpdate(){
-        var url = config.general[0].url + config.general[0].puerto_api + "/Api/UpdatePagos";
+        var url = config.general[0].url + config.general[0].puerto_api + "/api/UpdatePagos";
         var bodyFomrData = new FormData();
         bodyFomrData.append('ServicioEducativo' , this.state.servicioEducativoOpc);
         bodyFomrData.append('idServicioEducativo' , this.state.servicioEducativoID);
@@ -547,6 +561,7 @@ class Pagos extends React.Component {
         bodyFomrData.append('dateInicio' , this.state.dateStart);
         bodyFomrData.append('dateFinish' , this.state.dateFinish);
         bodyFomrData.append('descripcion' , this.state.descripcionInput);
+        bodyFomrData.append('idPagoUpdate' , this.state.idPagoUpdate);
         Swal.fire({
             title: "¿Estas seguro de actualizar",
             text: "¡No podrás revertir esto!",
@@ -564,26 +579,23 @@ class Pagos extends React.Component {
                     headers : {
                         'Content-Type': 'application/json'
                     }
-                }).then( function (response) {
-                    if(response['data']['status'] === 200){
-        
-                        Swal.fire({
-                            position: 'top-end',
-                            icon: 'success',
-                            title: 'Alumno agregado',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
+                }).then((response) => {
 
-                        setTimeout(window.location.reload(false), 7000);
-                        
-                    }else{
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops..',
-                            text: response['data']['data'] ,
-                        })
-                    }
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: response["data"]["mensaje"],
+                        showConfirmButton: false,
+                        timer: 500
+                    })
+                    this.setState({
+                        showForm: false,
+                        showTable: true,
+                        showisUpdate: false,
+                    });
+                    setTimeout(window.location.reload(false), 5000);
+
+ 
                 }).catch(function (e){
                     Swal.fire({
                         icon: 'error',

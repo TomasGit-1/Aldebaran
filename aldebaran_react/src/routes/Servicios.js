@@ -173,11 +173,11 @@ class Servicios extends React.Component {
                             validacion,
                         })
                             .then(res => {
-                                this.apiServicios();
+                               // this.apiServicios();
                                 Swal.fire({
                                     position: 'top-end',
                                     icon: 'success',
-                                    title: 'Servicio agregado',
+                                    title: res["data"]["mensaje"],
                                     showConfirmButton: false,
                                     timer: 1500
                                 })
@@ -186,6 +186,9 @@ class Servicios extends React.Component {
                                     showTable: true,
                                     showisUpdate: false,
                                 });
+
+                              
+                                setTimeout(window.location.reload(false), 7000);
                             }).catch(function (e) {
                                 Swal.fire({
                                     icon: 'error',
@@ -221,11 +224,15 @@ class Servicios extends React.Component {
                                     showConfirmButton: false,
                                     timer: 1500
                                 })
+                               
                                 this.setState({
                                     showForm: false,
                                     showTable: true,
                                     showisUpdate: false,
                                 });
+
+                              
+                                setTimeout(window.location.reload(false), 7000);
                             }).catch(function (e) {
                                 Swal.fire({
                                     icon: 'error',
