@@ -56,13 +56,33 @@ class PDFAlumno extends React.Component {
         // var dateNacimiento = new Moment(respuesta[0][0].fechanacimiento).format('DD/MM/YYYY');
         // var dateNacimiento = new Moment(respuesta[0][0].fechanacimiento).format('MM-DD-YYYY');
         // var dateNacimiento = new Moment(respuesta[0][0].fechanacimiento).format('MM-DD-YYYY');
+        let dateNacimiento;
+        let nacimiento;
+        let  hoy;
+        let anios;
 
-        // var dateNacimiento = Moment(respuesta[0][0].fechanacimiento, ["MM-DD-YYYY", "YYYY-MM-DD" , "DD/MM/YYYY"]);
-        var dateNacimiento = new Moment(respuesta[0][0].fechanacimiento,).format('DD/MM/YYYY');
+        dateNacimiento = Moment(respuesta[0][0].fechanacimiento, ["MM-DD-YYYY", "YYYY-MM-DD" , "DD/MM/YYYY"]);
 
-        var nacimiento = Moment(dateNacimiento);
-        var hoy = Moment();
-        var anios = hoy.diff(nacimiento, "years");
+        nacimiento = Moment(dateNacimiento);
+        hoy = Moment();
+        anios = hoy.diff(nacimiento, "years");
+        console.log(hoy);
+
+        if (anios == NaN  || (anios ===undefined)){
+            console.log("Intentamos otra vez");
+            dateNacimiento = new Moment(respuesta[0][0].fechanacimiento,).format('DD/MM/YYYY');
+            nacimiento = Moment(dateNacimiento);
+            hoy = Moment();
+            console.log(hoy);
+            anios = hoy.diff(nacimiento, "years");    
+        }
+        console.log(anios);
+        if (anios == NaN  || (anios ===undefined)){
+            anios =" ";
+        }
+
+
+
 
         arrayPersonales.push(respuesta[0][0].nombre);
         arrayPersonales.push(respuesta[0][0].appmat);
