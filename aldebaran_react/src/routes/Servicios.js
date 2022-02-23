@@ -66,8 +66,16 @@ class Servicios extends React.Component {
             })
         })
     }
-    ShowForm(num, isActualizar = false) {
-        if (!isActualizar) {
+    ShowForm(num, isActualizar) {
+        if (isActualizar) {
+            this.setState({
+                showForm: false,
+                showTable: false,
+                showisUpdate: true,
+            });
+            this.getUpdateServicios(num);
+        } else {
+            
             if (num === 1) {
                 this.setState({
                     showForm: true,
@@ -81,14 +89,6 @@ class Servicios extends React.Component {
                     showisUpdate: false
                 });
             }
-        } else {
-            
-            this.setState({
-                showForm: false,
-                showTable: false,
-                showisUpdate: true,
-            });
-            this.getUpdateServicios(num);
 
 
         }
@@ -542,7 +542,7 @@ class Servicios extends React.Component {
                                 {/* <Button variant="success">Hover me to see</Button> */}
                             </OverlayTrigger>
                             <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
-                                Servicios educativos  Actualizamos
+                                Servicios educativos
                             </div>
                             <Row className="mt-3 mb-3">
                                 <Col sm >
@@ -673,7 +673,7 @@ class Servicios extends React.Component {
                             <Row className="mt-3 mb-3">
                                 <Col >
                                     <ButtonGroup aria-label="Basic example" >
-                                        <Button variant="secondary" onClick={() => this.ShowForm(1)}>
+                                        <Button variant="secondary" onClick={() => this.ShowForm(1 , false)}>
                                             Nuevo servicio &nbsp;&nbsp;<i className="bi bi-plus-circle-fill "></i>
                                         </Button>
                                     </ButtonGroup>

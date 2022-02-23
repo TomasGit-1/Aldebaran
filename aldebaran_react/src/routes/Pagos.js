@@ -90,7 +90,6 @@ class Pagos extends React.Component {
     }
     onServicio(event) {
         var select = parseInt(event.target.value);
-        console.log(select);
         var servicios = this.state.servicio;
         for (let index = 0; index < servicios.length; index++) {
             if (servicios[index][0] === select) {
@@ -126,7 +125,14 @@ class Pagos extends React.Component {
         }
     }
     ShowForm(num , isActualizar) {
-        if(!isActualizar){
+        if(isActualizar){
+            this.setState({
+                showForm: false,
+                showTable: false,
+                showisUpdate: true,
+            });
+            this.getUpdatePagos(num);
+        }else{
             if (num === 1) {
                 this.setState({
                     showForm: true,
@@ -140,13 +146,6 @@ class Pagos extends React.Component {
                     showisUpdate:false
                 });
             }
-        }else{
-            this.setState({
-                showForm: false,
-                showTable: false,
-                showisUpdate: true,
-            });
-            this.getUpdatePagos(num);
         }
 
     }
@@ -178,7 +177,6 @@ class Pagos extends React.Component {
         var fechahoraticket = new Moment(pagos.fechahoraticket).format('YYYY-MM-DD HH:mm');
         var fecha_inicio = new Moment(pagos.fecha_inicio).format('YYYY-MM-DD');
         var fecha_termino = new Moment(pagos.fecha_termino).format('YYYY-MM-DD');
-        console.log(pagos);
             
         this.setState({ isFacturaSelec: pagos.facturacion});
         this.setState({ referencia: pagos.referencia});
@@ -215,12 +213,10 @@ class Pagos extends React.Component {
         this.setState({ servicioEducativoID : tempArray[0]});
 
         //Alumnos
-        console.log(alumno);
         var tempArrayAlum=[];
         tempArrayAlum.push(alumno.curp);
         tempArrayAlum.push(alumno.nombre+" "+ alumno.apppat +" "+alumno.appmat);
         let arrayAlumnos = this.state.curpData;
-        console.log(arrayAlumnos);
         let arrayTemp2 =[];
         for (let i = 0; i < arrayAlumnos.length; i++){
             var temp = arrayAlumnos[i];
@@ -228,7 +224,6 @@ class Pagos extends React.Component {
                 arrayTemp2.push(temp);
             }
         }
-        console.log(arrayTemp2);
         arrayTemp2.unshift(tempArrayAlum);
         this.setState({ curpData: arrayTemp2 });
         this.setState({ alumnoSelect: tempArrayAlum[0] });
@@ -351,7 +346,6 @@ class Pagos extends React.Component {
         }
     }
     formularioSetData = (event, data) => {
-        console.log(event.target.value);
         switch (data) {
             case "referencia":
                 this.setState({ referencia: event.target.value });
@@ -399,15 +393,12 @@ class Pagos extends React.Component {
         }
     }
     onChangeFactura( event ){
-        console.log( event.target.checked);
         this.setState({ isFacturaSelec: event.target.checked });
     }
     onChangeAlumnos( event ){
-        console.log(event.target.value);
         this.setState({ alumnoSelect: event.target.value });
     }
     onChangeNumModulo(event){
-        console.log(event.target.value);
         this.setState({ numeroModuloOpc: event.target.value });
     }
     validarFormulario( isUpdate=false){
@@ -812,7 +803,7 @@ class Pagos extends React.Component {
                           <Form>
 
                               <div className="alert mt-2" role="alert" style={{ background: ' #ceac00', color: '#000' }}>
-                                  Comprobante de pago update
+                                  Comprobante de pago 
                               </div>
                               <Row className="mt-3">
                                   <Col sm >
@@ -994,7 +985,7 @@ class Pagos extends React.Component {
                             <Row className="mt-3 mb-3">
                                 <Col >
                                     <ButtonGroup aria-label="Basic example" >
-                                        <Button variant="secondary" onClick={() => this.ShowForm(1)}>
+                                        <Button variant="secondary" onClick={() => this.ShowForm(1 , false)}>
                                             Nuevo Pago &nbsp;&nbsp;<i className="bi bi-plus-circle-fill "></i>
                                         </Button>
                                     </ButtonGroup>
