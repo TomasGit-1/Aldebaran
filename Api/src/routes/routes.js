@@ -76,7 +76,7 @@ routes.post('/createRegistro',  (req, res )=> {
     //En esta ruta se guardan las fotografias 
     var dirimg = __dirname +  rutas[0]['images'] + curp+'/';
     sampleFile = req.files.fileImg;
-    dirimg = resp = save(req , dirimg , sampleFile);
+    dirimg  = save(req , dirimg , sampleFile);
     console.log("Se guardo el archivo img ");
 
     //En esta ruta se guardan las fotografias 
@@ -485,5 +485,106 @@ routes.post('/UpdatePagos',  (req, res )=> {
 
 });
 
+routes.post('/UpdateRegistro',  (req, res )=> {
+    let datos = req.body;
+    let sampleFile;
+    const curp = datos.curp;
+    //Tablas a actualizar
+    /*
+     * personas 
+     * contactoemergencia
+     * formacionacademica
+     * datoslaborales
+     * INFOADICIONAL
+     */
 
+    //Tabla datos del alumnos
+    let datosPersonales = [
+        curp,
+        datos.emailAlum,
+        datos.nombreAlum,
+        datos.appPatAlum,
+        datos.appMatAlum,
+        datos.genero,
+        datos.fechaNacimiento,
+        datos.telParticularAlum,
+        datos.telCelularAlum,
+        datos.calle,
+        datos.colonia,
+        datos.codigoPostal,
+        datos.municipio,
+        datos.NumeroDom,
+        datos.lugarNacimiento
+    ];
+
+    //Tabla datos laborales
+    let datosLaborales = [
+        datos.nombreInst,
+        datos.domicilioInst,
+        datos.puestoInst,
+        datos.telefonoInst
+    ];
+
+    //   Tabla formacion academica
+    let formacionAcademica = [
+        datos.nivMaxStudy,
+        datos.acadSituacion,
+        datos.SitemaEducativoProcedencia,
+        datos.SitemaEducativoProcedenciaOtro,
+        datos.insEducativa,
+        datos.anioEgreso,
+        datos.UniversidadAspira,
+        datos.CarreraAspira
+    ];
+    //Tabla contacto de emergencia
+
+    let contactoEmergecia = [
+        datos.nombreEmergencia,
+        datos.appPatEmergencia,
+        datos.appMatEmergencia,
+        datos.telEmergencia,
+        datos.emailEmergencia
+    ];
+    // Tabla informacion adicion
+    let informacionAdicional = [
+        datos.marca_modelo,
+        datos.placas,
+        datos.comoseenterodelcurso,
+        datos.comoseenterodelcursoOtro,
+        datos.recomendacionCursoNombre,
+        datos.recomendacionCursoemail,
+        datos.recomendacionCursotelce
+    ]
+
+    if(req.files !== null){
+        //Alguno de los archivos se va a actualizar
+        //Comprobamos si la curp pdf se actualizo
+        let dirpdf = __dirname +  rutas[0]['upload'] + curp+'/';
+        sampleFile = req.files.fileCurp;
+        dirpdf = "";
+        if (sampleFile !== undefined) {
+            dirpdf =save(req , dirpdf , sampleFile);
+            console.log("Se guardo el archivo pdf ");
+        }
+
+        //En esta ruta se guardan las fotografias 
+        let dirimg = __dirname +  rutas[0]['images'] + curp+'/';
+        sampleFile = req.files.fileImg;
+        if (sampleFile !== undefined) {
+            dirimg  = save(req , dirimg , sampleFile);
+            console.log("Se guardo el archivo img ");
+        }
+
+        //En esta ruta se guardan las fotografias 
+        let dirpdfEvidencia = __dirname +  rutas[0]['upload'] + curp+'/';
+        sampleFile = req.files.fileEvidencia;
+        dirpdfEvidencia=""
+        if (sampleFile !== undefined) {
+            dirpdfEvidencia = save(req , dirpdfEvidencia , sampleFile);
+        } 
+
+    }
+    res.json("respuesta");
+
+});
 module.exports = routes;
