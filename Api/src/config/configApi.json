@@ -11,7 +11,8 @@
     "rutas":[
         {
             "images":"/resource/image/",
-            "upload":"/resource/upload/"
+            "upload":"/resource/upload/",
+            "pathLog":"/Log/all-the-logs.log"
         }
     ],
     "Hora":[

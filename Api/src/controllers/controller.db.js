@@ -290,6 +290,12 @@ const UpdatePagos = async (query, data) => {
     return { "mensaje": 'Pago actualizado' };
 };
 
+const UpdateRegistro = async (personas, emergencia, datoslaborales, filespath, formacionAcademica, InfoAdicional , sendFiles) => {
+
+    return { "mensaje": 'Datos actualizados' };
+
+}
+
 module.exports = {
     Home,
     getServicios,
@@ -307,5 +313,6 @@ module.exports = {
     getDataPagosPDF,
     UpdateServicio,
     getPathPagos,
-    UpdatePagos
+    UpdatePagos,
+    UpdateRegistro
 };

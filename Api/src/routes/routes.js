@@ -10,15 +10,17 @@ const { error } = require('console');
 const objUtil  = require('../utilities/util.js');
 const imageToBase64 = require('image-to-base64');
 
+var pathLog = __dirname + rutas[0]["pathLog"];
+
 var log4js = require("log4js");
 log4js.configure({
     appenders: {
-      everything: { type: 'file', filename: 'src/Log/all-the-logs.log' }
+      everything: { type: 'file', filename: pathLog }
     },
     categories: {
       default: { appenders: [ 'everything' ], level: 'all' }
     }
-  });
+});
   
 var logger = log4js.getLogger("everything");
 
@@ -606,8 +608,9 @@ routes.post('/UpdateRegistro',  (req, res )=> {
         datos.recomendacionCursoemail,
         datos.recomendacionCursotelce
     ]
-
+    let sendFiles = false;
     if(req.files !== null){
+        sendFiles = true;
         //Alguno de los archivos se va a actualizar
         //Comprobamos si la curp pdf se actualizo
         let dirpdf = __dirname +  rutas[0]['upload'] + curp+'/';
@@ -635,6 +638,16 @@ routes.post('/UpdateRegistro',  (req, res )=> {
         } 
 
     }
+
+    db.UpdateRegistro(datosPersonales , contactoEmergecia , datosLaborales , filepath , formacionAcademica , informacionAdicional , sendFiles ).then(respuesta =>{
+        res.json({ "status": 200 , "data":respuesta});
+
+    }).catch(error =>{
+        console.log(error);
+        res.json({ "status": 400 , "data":error.message});
+
+    })
+
     res.json("respuesta");
 
 });
