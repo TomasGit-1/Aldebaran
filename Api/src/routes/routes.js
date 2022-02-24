@@ -10,36 +10,58 @@ const { error } = require('console');
 const objUtil  = require('../utilities/util.js');
 const imageToBase64 = require('image-to-base64');
 
+var log4js = require("log4js");
+log4js.configure({
+    appenders: {
+      everything: { type: 'file', filename: 'src/Log/all-the-logs.log' }
+    },
+    categories: {
+      default: { appenders: [ 'everything' ], level: 'all' }
+    }
+  });
+  
+var logger = log4js.getLogger("everything");
+
+
 routes.get('/one' , (req, res)=> {
+    logger.info("El servidor esta en linea");
     res.send({ "name":"Testing Api"});
 });
 
 routes.get('/Servicios',  (req, res )=> {
+    logger.info("Obtenemos la lista de servicios");
     db.getServicios().then(respuesta =>{
         res.json({ "status": 200 , "data":respuesta});
     }).catch(error =>{
+        logger.error(`Servicios error :${error,message}`);
         res.json({ "status": 400 , "data":error.message});
     })
 });
 
 routes.get('/Alumnos',  (req, res )=> {
+    logger.info("Obtenemos la lista de alumnos");
     db.getAlumnos().then(respuesta =>{
         res.json({ "status": 200 , "data":respuesta['Info']});
     }).catch(error =>{
+        logger.error(`Alumnos error :${error,message}`);
         res.json({ "status": 400 , "data":error.message});
 
     })
 });
 
 routes.post('/updateHabilitado' , (req, res)=> {
+    logger.info("Cambiamos el estado de un servicio");
     db.updateHabilitado(req).then(respuesta =>{
         res.json(respuesta);
     }).catch(error => {
+        logger.error(`updateHabilitado :${error,message}`);
+        // res.json({ "status": 400 , "data":error.message});
         console.log(error);
     })
 });
 
 routes.post('/createServicio' , (req, res)=> {
+    logger.info("Creamos servicio");
     db.createServicio(req).then(respuesta =>{
         res.json(respuesta);
     }).catch(error => {
@@ -48,6 +70,7 @@ routes.post('/createServicio' , (req, res)=> {
 });
 
 routes.post('/ExisteCurp',  (req, res )=> {
+    logger.info("Validamos existencia de curp");
     db.getCurp(req).then(respuesta =>{
         if(respuesta == 0){
             res.json({"mensaje":respuesta});
@@ -62,6 +85,7 @@ routes.post('/ExisteCurp',  (req, res )=> {
 });
 
 routes.post('/createRegistro',  (req, res )=> {
+    logger.info("Insertamos un nuevo ingreso");
     // try {
     let datos = req.body;
     let sampleFile;
@@ -161,6 +185,7 @@ routes.post('/createRegistro',  (req, res )=> {
 });
 
 const save = ( req , dir , sampleFile , isPago=false,complementoName="" ) =>{
+
     let uploadPath;
     try {
         if (!fs.existsSync(dir)) {
@@ -179,6 +204,8 @@ const save = ( req , dir , sampleFile , isPago=false,complementoName="" ) =>{
                 console.log(err);
             }
         });
+    	logger.debug(`Guardamos archivo en ruta :${uploadPath} ...`);
+
         return uploadPath;
     } catch (error) {
         return error;
@@ -187,8 +214,8 @@ const save = ( req , dir , sampleFile , isPago=false,complementoName="" ) =>{
 
 }
 routes.get('/downloadFile',  (req, res )=> {
-    // var curp = req.body.curp;
-    // var tipo = parseInt(req.body.tipo);
+    logger.info("Descargamos un archivo");
+    
     var curp = req.query.curp;
     var tipo = parseInt(req.query.tipo);
     db.getPathFile(curp).then(respuesta =>{
@@ -225,6 +252,8 @@ routes.get('/downloadFile',  (req, res )=> {
 
 
 routes.post('/imagen64' ,  (req, res) =>{
+    logger.info("Generamos imagen base 64");
+
     var curp = req.body.curp;
     let file_path = "";
     db.getPathFile(curp).then(respuesta =>{
@@ -248,6 +277,8 @@ routes.post('/imagen64' ,  (req, res) =>{
 
 
 routes.post('/AlumnoJoin',  (req, res )=> {
+    logger.info("informacion del alumno");
+
     var curp = req.body.curp;
 
     db.getDataUsers(curp).then(respuesta =>{
@@ -260,6 +291,7 @@ routes.post('/AlumnoJoin',  (req, res )=> {
 
 
 routes.get('/Pagos',  (req, res )=> {
+    logger.info("Obtenemos la lista de pagos");
     db.getPagos().then(respuesta =>{
         res.json({ "status": 200 , "data":respuesta['Info']  });
 
@@ -269,6 +301,7 @@ routes.get('/Pagos',  (req, res )=> {
 });
 
 routes.get('/ServiciosLista',  (req, res )=> {
+    logger.info("Obtenemos la lista de personas y servicios para los pagos");
     db.getDataServicios().then(respuesta =>{
         res.json({ "status": 200 , "data":respuesta['Info'] , "Curp":respuesta['Curp'] });
 
@@ -278,6 +311,8 @@ routes.get('/ServiciosLista',  (req, res )=> {
 });
 
 routes.post('/CrearPago',  (req, res )=> {
+    logger.info("Generamos un nuevo pago");
+
     let datos = req.body;
     let sampleFile;
     const curp = datos.alumnosNameCurp;
@@ -324,6 +359,8 @@ routes.post('/CrearPago',  (req, res )=> {
 
 
 routes.post('/DataServicioPDF',  (req, res )=> {
+    logger.info("Servicios pdf");
+
     var idServicio = req.body.idServicio;
 
     db.getDataServicioPDF(idServicio).then(respuesta =>{
@@ -335,6 +372,8 @@ routes.post('/DataServicioPDF',  (req, res )=> {
 });
 
 routes.post('/DataPagosPDF',  (req, res )=> {
+    logger.info("Pagos pdf");
+
     var idPago = req.body.idPago;
 
     db.getDataPagosPDF(idPago).then(respuesta =>{
@@ -346,6 +385,8 @@ routes.post('/DataPagosPDF',  (req, res )=> {
 });
 
 routes.post('/getUpdateServicios',  (req, res )=> {
+    logger.info("Data para actualizar");
+
     var idServicio = req.body.idServicio;
 
     db.getDataServicioPDF(idServicio).then(respuesta =>{
@@ -358,6 +399,8 @@ routes.post('/getUpdateServicios',  (req, res )=> {
 
 
 routes.post('/UpdateServicios',  (req, res )=> {
+    logger.info("Actualizamos  servicios");
+
     db.UpdateServicio(req).then(respuesta =>{
         // res.json({ "status": 200 , "Servicios":respuesta});
         res.json(respuesta);
@@ -368,6 +411,8 @@ routes.post('/UpdateServicios',  (req, res )=> {
 
 
 routes.get('/downloadFilePagos',  (req, res )=> {
+    logger.info("Download file pagos");
+
     var idPago = req.query.idPago;
     var tipo = parseInt(req.query.tipo);
     db.getPathPagos(idPago).then(respuesta =>{
@@ -402,6 +447,8 @@ routes.get('/downloadFilePagos',  (req, res )=> {
 
 
 routes.post('/getUpdatePagos',  (req, res )=> {
+    logger.info("Obetenemos la data a actualizar");
+
     var idPago = req.body.idPago;
     db.getDataPagosPDF(idPago).then(respuesta =>{
         // res.json({ "status": 200 , "Servicios":respuesta});
@@ -414,6 +461,8 @@ routes.post('/getUpdatePagos',  (req, res )=> {
 
 
 routes.post('/UpdatePagos',  (req, res )=> {
+    logger.info("Actualizamos pagos");
+
     console.log(req);
     let datos = req.body;
     let sampleFile;
@@ -486,6 +535,8 @@ routes.post('/UpdatePagos',  (req, res )=> {
 });
 
 routes.post('/UpdateRegistro',  (req, res )=> {
+    logger.info("Actualizamos  resgitros de alumnos");
+
     let datos = req.body;
     let sampleFile;
     const curp = datos.curp;
