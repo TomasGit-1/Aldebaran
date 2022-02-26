@@ -234,6 +234,7 @@ class FormularioC extends React.Component {
     ShowForm(num , isActualizar) {
         console.log(num);
         console.log(isActualizar);
+        this.setState({activateSend :false})
         if(isActualizar){
             this.setState({
                 showForm: false,
@@ -948,6 +949,8 @@ class FormularioC extends React.Component {
         }
     }
     ShownextView(num) {
+        this.setState({activateSend :false})
+
         if (num === 2) {
             this.setState({
                 showF_uno: false,
