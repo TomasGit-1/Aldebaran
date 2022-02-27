@@ -3,11 +3,6 @@ const fileUpload = require('express-fileupload');
 const routes  = require('./routes/routes');
 const cors = require('cors');
 const app = express();
-
-var log4js = require("log4js");
-var logger = log4js.getLogger();
-logger.level = "all";
-
 app.set('port' , process.env.PORT || 5000)
 app.use(cors())
 app.use(express.json())
@@ -26,6 +21,9 @@ app.use((req, res, next) => {
 });
 app.use('/api' , routes)
 
+var log4js = require("log4js");
+var logger = log4js.getLogger();
+logger.level = "all";
 app.listen(app.get('port'), () => {
 	logger.debug(`Servidor escuchando en 0.0.0.0:${app.get('port')} ...`);
     // console.log('Servidor escuchando en http://localhost:' + );

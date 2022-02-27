@@ -658,14 +658,11 @@ routes.post('/UpdateRegistro', (req, res) => {
 
     db.UpdateRegistro(datosPersonales, contactoEmergecia, datosLaborales, filepath, formacionAcademica, informacionAdicional, sendFiles).then(respuesta => {
         res.json({ "status": 200, "data": respuesta });
-
     }).catch(error => {
         console.log(error);
         res.json({ "status": 400, "data": error.message });
-
     })
 
-    res.json("respuesta");
 
 });
 module.exports = routes;

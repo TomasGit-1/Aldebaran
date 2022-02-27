@@ -291,10 +291,70 @@ const UpdatePagos = async (query, data) => {
 };
 
 const UpdateRegistro = async (personas, emergencia, datoslaborales, filespath, formacionAcademica, InfoAdicional , sendFiles) => {
+    let query = "";
+    //Query para actualizar la tabla persona
+    let dataPersona = [];
+    dataPersona =[
+        personas[1],
+        personas[2],
+        personas[3],
+        personas[4],
+        personas[5],
+        personas[6],
+        personas[7],
+        personas[8],
+        personas[9],
+        personas[10],
+        personas[11],
+        personas[12],
+        personas[13],
+        personas[14],
+        personas[0],
+
+    ];
+
+    query = "UPDATE personas SET email = $1 , Nombre = $2 , AppPat = $3 , AppMat = $4 , Sexo = $5 , FechaNacimiento = $6 , TelPar = $7 , TelCel = $8 , Calle = $9 , Colonia = $10 , CodigoPostal = $11 , Municipio = $12 , numDomicilio = $13 , lugarNacimiento = $14 WHERE Curp = $15"
+        const resPersona = await pool.query(query , dataPersona);
+    
+    //Query para actualizar la tabla contacto de emergencia
+    query = "UPDATE contactoemergencia SET Nombre = $1 , AppPat = $2 , AppMat = $3 , telefono_contacto = $4 , email = $5 WHERE idcurpfk = $6";
+
+    let dataContactEmergencia = [
+         emergencia[0], emergencia[1], emergencia[2], emergencia[3], emergencia[4] , personas[0]
+    ];
+
+    const resContactoEmergencia= await pool.query(query , dataContactEmergencia);
+
+    //Query para actualizar la tabla formacionacademic1
+    query = "UPDATE formacionacademica SET n_max_estudios = $1 , s_academica_actual = $2 , sistemaeducativoprocedencia = $3 , sistemaeducativoprocedenciaOtro = $4 , insteducativa = $5 , anioegreso = $6 , uniAspiraIngresar = $7 , carrerarAspirasIngresar = $8 WHERE idcurpfk = $9";
+
+    let dataFormacionAcadmeica = [
+       formacionAcademica[0], formacionAcademica[1], formacionAcademica[2], formacionAcademica[3], formacionAcademica[4], formacionAcademica[5], formacionAcademica[6], formacionAcademica[7] ,  personas[0]
+
+    ];
+    const resFormacionAcademica = await pool.query(query , dataFormacionAcadmeica);
+
+    //Query para datos laborales tabla
+    query = "UPDATE datoslaborales SET nombre_institucion = $1, direccion = $2, puesto = $3, telefono = $4  WHERE idcurpfk = $5" 
+    let dataLaboral = [
+        datoslaborales[0], datoslaborales[1], datoslaborales[2], datoslaborales[3] , personas[0]
+    ];
+    const resLaboral = await pool.query(query , dataLaboral);
+
+    //Query para actualizar la tabla de infomacion adicional
+    query = "UPDATE infoadicional SET marca_modelo_Vehiculo = $1 , placas_Vehiculo = $2 , comoseenterodelcuros = $3 , comoseenterodelcurosOtro = $4 , recomendacion_Nombre = $5 , recomendacion_Email= $6 , recomendacion_telCel = $7 WHERE idcurpfk = $8";
+
+    let dataInfoAdicional = [
+       InfoAdicional[0], InfoAdicional[1], InfoAdicional[2], InfoAdicional[3], InfoAdicional[4], InfoAdicional[5], InfoAdicional[6] ,   personas[0]
+    ];
+
+    if (sendFiles){
+        const resLaboral = await pool.query(filespath[0] , filespath[1]);
+    }
+
 
     return { "mensaje": 'Datos actualizados' };
-
-}
+};
 
 module.exports = {
     Home,
