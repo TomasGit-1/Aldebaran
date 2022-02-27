@@ -613,7 +613,7 @@ routes.post('/UpdateRegistro', (req, res) => {
         let getDataUrl = [];
         let queryFilePath = "";
         var buildQuery = new Map();
-        queryFilePath = "UPDATE FilesPersona SET  "
+        queryFilePath = "UPDATE FilesPersona SET "
         sendFiles = true;
         //Alguno de los archivos se va a actualizar
         //Comprobamos si la curp pdf se actualizo
@@ -629,7 +629,7 @@ routes.post('/UpdateRegistro', (req, res) => {
         sampleFile = req.files.fileImg;
         if (sampleFile !== undefined) {
             dirimg = save(req, dirimg, sampleFile);
-            buildQuery.set(", FotografiaImg", dirimg);
+            buildQuery.set(" FotografiaImg", dirimg);
         }
 
         //En esta ruta se guardan las fotografias 
@@ -637,21 +637,24 @@ routes.post('/UpdateRegistro', (req, res) => {
         sampleFile = req.files.fileEvidencia;
         if (sampleFile !== undefined) {
             dirpdfEvidencia = save(req, dirpdfEvidencia, sampleFile);
-            buildQuery.set(", EvidenciaipnPdf", dirpdfEvidencia);
+            buildQuery.set(" EvidenciaipnPdf", dirpdfEvidencia);
         }
 
         let cont = 1;
         for (let clave of buildQuery.keys()) {
             var valor = buildQuery.get(clave);
-            queryFilePath += clave + " =  $" + cont;
+            queryFilePath += clave + " =  $" + cont + ",";
             getDataUrl.push(valor);
             cont++;
         }
-        
+        getDataUrl.push(curp);
         queryFilePath += "  WHERE idcurpfk " + " =  $" + cont;
 
+        var isfind = queryFilePath.lastIndexOf(",");
+        var len = queryFilePath.length;
+        var newQuery = queryFilePath.slice(0 , isfind) + " " + queryFilePath.slice(isfind+1 ,len);
 
-        filepath.push(queryFilePath)
+        filepath.push(newQuery)
         filepath.push(getDataUrl);
 
     }
