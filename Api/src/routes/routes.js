@@ -10,7 +10,9 @@ const { error } = require('console');
 const objUtil = require('../utilities/util.js');
 const imageToBase64 = require('image-to-base64');
 
-var pathLog = __dirname + rutas[0]["pathLog"];
+var pathFull = __dirname;
+var isfind = pathFull.lastIndexOf("src");
+var pathLog = pathFull.slice(0 , isfind) + rutas[0]["pathLog"];
 
 var log4js = require("log4js");
 log4js.configure({
