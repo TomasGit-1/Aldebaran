@@ -28,5 +28,5 @@ logger.level = "all";
 
 app.listen(app.get('port'), () => {
 	logger.debug(`Servidor escuchando en 0.0.0.0:${app.get('port')} ...`);
-    // console.log('Servidor escuchando en http://localhost:' + );
+    console.log(`Servidor escuchando en http://localhost: ${app.get('port')} ` );
 });
