@@ -13,10 +13,10 @@
 # Desacarga el proyecto 
 
     Para desarrollo debemos de clonar el proyecto con git o descargar el Zip  de la rama desarrollo
-    git clone -b desarrollo https://github.com/TomasGit-1/Aldebaran
+    git clone -b desarrollo https://github.com/TomasGit-1/Aldebaran.git
 
     Para Produccion 
-    git clone -b IPN-deploy https://github.com/TomasGit-1/Aldebaran
+    git clone -b IPN-deploy https://github.com/TomasGit-1/Aldebaran.git
 
 # Para utilizar el sistema en desarrollo :
     Tenemos que movernos a las carpetas correspondientes donde esta el archivo package.json
