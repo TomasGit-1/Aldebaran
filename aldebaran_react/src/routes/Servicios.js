@@ -345,7 +345,7 @@ class Servicios extends React.Component {
     }
     apiServicios = async () => {
         try {
-
+            console.log("Aqui estamos");
             let id = []
             let registro = []
             let evento = []
@@ -358,6 +358,7 @@ class Servicios extends React.Component {
             const response = await fetch(config.general[0].url + config.general[0].puerto_api + "/api/Servicios")
             var responseJson = await response.json();
             var temp = responseJson;
+            console.log(responseJson);
             if (temp['status'] === 200) {
                 responseJson = responseJson['data'];
                 for (var i = 0; i < responseJson.id.length; i++) {
@@ -687,7 +688,9 @@ class Servicios extends React.Component {
                                 id.length === 0 ?
                                     <Container className="mb-3"  >
                                         <div className="alert alert-danger mt-2" role="alert">
-                                            No hay servicios en la base de datos
+                                            {/* No hay servicios en la base de datos */}
+                                            No hay servicios de pagos
+
                                         </div>
                                     </Container>
                                     : null

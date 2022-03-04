@@ -57,5 +57,11 @@
     docker rm -- idContainer--
 
 
-#Lanzamiento PM2 
+# Lanzamiento PM2 
 https://desarrolloweb.com/articulos/ejecutar-aplicacion-nodejs-pm2.html
+
+# Documentacion
+https://www.npmjs.com/package/pm2
+
+# 
+pm2 start ecosystem.config.js

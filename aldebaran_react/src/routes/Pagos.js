@@ -994,7 +994,15 @@ class Pagos extends React.Component {
                                     <input className='form-control' type="text" placeholder='Buscar' id="myInput" onChange={this.filterInput}></input>
                                 </Col>
                             </Row>
-
+                            {
+                                dataPagos.length === 0 ?
+                                <Container className="mb-3"  >
+                                <div className="alert alert-danger mt-2" role="alert">
+                                    No hay registro de pagos
+                                </div>
+                                </Container>
+                                : null
+                            }
 
                             <div className="table-responsive " style={{ height: "500px" }}>
                                 <Table className="table-hover" id="myTable" striped bordered hover>

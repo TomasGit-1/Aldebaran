@@ -39,7 +39,7 @@ routes.get('/Servicios', (req, res) => {
     db.getServicios().then(respuesta => {
         res.json({ "status": 200, "data": respuesta });
     }).catch(error => {
-        logger.error(`Servicios error :${error, message}`);
+        logger.error(`Servicios error :${error.message}`);
         res.json({ "status": 400, "data": error.message });
     })
 });
@@ -49,7 +49,7 @@ routes.get('/Alumnos', (req, res) => {
     db.getAlumnos().then(respuesta => {
         res.json({ "status": 200, "data": respuesta['Info'] });
     }).catch(error => {
-        logger.error(`Alumnos error :${error, message}`);
+        logger.error(`Alumnos error :${error.message}`);
         res.json({ "status": 400, "data": error.message });
 
     })
@@ -60,9 +60,8 @@ routes.post('/updateHabilitado', (req, res) => {
     db.updateHabilitado(req).then(respuesta => {
         res.json(respuesta);
     }).catch(error => {
-        logger.error(`updateHabilitado :${error, message}`);
-        // res.json({ "status": 400 , "data":error.message});
-        console.log(error);
+        logger.error(`updateHabilitado :${error.message}`);
+        res.json({ "status": 400, "data": error.message });
     })
 });
 
@@ -71,7 +70,8 @@ routes.post('/createServicio', (req, res) => {
     db.createServicio(req).then(respuesta => {
         res.json(respuesta);
     }).catch(error => {
-        console.log(error);
+        logger.error(`createServicio :${error}`);
+        res.json({ "status": 400, "data": error.message });
     })
 });
 
@@ -86,6 +86,7 @@ routes.post('/ExisteCurp', (req, res) => {
         // res.json({ "status": 200 , "Servicios":respuesta});
         // res.json(respuesta);
     }).catch(error => {
+        logger.error(`ExisteCurp :${error.message}`);
         console.log(error);
     })
 });
@@ -186,7 +187,8 @@ routes.post('/createRegistro', (req, res) => {
         res.json({ "status": 200, "data": respuesta });
 
     }).catch(error => {
-        console.log(error);
+        logger.error(`createRegistro :${error.message}`);
+
         res.json({ "status": 400, "data": error.message });
 
     })
@@ -222,7 +224,7 @@ const save = (req, dir, sampleFile, isPago = false, complementoName = "") => {
 
         return uploadPath;
     } catch (error) {
-        console.log(error);
+        logger.error(`save :${error}`);
         return error;
 
     }
@@ -260,7 +262,7 @@ routes.get('/downloadFile', (req, res) => {
         }
         // const file = '/home/tomas/Documentos/Aldebaran/Aldebaran/Api/src/routes/resource/image/curpalumno/2xz1k0at7124279eeecnw9índice.jpeg';
     }).catch(error => {
-        console.log(error);
+        logger.error(`downloadFile :${error}`);
     })
 });
 
@@ -286,7 +288,7 @@ routes.post('/imagen64', (req, res) => {
                 //     });
             })
     }).catch(error => {
-        console.log(error);
+        logger.error(`downloadFile :${error}`);
     })
 });
 
@@ -300,7 +302,7 @@ routes.post('/AlumnoJoin', (req, res) => {
         // res.json({ "status": 200 , "Servicios":respuesta});
         res.json(respuesta['data']);
     }).catch(error => {
-        console.log(error);
+        logger.error(`downloadFile :${error}`);
     })
 });
 
@@ -309,8 +311,8 @@ routes.get('/Pagos', (req, res) => {
     logger.info("Obtenemos la lista de pagos");
     db.getPagos().then(respuesta => {
         res.json({ "status": 200, "data": respuesta['Info'] });
-
     }).catch(error => {
+        logger.error(`Pagos :${error.message}`);
         res.json({ "status": 400, "data": error.message });
     })
 });
@@ -321,6 +323,7 @@ routes.get('/ServiciosLista', (req, res) => {
         res.json({ "status": 200, "data": respuesta['Info'], "Curp": respuesta['Curp'] });
 
     }).catch(error => {
+        logger.error(`ServiciosLista :${error.message}`);
         res.json({ "status": 400, "data": error.message });
     })
 });
@@ -367,8 +370,8 @@ routes.post('/CrearPago', (req, res) => {
     console.log("Se guardo el archivo pdf ");
     db.setCrearPago(data).then(respuesta => {
         res.json({ "status": 200, "data": respuesta });
-
     }).catch(error => {
+        logger.error(`CrearPago :${error.message}`);
         res.json({ "status": 400, "data": error.message });
     })
 });
@@ -384,7 +387,7 @@ routes.post('/DataServicioPDF', (req, res) => {
         // res.json({ "status": 200 , "Servicios":respuesta});
         res.json(respuesta['data']);
     }).catch(error => {
-        console.log(error);
+        logger.error(`DataServicioPDF :${error.message}`);
     })
 });
 
@@ -397,7 +400,7 @@ routes.post('/DataPagosPDF', (req, res) => {
         // res.json({ "status": 200 , "Servicios":respuesta});
         res.json(respuesta);
     }).catch(error => {
-        console.log(error);
+        logger.error(`DataPagosPDF :${error.message}`);
     })
 });
 
@@ -410,7 +413,7 @@ routes.post('/getUpdateServicios', (req, res) => {
         // res.json({ "status": 200 , "Servicios":respuesta});
         res.json(respuesta['data']);
     }).catch(error => {
-        console.log(error);
+        logger.error(`getUpdateServicios :${error.message}`);
     })
 });
 
@@ -422,6 +425,7 @@ routes.post('/UpdateServicios', (req, res) => {
         // res.json({ "status": 200 , "Servicios":respuesta});
         res.json(respuesta);
     }).catch(error => {
+        logger.error(`UpdateServicios :${error.message}`);
         res.json(error);
     })
 });
@@ -457,7 +461,7 @@ routes.get('/downloadFilePagos', (req, res) => {
         }
         // const file = '/home/tomas/Documentos/Aldebaran/Aldebaran/Api/src/routes/resource/image/curpalumno/2xz1k0at7124279eeecnw9índice.jpeg';
     }).catch(error => {
-        console.log(error);
+        logger.error(`downloadFilePagos :${error.message}`);
     })
 });
 
@@ -471,7 +475,7 @@ routes.post('/getUpdatePagos', (req, res) => {
         // res.json({ "status": 200 , "Servicios":respuesta});
         res.json(respuesta);
     }).catch(error => {
-        console.log(error);
+        logger.error(`getUpdatePagos :${error.message}`);
     })
 });
 
@@ -546,6 +550,7 @@ routes.post('/UpdatePagos', (req, res) => {
     db.UpdatePagos(query, data).then(respuesta => {
         res.json(respuesta);
     }).catch(error => {
+        logger.error(`UpdatePagos :${error.message}`);
         res.json(error.message);
     })
 
@@ -677,7 +682,7 @@ routes.post('/UpdateRegistro', (req, res) => {
     db.UpdateRegistro(datosPersonales, contactoEmergecia, datosLaborales, filepath, formacionAcademica, informacionAdicional, sendFiles).then(respuesta => {
         res.json({ "status": 200, "data": respuesta });
     }).catch(error => {
-        console.log(error);
+        logger.error(`UpdateRegistro :${error.message}`);
         res.json({ "status": 400, "data": error.message });
     })
 
