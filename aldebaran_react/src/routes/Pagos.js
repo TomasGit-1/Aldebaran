@@ -115,7 +115,10 @@ class Pagos extends React.Component {
         var res = await fetch(url , params);
         if (res.ok) {
             const blob = await res.blob();
-            download(blob);
+            var name = (( tipo === 0 ) ? "Comprobante.pdf" : "CedulaFiscal.pdf" ) 
+            download(blob ,name , "application/pdf");
+             
+            // download(blob);
         } else {
             Swal.fire({
                 icon: 'error',
