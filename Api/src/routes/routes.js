@@ -15,7 +15,7 @@ const imageToBase64 = require('image-to-base64');
 // var pathLog = pathFull.slice(0 , isfind) + rutas[0]["pathLog"];
 var pathLog = __dirname + rutas[0]["pathLog"];
 
-console.log(pathLog);
+
 var log4js = require("log4js");
 log4js.configure({
     appenders: {
@@ -87,7 +87,6 @@ routes.post('/ExisteCurp', (req, res) => {
         // res.json(respuesta);
     }).catch(error => {
         logger.error(`ExisteCurp :${error.message}`);
-        console.log(error);
     })
 });
 
@@ -100,21 +99,16 @@ routes.post('/createRegistro', (req, res) => {
     let resp;
     //En esta ruta se guardan los archivos pdf 
     var dirpdf = __dirname + rutas[0]['upload'] + curp + '/';
-    console.log(dirpdf);
     sampleFile = req.files.fileCurp;
     dirpdf = save(req, dirpdf, sampleFile);
-    console.log("Se guardo el archivo pdf ");
 
     //En esta ruta se guardan las fotografias 
     var dirimg = __dirname + rutas[0]['images'] + curp + '/';
-    console.log(dirimg);
     sampleFile = req.files.fileImg;
     dirimg = save(req, dirimg, sampleFile);
-    console.log("Se guardo el archivo img ");
 
     //En esta ruta se guardan las fotografias 
     var dirpdfEvidencia = __dirname + rutas[0]['upload'] + curp + '/';
-    console.log(dirpdfEvidencia);
     sampleFile = req.files.fileEvidencia;
     if (sampleFile == undefined) {
         dirpdfEvidencia = ""
@@ -202,24 +196,23 @@ const save = (req, dir, sampleFile, isPago = false, complementoName = "") => {
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, 0744);
         }
-        console.log(dir);
         if (!req.files || Object.keys(req.files).length === 0) {
-            console.log('No file were uploaded');
+            // console.log('No file were uploaded');
+            logger.error(`No file were uploaded`);
+
         }
         if (isPago) {
             uploadPath = dir + "_" + complementoName + "_" + objUtil.RandomName2() + sampleFile.name;
         } else {
             uploadPath = dir + "_" + objUtil.RandomName() + sampleFile.name;
         }
-        console.log(sampleFile);
 
         
         sampleFile.mv(uploadPath, function (err) {
             if (err) {
-                console.log(err);
+                logger.error(`Error  :${err}`);
             }
         });
-        console.log("Guardamos el archivo");
         logger.debug(`Guardamos archivo en ruta :${uploadPath} ...`);
 
         return uploadPath;
@@ -337,7 +330,6 @@ routes.post('/CrearPago', (req, res) => {
 
     //Aqui se empieza a guardar el comprobanye del pago del alumno
     var dirComprobante = __dirname + rutas[0]['upload'] + curp + '/';
-    console.log(dirComprobante);
     var name = "_Comprobante_" + datos.ServicioEducativo + "_Modulo_" + datos.NumModulo;
     sampleFile = req.files.comprobantePago;
     dirComprobante = save(req, dirComprobante, sampleFile, true, name);
@@ -345,7 +337,6 @@ routes.post('/CrearPago', (req, res) => {
 
     //En esta ruta se guardan las fotografias 
     var dirCedula = __dirname + rutas[0]['upload'] + curp + '/';
-    console.log(dirCedula);
     sampleFile = req.files.cedulaFiscal;
     name = "_CedulaFiscal_" + datos.ServicioEducativo + "_Modulo_" + datos.NumModulo;
     if (sampleFile == undefined) {
@@ -367,7 +358,6 @@ routes.post('/CrearPago', (req, res) => {
         datos.facturaElectronica,
         datos.descripcion
     ]
-    console.log("Se guardo el archivo pdf ");
     db.setCrearPago(data).then(respuesta => {
         res.json({ "status": 200, "data": respuesta });
     }).catch(error => {
@@ -484,7 +474,6 @@ routes.post('/getUpdatePagos', (req, res) => {
 routes.post('/UpdatePagos', (req, res) => {
     logger.info("Actualizamos pagos");
 
-    console.log(req);
     let datos = req.body;
     let sampleFile;
     const curp = datos.alumnosNameCurp;
