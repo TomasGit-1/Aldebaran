@@ -1615,15 +1615,15 @@ class FormularioC extends React.Component {
 
                                                         <i className="bi bi-arrow-left-circle"></i> &nbsp; Anterior
 
-
                                                     </Button>
                                                 </Col>
                                                 <Col sm >
                                                     {activateSend ?
-                                                        <Button className="col-12" variant="success" onClick={() => this.form3Validacion(false)}>Enviar</Button>
+                                                        <Button className="col-12" variant="secondary"
+                                                        onClick={() => this.form3Validacion(false)}>Enviar</Button>
 
                                                         :
-                                                        <Button className="col-12" variant="success" disabled>Enviar</Button>
+                                                        <Button className="col-12" variant="secondary" disabled>Enviar</Button>
                                                     }
                                                 </Col>
                                             </Row>
@@ -2104,10 +2104,9 @@ class FormularioC extends React.Component {
                                                 </Col>
                                                 <Col sm >
                                                     {activateSend ?
-                                                        <Button className="col-12" variant="success" onClick={() => this.form3Validacion(true)}>Enviar</Button>
-
+                                                        <Button className="col-12" variant="secondary" onClick={() => this.form3Validacion(true)}>Enviar</Button>
                                                         :
-                                                        <Button className="col-12" variant="success" disabled>Enviar</Button>
+                                                        <Button className="col-12" variant="secondary" disabled>Enviar</Button>
                                                     }
                                                 </Col>
                                             </Row>
