@@ -219,7 +219,7 @@ class Pagos extends React.Component {
         let arrayAlumnos = this.state.curpData;
         let arrayTemp2 =[];
         for (let i = 0; i < arrayAlumnos.length; i++){
-            var temp = arrayAlumnos[i];
+            let temp = arrayAlumnos[i];
             if(temp[0] !== tempArrayAlum[0]){
                 arrayTemp2.push(temp);
             }
@@ -434,7 +434,7 @@ class Pagos extends React.Component {
                 })
             }
         }else{
-            var campos = new Map();
+            let campos = new Map();
             campos.set('Servicio educativo', this.state.servicioEducativoOpc);
             campos.set('Numero de modulo', this.state.numeroModuloOpc);
             campos.set('Alumnos', this.state.alumnoSelect);
@@ -448,7 +448,7 @@ class Pagos extends React.Component {
             campos.set('Descripcion', this.state.descripcionInput);
             let msg = "";
             for (let clave of campos.keys()) {
-                var valor = campos.get(clave);
+                let valor = campos.get(clave);
                 if (valor === null || valor === "" || valor === false ) {
                     msg = `El campo :${clave} esta vacio`;
                     break;
@@ -695,7 +695,7 @@ class Pagos extends React.Component {
                                     </Col>
                                     <Col sm>
                                     <Form.Group className="mb-3">
-                                            <Form.Label className="h5"> ¿Requiere factura electrónica? </Form.Label>
+                                            <Form.Label className="h6"> ¿Requiere factura electrónica? </Form.Label>
                                             <Form.Check 
                                                 type="switch"
                                                 id="custom-switch"
@@ -716,20 +716,20 @@ class Pagos extends React.Component {
                                 <Row className="mt-3">
                                     <Col sm>
                                     <Form.Group className="mb-3">
-                                            <Form.Label className="h5">Referencia  <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                            <Form.Label className="h6">Referencia  <small style={{ color: "#600101" }}>*</small> </Form.Label>
                                             <Form.Control type="text" placeholder="Referencia"   value={this.state.referencia}  onChange={(evt) => this.formularioSetData(evt, "referencia")}  />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
                                         <Form.Group className="mb-3" >
-                                            <Form.Label className="h5">Fecha / Hora en el Bauche  <small style={{ color: "#600101" }}>*</small></Form.Label>
+                                            <Form.Label className="h6">Fecha / Hora en el Bauche  <small style={{ color: "#600101" }}>*</small></Form.Label>
                                             <Form.Control type="datetime-local" value={this.state.fechaHoraBaucher}  onChange={(evt) => this.formularioSetData(evt, "FechaHora")}  />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
 
                                         <Form.Group >
-                                            <Form.Label className="h5">Cantidad <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                            <Form.Label className="h6">Cantidad <small style={{ color: "#600101" }}>*</small> </Form.Label>
                                         </Form.Group>
                                         <InputGroup className="mb-3">
                                             <InputGroup.Text id="basic-addon1">$</InputGroup.Text>
@@ -741,13 +741,13 @@ class Pagos extends React.Component {
                                 <Row className="mt-3">
                                     <Col sm>
                                         <Form.Group className="mb-3" >
-                                            <Form.Label className="h5">Fecha de Inicio <small style={{ color: "#600101" }}>*</small>  </Form.Label>
+                                            <Form.Label className="h6">Fecha de Inicio <small style={{ color: "#600101" }}>*</small>  </Form.Label>
                                             <Form.Control type="date" value={this.state.dateStart}  onChange={(evt) => this.formularioSetData(evt, "FechaInicio")}   />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
                                         <Form.Group className="mb-3" >
-                                            <Form.Label className="h5">Fecha de Termino  <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                            <Form.Label className="h6">Fecha de Termino  <small style={{ color: "#600101" }}>*</small> </Form.Label>
                                             <Form.Control type="date" value={this.state.dateFinish} onChange={(evt) => this.formularioSetData(evt, "FechaFin")}  />
                                         </Form.Group>
                                     </Col>

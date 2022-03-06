@@ -173,14 +173,19 @@ class FormularioC extends React.Component {
         })
     }
     getDownloadFile = async (curp, tipo) => {
+        console.log(tipo);
         let url = new URL(config.general[0].url + config.general[0].puerto_api + '/api/downloadFile');
         const params = {curp: curp , tipo:tipo};
         Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
         var res = await fetch(url , params);
         if (res.ok) {
             const blob = await res.blob();
-
-            download(blob);
+            if(tipo === 1){
+                download(blob , "curp.pdf" , "application/pdf");
+            }else{
+                var name = ( (tipo === 0) ? "fotografia.png" : "evidenciaIPN.png");
+                download(blob , name , "image/png");
+            }
 
         } else {
             Swal.fire({
@@ -281,9 +286,6 @@ class FormularioC extends React.Component {
         // var dateNacimiento = new Moment(respuesta[0][0].fechanacimiento).format('MM-DD-YYYY');
         // var dateNacimiento = new Moment(respuesta[0][0].fechanacimiento).format('MM-DD-YYYY');
         let dateNacimiento;
-        let nacimiento;
-        let  hoy;
-        let anios;
 
         dateNacimiento = new Moment(respuesta[0][0].fechanacimiento).format('YYYY-MM-DD');
 
@@ -661,7 +663,7 @@ class FormularioC extends React.Component {
                     })
                 })
                 if (respuesta === 0) {
-                    var campos = new Map();
+                    let campos = new Map();
                     campos.set('Fotografia', this.state.file_fotografia);
                     campos.set('email', this.state.email_Alumno);
                     campos.set('Curp', this.state.curp_Alumno);
@@ -680,7 +682,7 @@ class FormularioC extends React.Component {
                     campos.set('Municipio', this.state.municipio_Alumno);
                     this.validarForm_Uno(campos, pos);
                 } else {
-                    var msg = 'la curp ya esta registrada';
+                    let msg = 'la curp ya esta registrada';
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops..',
@@ -1176,7 +1178,7 @@ class FormularioC extends React.Component {
                                                 <Col sm >
                                                     <Form.Group controlId="formFile1" className="mb-3">
                                                         <Form.Label className="h6">Fotografía <small style={{ color: "#600101" }}>*</small> </Form.Label>
-                                                        <Form.Control type="file" accept="image/*" onChange={this.uploadPhoto} />
+                                                        <Form.Control type="file" accept=".png" onChange={this.uploadPhoto} />
                                                     </Form.Group>
                                                 </Col>
                                                 <Col sm >
@@ -1479,7 +1481,7 @@ class FormularioC extends React.Component {
                                                 <Col sm className="mb-3">
                                                     <Form.Group className="mb-3" controlId="formFile3">
                                                         <Form.Label className="h6">En caso de ser comunidad politecnica adjuntar evidencia</Form.Label>
-                                                        <Form.Control type="file" accept="image/*,.pdf" onChange={this.uploadFileEvidencia} />
+                                                        <Form.Control type="file" accept=".png" onChange={this.uploadFileEvidencia} />
                                                     </Form.Group>
                                                 </Col>
                                             </Row>
@@ -1660,7 +1662,7 @@ class FormularioC extends React.Component {
                                                 <Col sm >
                                                     <Form.Group controlId="formFile1" className="mb-3">
                                                         <Form.Label className="h6">Fotografía <small style={{ color: "#600101" }}>*</small> </Form.Label>
-                                                        <Form.Control type="file" accept="image/*" onChange={this.uploadPhoto} />
+                                                        <Form.Control type="file" accept=".png" onChange={this.uploadPhoto} />
                                                     </Form.Group>
                                                 </Col>
                                                 <Col sm >
@@ -1963,7 +1965,7 @@ class FormularioC extends React.Component {
                                                 <Col sm className="mb-3">
                                                     <Form.Group className="mb-3" controlId="formFile3">
                                                         <Form.Label className="h6">En caso de ser comunidad politecnica adjuntar evidencia</Form.Label>
-                                                        <Form.Control type="file" accept="image/*,.pdf" onChange={this.uploadFileEvidencia} />
+                                                        <Form.Control type="file" accept=".png" onChange={this.uploadFileEvidencia} />
                                                     </Form.Group>
                                                 </Col>
                                             </Row>
