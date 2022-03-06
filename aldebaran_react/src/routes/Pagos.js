@@ -413,7 +413,7 @@ class Pagos extends React.Component {
             // campos.set('Comprobante de pago', this.state.comprobantePago);
             // campos.set('Factura electronica', this.state.isFacturaSelec);
             campos.set('Referencia', this.state.referencia);
-            campos.set('Fecha / Hora Baucher', this.state.fechaHoraBaucher);
+            campos.set('Fecha / Hora Vaucher', this.state.fechaHoraBaucher);
             campos.set('Cantidad', this.state.cantidadPago);
             campos.set('Fecha Incio', this.state.dateStart);
             campos.set('Fecha de Termino', this.state.dateFinish);
@@ -444,7 +444,7 @@ class Pagos extends React.Component {
             campos.set('Comprobante de pago', this.state.comprobantePago);
             // campos.set('Factura electronica', this.state.isFacturaSelec);
             campos.set('Referencia', this.state.referencia);
-            campos.set('Fecha / Hora Baucher', this.state.fechaHoraBaucher);
+            campos.set('Fecha / Hora Vaucher', this.state.fechaHoraBaucher);
             campos.set('Cantidad', this.state.cantidadPago);
             campos.set('Fecha Incio', this.state.dateStart);
             campos.set('Fecha de Termino', this.state.dateFinish);
@@ -725,7 +725,7 @@ class Pagos extends React.Component {
                                     </Col>
                                     <Col sm>
                                         <Form.Group className="mb-3" >
-                                            <Form.Label className="h6">Fecha / Hora en el Bauche  <small style={{ color: "#600101" }}>*</small></Form.Label>
+                                            <Form.Label className="h6">Fecha / Hora en el Vaucher  <small style={{ color: "#600101" }}>*</small></Form.Label>
                                             <Form.Control type="datetime-local" value={this.state.fechaHoraBaucher}  onChange={(evt) => this.formularioSetData(evt, "FechaHora")}  />
                                         </Form.Group>
                                     </Col>
@@ -908,7 +908,7 @@ class Pagos extends React.Component {
                                   </Col>
                                   <Col sm>
                                       <Form.Group className="mb-3" >
-                                          <Form.Label className="h5">Fecha / Hora en el Bauche  <small style={{ color: "#600101" }}>*</small></Form.Label>
+                                          <Form.Label className="h5">Fecha / Hora en el Vaucher  <small style={{ color: "#600101" }}>*</small></Form.Label>
                                           <Form.Control type="datetime-local" value={this.state.fechaHoraBaucher}  onChange={(evt) => this.formularioSetData(evt, "FechaHora")}  />
                                       </Form.Group>
                                   </Col>
