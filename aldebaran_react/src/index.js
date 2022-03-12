@@ -9,6 +9,8 @@ import App from "./App";
 import Pagos from "./routes/Pagos";
 import Ingresos from "./routes/FormularioC";
 import Servicios from "./routes/Servicios";
+import IniciosCursos from "./routes/InicioCursos";
+
 import PDFalumno from "./routes/PDFalumno";
 import PDFservicio from "./routes/PDFservicio";
 import PDFpago from "./routes/PDFpago";
@@ -21,6 +23,7 @@ render(
       <Route path="Pagos" element={<Pagos />} />
       <Route path="Ingresos" element={<Ingresos />} />
       <Route path="Servicios" element={<Servicios />} />
+      <Route path="IniciosCursos" element={<IniciosCursos />} />
       <Route path="PDFalumno/:value" element={<PDFalumno />} />
       <Route path="PDFservicio/:value" element={<PDFservicio />} />
       <Route path="PDFpago/:value" element={<PDFpago />} />

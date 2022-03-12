@@ -677,4 +677,36 @@ routes.post('/UpdateRegistro', (req, res) => {
 
 
 });
+
+
+routes.post('/CrearInicioCursos', (req, res) => {
+    logger.info("Generamos uun nuevo inicio de clases");
+    db.createInicioCurso(req).then(respuesta => {
+        res.json({ "status": 200, "data": respuesta });
+    }).catch(error => {
+        logger.error(`CrearInicioCursos :${error.message}`);
+        res.json({ "status": 400, "data": error.message });
+    })
+});
+
+
+routes.get('/getInicioCursos', (req, res) => {
+    logger.info("Generamos uun nuevo inicio de clases");
+    db.getInicioCurso().then(respuesta => {
+        res.json({ "status": 200, "data": respuesta });
+    }).catch(error => {
+        logger.error(`CrearInicioCursos :${error.message}`);
+        res.json({ "status": 400, "data": error.message });
+    })
+});
+
+routes.post('/updateHabilitadoFechas', (req, res) => {
+    logger.info("Cambiamos el estado de un fechas");
+    db.updateHabilitadoFechasBD(req).then(respuesta => {
+        res.json(respuesta);
+    }).catch(error => {
+        logger.error(`updateHabilitadoFechas :${error.message}`);
+        res.json({ "status": 400, "data": error.message });
+    })
+});
 module.exports = routes;

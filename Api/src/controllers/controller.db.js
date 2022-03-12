@@ -202,7 +202,7 @@ const getDataServicios = async () => {
         bdServicios.push(data[index]);
     }
 
-    const responsePersona = await pool.query('SELECT * FROM personas  ORDER BY idPersona ASC');
+    const responsePersona = await pool.query('SELECT * FROM personas  ORDER BY idPersona DESC');
     data = responsePersona.rows;
     var bdAlumnos = []
     for (let index = 0; index < data.length; index++) {
@@ -356,6 +356,38 @@ const UpdateRegistro = async (personas, emergencia, datoslaborales, filespath, f
     return { "mensaje": 'Datos actualizados' };
 };
 
+
+const createInicioCurso = async (req) => {
+    let datos = req.body;
+    let servicioID = datos.idServicioEducativo;
+    let servicioName = datos.ServicioEducativo;
+    let dateInicion = datos.dateInicio;
+    const response = await pool.query('INSERT INTO iniciocursos  (idServiciosEduFK , fecha_inicio , habilitado_curso) VALUES ($1, $2 , $3)', [servicioID, dateInicion,1]);
+    console.log(response);
+    return { "mensaje": 'Servicio agregado' };
+};
+
+
+const getInicioCurso = async () => {
+    const response = await pool.query('SELECT * FROM iniciocursos FULL JOIN servicioeducativo ON  iniciocursos.idServiciosEduFK = servicioeducativo.idServiciosEdu ORDER BY idInicioCurso DESC;');
+    // s  FULL JOIN servicioeducativo ON  iniciocursos.idServiciosEduFK = servicioeducativo.idServiciosEdu ORDER BY idInicioCurso DESC 
+    var data = response.rows;
+    var bdFechaCursos = []
+    for (let index = 0; index < data.length; index++) {
+        bdFechaCursos.push(data[index]);
+    }
+    return { "Info": bdFechaCursos };
+};
+const updateHabilitadoFechasBD = async (req) => {
+    let datos = req.body;
+    let id = datos.data[0];
+    let newhabilitado = ( (datos.data[4] === "Habilitado") ? false : true);
+    const response = await pool.query('UPDATE iniciocursos SET habilitado_curso = $1   WHERE idInicioCurso = $2', [
+        newhabilitado,
+        id,
+    ]);
+    return { "mensaje": 'User Updated Successfully' };
+};
 module.exports = {
     Home,
     getServicios,
@@ -374,5 +406,8 @@ module.exports = {
     UpdateServicio,
     getPathPagos,
     UpdatePagos,
-    UpdateRegistro
+    UpdateRegistro,
+    createInicioCurso,
+    getInicioCurso,
+    updateHabilitadoFechasBD
 };
