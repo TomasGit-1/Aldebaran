@@ -36,6 +36,7 @@ class InicioCursos extends React.Component {
       servicioEducativoID: "",
       servicio: [],
       dateArray: [],
+      idInicioCurso : ""
     };
     this.filterInput = this.filterInput.bind(this);
     this.ShowForm = this.ShowForm.bind(this);
@@ -44,6 +45,7 @@ class InicioCursos extends React.Component {
     this.apiGetDates = this.apiGetDates.bind(this);
     this.formularioSetData = this.formularioSetData.bind(this);
     this.editar = this.editar.bind(this);
+    this.getDataUpdate = this.getDataUpdate.bind(this);
 
   }
   componentDidMount() {
@@ -51,7 +53,6 @@ class InicioCursos extends React.Component {
     this.apiGetDates();
   }
   apiGetDates = async () => {
-    let datDates = [];
     const response = await fetch(
       config.general[0].url +
         config.general[0].puerto_api +
@@ -70,9 +71,9 @@ class InicioCursos extends React.Component {
         arrayTemp.push(row.programa_academico);
         var fechaInicio = new Moment(row.fecha_inicio).format("DD/MM/YYYY");
         arrayTemp.push(fechaInicio);
-        console.log(row.habilitado_curso);
         let ishabilitado =row.habilitado_curso === true ? "Habilitado" : "Deshabilitado";
         arrayTemp.push(ishabilitado);
+        arrayTemp.push(row.fecha_inicio);
         arrayFull.push(arrayTemp);
       }
       this.setState({ dateArray: arrayFull });
@@ -101,7 +102,7 @@ class InicioCursos extends React.Component {
         showTable: false,
         showisUpdate: true,
       });
-      this.getUpdatePagos(num);
+      this.getDataUpdate(num);
     } else {
       if (num === 1) {
         this.setState({
@@ -118,9 +119,37 @@ class InicioCursos extends React.Component {
       }
     }
   }
+  getDataUpdate = async (data) => {
+    this.setState({idInicioCurso : data})
+    var url = config.general[0].url + config.general[0].puerto_api + "/Api/getUpdateFecha";
+    var bodyFormData = new FormData();
+    bodyFormData.append('idFecha', data);
+    const respuesta = await axios({
+        method: 'POST',
+        url: url,
+        data: bodyFormData,
+        headers: { 'Content-Type': 'application/json' }
+    }).then(function (response) {
+        return response.data;
+    }).catch(function (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops..',
+            text: error.message,
+        })
+    })
+
+    var row = respuesta["data"][0];      
+    var fecha_inicio = new Moment(row.fecha_inicio).format('YYYY-MM-DD');
+
+    this.setState({ dateStart: fecha_inicio});
+    this.setState({ servicioEducativoID: row.idserviciosedufk});
+    // this.setState({ referencia: pagos.referencia});
+  }
   onServicio(event) {
     var select = parseInt(event.target.value);
     var servicios = this.state.servicio;
+    console.log(select);
     for (let index = 0; index < servicios.length; index++) {
       if (servicios[index][0] === select) {
         let array = [];
@@ -140,7 +169,7 @@ class InicioCursos extends React.Component {
   validarFormulario(isUpdate = false) {
     if (isUpdate) {
       let campos = new Map();
-      campos.set("Servicio educativo", this.state.servicioEducativoOpc);
+      // campos.set("Servicio educativo", this.state.servicioEducativoOpc);
       campos.set("Fecha de Inicio", this.state.numeroModuloOpc);
       let msg = "";
       for (let clave of campos.keys()) {
@@ -151,7 +180,7 @@ class InicioCursos extends React.Component {
         }
       }
       if (msg === "") {
-        this.SendData();
+        this.SendDataUpdate();
       } else {
         Swal.fire({
           icon: "error",
@@ -173,6 +202,7 @@ class InicioCursos extends React.Component {
       }
       if (msg === "") {
         this.SendData();
+
       } else {
         Swal.fire({
           icon: "error",
@@ -181,6 +211,68 @@ class InicioCursos extends React.Component {
         });
       }
     }
+  }
+  SendDataUpdate() {
+    var url =
+      config.general[0].url +
+      config.general[0].puerto_api +
+      "/api/UpdateFecha";
+    var bodyFomrData = new FormData();
+    bodyFomrData.append("ServicioEducativo", this.state.servicioEducativoOpc);
+    bodyFomrData.append("idServicioEducativo", this.state.servicioEducativoID);
+    bodyFomrData.append("dateInicio", this.state.dateStart);
+    bodyFomrData.append("idCurso", this.state.idInicioCurso);
+    Swal.fire({
+      title: "¿Estas seguro de actualizar?",
+      text: "",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Continuar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios({
+          method: "POST",
+          url: url,
+          data: bodyFomrData,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => {
+            if (response["data"]["status"] === 200) {
+              // this.apiGetPagos();
+              Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Datos actualizados",
+                showConfirmButton: false,
+                timer: 500,
+              });
+              this.setState({
+                showForm: false,
+                showTable: true,
+                showisUpdate: false,
+              });
+              setTimeout(window.location.reload(false), 7000);
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "Oops..",
+                text: response["data"]["data"],
+              });
+            }
+          })
+          .catch(function (e) {
+            Swal.fire({
+              icon: "error",
+              title: "Oops..",
+              text: e,
+            });
+          });
+      }
+    });
   }
   SendData() {
     var url =
@@ -215,7 +307,7 @@ class InicioCursos extends React.Component {
               Swal.fire({
                 position: "top-end",
                 icon: "success",
-                title: "Pago agregado",
+                title: "Datos agregados",
                 showConfirmButton: false,
                 timer: 500,
               });
@@ -452,6 +544,82 @@ class InicioCursos extends React.Component {
                     >
                       <i className="bi bi-plus-circle-fill "></i>
                       &nbsp;&nbsp; Enviar
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
+            </Container>
+          </section>
+        ) : null}
+
+{showisUpdate ? (
+          <section style={{ marginTop: 80 }}>
+            <Container className="mt-3 mb-3 border border-2 shadow-sm p-3 mb-5 bg-body rounded p-2">
+              <OverlayTrigger
+                placement="right"
+                delay={{ show: 250, hide: 400 }}
+                overlay={<Tooltip id="button-tooltip-2">Cerrar</Tooltip>}
+              >
+                <CloseButton
+                  style={styles.buttonClose}
+                  onClick={() => window.location.reload(false)}
+                />
+                {/* <Button variant="success">Hover me to see</Button> */}
+              </OverlayTrigger>
+              <Form>
+                <div
+                  className="alert mt-2"
+                  role="alert"
+                  style={{ background: " #ceac00", color: "#000" }}
+                >
+                  Incio de cursos
+                </div>
+                <Row className="mt-3">
+                  <Col sm>
+                    <Form.Group controlId="formFile">
+                      <Form.Label className="h6 ">
+                        Servicio educativo{" "}
+                        <small style={{ color: "#600101" }}>*</small>{" "}
+                      </Form.Label>
+                      <Form.Select onChange={this.onServicio} value={this.state.servicioEducativoID}>
+                        {/* <option value="Seleccione una opcion">
+                          Seleccione una opcion
+                        </option> */}
+                        {servicio.map(function (item) {
+                          return (
+                            <option key={item[0]} value={item[0]}>
+                              {item[3] + " / " + item[1]}
+                            </option>
+                          );
+                        })}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  <Col sm>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="h6">
+                        Fecha de Inicio{" "}
+                        <small style={{ color: "#600101" }}>*</small>{" "}
+                      </Form.Label>
+                      <Form.Control
+                        type="date"
+                        value={this.state.dateStart}
+                        onChange={(evt) =>
+                          this.formularioSetData(evt, "FechaInicio")
+                        }
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row className="mt-3 ">
+                  <Col sm>
+                    <Button
+                      className="col-6"
+                      variant="secondary"
+                      onClick={() => this.validarFormulario(true)}
+                    >
+                      <i className="bi bi-plus-circle-fill "></i>
+                      &nbsp;&nbsp; Actualizar
                     </Button>
                   </Col>
                 </Row>

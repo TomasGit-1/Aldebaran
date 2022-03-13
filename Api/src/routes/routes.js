@@ -709,4 +709,31 @@ routes.post('/updateHabilitadoFechas', (req, res) => {
         res.json({ "status": 400, "data": error.message });
     })
 });
+
+
+routes.post('/getUpdateFecha', (req, res) => {
+    logger.info("Obetenemos la data a actualizar");
+
+    var idFecha = req.body.idFecha;
+    db.getDataFechaEdit(idFecha).then(respuesta => {
+        // res.json({ "status": 200 , "Servicios":respuesta});
+        res.json(respuesta);
+    }).catch(error => {
+        logger.error(`getUpdateFecha :${error.message}`);
+    })
+});
+
+routes.post('/UpdateFecha', (req, res) => {
+    logger.info("Obetenemos la data a actualizar");
+
+    db.UpdateFecha(req).then(respuesta => {
+        // res.json({ "status": 200 , "Servicios":respuesta});
+        // res.json(respuesta);
+        res.json({ "status": 200, "data": respuesta });
+    }).catch(error => {
+        logger.error(`UpdateFecha :${error.message}`);
+        res.json({ "status": 400, "data": error.message });
+          
+    })
+});
 module.exports = routes;

@@ -369,7 +369,7 @@ const createInicioCurso = async (req) => {
 
 
 const getInicioCurso = async () => {
-    const response = await pool.query('SELECT * FROM iniciocursos FULL JOIN servicioeducativo ON  iniciocursos.idServiciosEduFK = servicioeducativo.idServiciosEdu ORDER BY idInicioCurso DESC;');
+    const response = await pool.query('SELECT * FROM iniciocursos INNER JOIN servicioeducativo ON  iniciocursos.idServiciosEduFK = servicioeducativo.idServiciosEdu ORDER BY idInicioCurso DESC;');
     // s  FULL JOIN servicioeducativo ON  iniciocursos.idServiciosEduFK = servicioeducativo.idServiciosEdu ORDER BY idInicioCurso DESC 
     var data = response.rows;
     var bdFechaCursos = []
@@ -388,6 +388,27 @@ const updateHabilitadoFechasBD = async (req) => {
     ]);
     return { "mensaje": 'User Updated Successfully' };
 };
+
+
+getDataFechaEdit = async (idFecha) => {
+    var idFecha = idFecha;
+    const resp = await pool.query('SELECT * FROM iniciocursos WHERE idInicioCurso = $1', [idFecha]);
+    var dataFechas = resp.rows;
+    return {
+        "data": dataFechas,
+    }
+}
+
+UpdateFecha = async (req) => {
+    let datos = req.body;
+    let servicioID = datos.idServicioEducativo;
+    let servicioName = datos.ServicioEducativo;
+    let dateInicion = datos.dateInicio;
+    let idCurso = datos.idCurso;
+    const response = await pool.query('UPDATE iniciocursos SET  idServiciosEduFK = $1 , fecha_inicio = $2  WHERE idInicioCurso = $3', [servicioID, dateInicion , idCurso]);
+    return { "mensaje": 'Datos actualizados' };
+}
+
 module.exports = {
     Home,
     getServicios,
@@ -409,5 +430,7 @@ module.exports = {
     UpdateRegistro,
     createInicioCurso,
     getInicioCurso,
-    updateHabilitadoFechasBD
+    updateHabilitadoFechasBD,
+    getDataFechaEdit,
+    UpdateFecha
 };
