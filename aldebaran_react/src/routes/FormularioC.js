@@ -180,11 +180,12 @@ class FormularioC extends React.Component {
         var res = await fetch(url , params);
         if (res.ok) {
             const blob = await res.blob();
-            if(tipo === 1){
-                download(blob , "curp.pdf" , "application/pdf");
-            }else{
-                var name = ( (tipo === 0) ? "fotografia.png" : "evidenciaIPN.png");
+            if(tipo === 0){
+                var name = "fotografia.png";
                 download(blob , name , "image/png");
+            }else{
+                var nameFile = ( (tipo === 1) ? "curp.pdf" : "evidenciaIPN.pdf");
+                download(blob , nameFile, "application/pdf");
             }
 
         } else {
@@ -1481,7 +1482,7 @@ class FormularioC extends React.Component {
                                                 <Col sm className="mb-3">
                                                     <Form.Group className="mb-3" controlId="formFile3">
                                                         <Form.Label className="h6">En caso de ser comunidad politecnica adjuntar evidencia</Form.Label>
-                                                        <Form.Control type="file" accept=".png" onChange={this.uploadFileEvidencia} />
+                                                        <Form.Control type="file" accept=".pdf" onChange={this.uploadFileEvidencia} />
                                                     </Form.Group>
                                                 </Col>
                                             </Row>
@@ -1965,7 +1966,7 @@ class FormularioC extends React.Component {
                                                 <Col sm className="mb-3">
                                                     <Form.Group className="mb-3" controlId="formFile3">
                                                         <Form.Label className="h6">En caso de ser comunidad politecnica adjuntar evidencia</Form.Label>
-                                                        <Form.Control type="file" accept=".png" onChange={this.uploadFileEvidencia} />
+                                                        <Form.Control type="file" accept=".pdf" onChange={this.uploadFileEvidencia} />
                                                     </Form.Group>
                                                 </Col>
                                             </Row>
