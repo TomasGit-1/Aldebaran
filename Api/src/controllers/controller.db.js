@@ -212,8 +212,10 @@ const getDataServicios = async () => {
         bdAlumnos.push(array);
     }
 
+    const responseiniciocursos = await pool.query('SELECT * FROM iniciocursos  ORDER BY idInicioCurso DESC');
+    data = responseiniciocursos.rows;
 
-    return { "Info": bdServicios, "Curp": bdAlumnos };
+    return { "Info": bdServicios, "Curp": bdAlumnos , "Cursos" : data };
 };
 
 
@@ -222,10 +224,22 @@ const setCrearPago = async (data) => {
     var dat = new Date(); //Obtienes la fecha
     var dat2 = Date.parse(dat); //Lo parseas para transformarlo
 
-    const contacto = await pool.query('INSERT INTO pagos  (idcurpfk , idServiciosEduFk , numModulo ,comprobantePath , cedulaPath ,referencia , cantidad, FechaHoraTicket , FECHA_INICIO , FECHA_TERMINO ,facturacion ,fechaHoraRegistro , descripcion) VALUES ($1, $2 , $3 , $4 , $5 , $6 , $7 , $8 , $9 , $10 , $11 , $12 , $13)',
-        [
-            data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], dat, data[11]
-        ]);
+    // var str = data[12].replace('/', '-');
+    // str = str.replace('/', '-');
+    
+    // var mydate = new Date(str);
+    // console.log(mydate.toDateString());
+    if (data[8] === '') {
+        const contacto = await pool.query('INSERT INTO pagos  (idcurpfk , idServiciosEduFk , numModulo ,comprobantePath , cedulaPath ,referencia , cantidad, FechaHoraTicket ,facturacion ,fechaHoraRegistro , descripcion , FECHA_INICIO_OPCIONAL) VALUES ($1, $2 , $3 , $4 , $5 , $6 , $7 , $8 , $9 , $10 , $11 , $12 )',
+            [
+                data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7],data[10], dat, data[11] ,  data[12]
+            ]);
+    }else{
+        const contacto = await pool.query('INSERT INTO pagos  (idcurpfk , idServiciosEduFk , numModulo ,comprobantePath , cedulaPath ,referencia , cantidad, FechaHoraTicket , FECHA_INICIO , FECHA_TERMINO ,facturacion ,fechaHoraRegistro , descripcion ) VALUES ($1, $2 , $3 , $4 , $5 , $6 , $7 , $8 , $9 , $10 , $11 , $12 , $13 )',
+            [
+                data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], dat, data[11]
+            ]);
+    }
 
 
     return { "mensaje": 'Pago registrado' };

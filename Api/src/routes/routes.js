@@ -313,7 +313,7 @@ routes.get('/Pagos', (req, res) => {
 routes.get('/ServiciosLista', (req, res) => {
     logger.info("Obtenemos la lista de personas y servicios para los pagos");
     db.getDataServicios().then(respuesta => {
-        res.json({ "status": 200, "data": respuesta['Info'], "Curp": respuesta['Curp'] });
+        res.json({ "status": 200, "data": respuesta['Info'], "Curp": respuesta['Curp'] , "Cursos": respuesta['Cursos']});
 
     }).catch(error => {
         logger.error(`ServiciosLista :${error.message}`);
@@ -356,7 +356,8 @@ routes.post('/CrearPago', (req, res) => {
         datos.dateInicio,
         datos.dateFinish,
         datos.facturaElectronica,
-        datos.descripcion
+        datos.descripcion,
+        datos.inicioCurso
     ]
     db.setCrearPago(data).then(respuesta => {
         res.json({ "status": 200, "data": respuesta });

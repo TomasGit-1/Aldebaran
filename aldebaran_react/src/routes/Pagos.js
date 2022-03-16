@@ -21,6 +21,10 @@ class Pagos extends React.Component {
             ],
             servicio: [
             ],
+            cursosdates : [],
+            cursosdatesSeleccion : [],
+            seleccionInicioCurso:"",
+            opInicioFecha : 0,
             opServicio: 0,
             servicioPago: "",
             showForm: false,
@@ -73,6 +77,10 @@ class Pagos extends React.Component {
         this.getUpdatePagos = this.getUpdatePagos.bind(this);
         this.SendUpdate = this.SendUpdate.bind(this);
         this.apiGetPagos = this.apiGetPagos.bind(this);
+        this.onChangeNumModulo = this.onChangeNumModulo.bind(this);
+        this.onChangeInicioCurso = this.onChangeInicioCurso.bind(this);
+        
+        
     }
     /*  
     ===========================================================================
@@ -83,7 +91,6 @@ class Pagos extends React.Component {
     componentDidMount() {
         this.apiGetPagos();
         this.serviciosHabilitados();
-
     }
     onModalida(event) {
         this.setState({ modalidad: event.target.value });
@@ -91,19 +98,28 @@ class Pagos extends React.Component {
     onServicio(event) {
         var select = parseInt(event.target.value);
         var servicios = this.state.servicio;
+        var cursos_dates = this.state.cursosdates;
+        let arrayIniciodates = [];
         for (let index = 0; index < servicios.length; index++) {
             if (servicios[index][0] === select) {
                 let array = [];
                 for (let i = 0; i < servicios[index][7]; i++) {
                     array.push(i + 1);
                 }
-               
-                
                 this.setState({ numModuloPago: array });
                 this.setState({ cantidadPago: servicios[index][5] });
                 this.setState({ servicioEducativoOpc : servicios[index][3] });
                 this.setState({ servicioEducativoID : select });
-
+                console.log(cursos_dates);
+                if(cursos_dates.length !== 0){
+                    for (let j = 0; j < cursos_dates.length; j++) {
+                        var element = cursos_dates[j];
+                        if (parseInt(element[1]) === select) {
+                            arrayIniciodates.push(element);
+                        }
+                    }
+                }
+                this.setState({ cursosdatesSeleccion: arrayIniciodates });
                 break;
             }
         }
@@ -230,10 +246,6 @@ class Pagos extends React.Component {
         arrayTemp2.unshift(tempArrayAlum);
         this.setState({ curpData: arrayTemp2 });
         this.setState({ alumnoSelect: tempArrayAlum[0] });
-
-        
-
-
     }
     filterInput() {
         $(document).ready(function () {
@@ -266,10 +278,7 @@ class Pagos extends React.Component {
                     arrayTemp.push(fechahoraticket);
                     var fechahoraregistro = new Moment(responseJson[i].fechahoraregistro).format('DD/MM/YYYY HH:mm');
                     arrayTemp.push(fechahoraregistro);
-
-
                     // arrayTemp.push(responseJson[i].nummodulo);
-
                     if(responseJson[i].facturacion === true)
                         arrayTemp.push("Si");
                     else arrayTemp.push("No");
@@ -309,7 +318,6 @@ class Pagos extends React.Component {
             const response = await fetch(config.general[0].url + config.general[0].puerto_api + "/api/ServiciosLista")
             var responseJson = await response.json();
             var temp = responseJson;
-
             if (temp['status'] === 200) {
                 var responseData = responseJson['data'];
                 for (var i = 0; i < responseData.length; i++) {
@@ -328,6 +336,21 @@ class Pagos extends React.Component {
                         Servicios.push(tempArray);
                     }
                 }
+                var responseCursos = responseJson['Cursos'];
+                var Cursos = [];
+                console.log(responseCursos);
+                for (var j = 0; j < responseCursos.length; j++) {
+                    if (responseCursos[j].habilitado_curso === true) {
+                        var tempArrayCursos = [];
+                        tempArrayCursos.push(responseCursos[j].idiniciocurso);
+                        tempArrayCursos.push(responseCursos[j].idserviciosedufk);
+                        tempArrayCursos.push(responseCursos[j].habilitado_curso);
+                        let fechaInicio = new Moment(responseCursos[j].fecha_inicio).format('DD/MM/YYYY');
+                        tempArrayCursos.push(fechaInicio);
+                        Cursos.push(tempArrayCursos);
+                    }
+                }
+                this.setState({cursosdates : Cursos})
                 var curpData = responseJson['Curp'];
                 this.setState({curpData : curpData})
                 // this.setState({ id: id });
@@ -401,8 +424,22 @@ class Pagos extends React.Component {
     onChangeAlumnos( event ){
         this.setState({ alumnoSelect: event.target.value });
     }
+    onChangeInicioFecha( event ){
+        this.setState({ opInicioFecha: event.target.value });
+    }
     onChangeNumModulo(event){
-        this.setState({ numeroModuloOpc: event.target.value });
+        var opcion = event.target.value;
+        if(opcion !== "Seleccione una opcion"){
+            console.log(event.target.value);
+            this.setState({ numeroModuloOpc: event.target.value });
+        }
+    }
+    onChangeInicioCurso(event){
+        var opcion = event.target.value;
+        if(opcion !== "Seleccione una opcion"){
+            console.log(event.target.value);
+            this.setState({ seleccionInicioCurso: event.target.value });
+        }
     }
     validarFormulario( isUpdate=false){
         if(isUpdate){
@@ -446,8 +483,8 @@ class Pagos extends React.Component {
             campos.set('Referencia', this.state.referencia);
             campos.set('Fecha / Hora Vaucher', this.state.fechaHoraBaucher);
             campos.set('Cantidad', this.state.cantidadPago);
-            campos.set('Fecha Incio', this.state.dateStart);
-            campos.set('Fecha de Termino', this.state.dateFinish);
+            // campos.set('Fecha Incio', this.state.dateStart);
+            // campos.set('Fecha de Termino', this.state.dateFinish);
             campos.set('Descripcion', this.state.descripcionInput);
             let msg = "";
             for (let clave of campos.keys()) {
@@ -485,6 +522,7 @@ class Pagos extends React.Component {
         bodyFomrData.append('dateInicio' , this.state.dateStart);
         bodyFomrData.append('dateFinish' , this.state.dateFinish);
         bodyFomrData.append('descripcion' , this.state.descripcionInput);
+        bodyFomrData.append('inicioCurso' ,this.state.seleccionInicioCurso );
         Swal.fire({
             title: "¿Estas seguro de agregar un nuevo pago?",
             text: "¡No podrás revertir esto!",
@@ -611,6 +649,7 @@ class Pagos extends React.Component {
         let { dataPagos } = this.state
         let { curpData } = this.state
         let { isFacturaSelec } = this.state
+        let { cursosdatesSeleccion } = this.state
         const styles = StyleSheet.create({
             buttonSend: {
                 backgroundColor: "#00a01b ",
@@ -744,14 +783,28 @@ class Pagos extends React.Component {
                                 <Row className="mt-3">
                                     <Col sm>
                                         <Form.Group className="mb-3" >
-                                            <Form.Label className="h6">Fecha de Inicio <small style={{ color: "#600101" }}>*</small>  </Form.Label>
+                                            <Form.Label className="h6">Fecha de Inicio </Form.Label>
                                             <Form.Control type="date" value={this.state.dateStart}  onChange={(evt) => this.formularioSetData(evt, "FechaInicio")}   />
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
                                         <Form.Group className="mb-3" >
-                                            <Form.Label className="h6">Fecha de Termino  <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                            <Form.Label className="h6">Fecha de Termino  </Form.Label>
                                             <Form.Control type="date" value={this.state.dateFinish} onChange={(evt) => this.formularioSetData(evt, "FechaFin")}  />
+                                        </Form.Group>
+                                    </Col>
+
+                                    <Col sm >
+                                        <Form.Group controlId="formFile">
+                                            <Form.Label className="h6 ">Inicio de curso </Form.Label>
+                                            <Form.Select  onChange={this.onChangeInicioCurso} >
+                                                <option value="Seleccione una opcion">Seleccione una opcion</option>
+                                                {
+                                                    cursosdatesSeleccion.map(function (value ,item) {
+                                                        return <option key={item} value={value[3]}>{value[3]}</option>;
+                                                    })
+                                                }
+                                            </Form.Select>
                                         </Form.Group>
                                     </Col>
                                 </Row>
