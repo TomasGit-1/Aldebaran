@@ -78,14 +78,21 @@ class PDFPago extends React.Component {
         arrayPago.push(fechahoraregistro);
 
         var fecha_inicio = new Moment(pagos[0].fecha_inicio).format('DD/MM/YYYY');
-        arrayPago.push(fecha_inicio);
-
-        var fecha_termino = new Moment(pagos[0].fecha_termino).format('DD/MM/YYYY');
-        arrayPago.push(fecha_termino);
-
+        if (fecha_inicio ==='Invalid date') {
+            console.log("Invalide date");
+            arrayPago.push(' ');
+            arrayPago.push(' ');
+            console.log(pagos);
+        }else{
+            arrayPago.push(fecha_inicio);
+            var fecha_termino = new Moment(pagos[0].fecha_termino).format('DD/MM/YYYY');
+            arrayPago.push(fecha_termino);
+        }
         arrayPago.push(pagos[0].cantidad);
         arrayPago.push(pagos[0].descripcion);
-
+        console.log(pagos[0].fecha_inicio_opcional);
+        var msg = ( (pagos[0].fecha_inicio_opcional === null) ? ' ' : pagos[0].fecha_inicio_opcional  )
+        arrayPago.push(msg);
         this.setState({ pagos: arrayPago });
         this.setState({ alumno: arrayAlumno });
         this.setState({ servicio: arrayServicios });
@@ -261,14 +268,20 @@ class PDFPago extends React.Component {
 
                                 <View style={styles.container}>
                                     <Text style={styles.text1}> Inicio del curso:</Text>
-                                    <div style={{ borderBottom: 1, marginLeft: 15, width: "30%" }}>
+                                    <div style={{ borderBottom: 1, marginLeft: 10, width: "30%" }}>
                                         <Text style={styles.text2}>{" " + pagos[5]}</Text>
                                     </div>
                                     <Text style={styles.text1}> Termino del curso :</Text>
-                                    <div style={{ borderBottom: 1, marginLeft: 15, width: "30%" }}>
+                                    <div style={{ borderBottom: 1, marginLeft: 10, width: "40%" }}>
                                         <Text style={styles.text2}>{" " + pagos[6]}</Text>
                                     </div>
                                    
+                                </View>
+                                <View style={styles.container}>
+                                    <Text style={styles.text1}>Inicio de curso opcional:</Text>
+                                    <div style={{ borderBottom: 1, marginLeft: 25, width: "100%" }}>
+                                        <Text style={styles.text2}>{" " + pagos[9]}</Text>
+                                    </div>               
                                 </View>
                                 <View style={styles.container}>
                                     <Text style={styles.text1}> Cantidad:</Text>
