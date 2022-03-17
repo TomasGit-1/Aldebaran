@@ -365,7 +365,7 @@ class PDFAlumno extends React.Component {
 
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>CURP:</Text>
-                                        <div style={{ borderBottom: 1, marginLeft: 23, width: "60%" }}>
+                                        <div style={{ borderBottom: 1, marginLeft: 23, width: "60%",  textTransform: 'uppercase', }}>
                                             <Text style={styles.text2}>{" " + datosPersonales[12]}</Text>
                                         </div>
                                         <Text style={styles.text1}>Telefono cel:</Text>

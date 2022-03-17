@@ -193,7 +193,7 @@ class PDFPago extends React.Component {
                                     
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>Curp:</Text>
-                                        <div style={{ borderBottom: 1, marginLeft: 20, width: "100%" }}>
+                                        <div style={{ borderBottom: 1, marginLeft: 20, width: "100%" , textTransform: 'uppercase' }}>
                                             <Text style={styles.text2}>{" " + alumno[0]}</Text>
                                         </div>
 
