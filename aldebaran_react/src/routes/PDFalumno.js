@@ -208,7 +208,7 @@ class PDFAlumno extends React.Component {
             title: {
                 margin: 0,
                 marginBottom: 2,
-                fontSize: 14,
+                fontSize: 13,
                 textAlign: 'center',
                 // backgroundColor: 'red',
                 textTransform: 'uppercase',
@@ -219,6 +219,8 @@ class PDFAlumno extends React.Component {
                 fontSize: 10,
                 textAlign: 'center',
                 alignItems: 'center',
+                textTransform: 'uppercase',
+
             },
             text2: {
                 fontSize: 10,
@@ -230,6 +232,8 @@ class PDFAlumno extends React.Component {
                 fontFamily: 'Oswald',
                 alignItems: 'center',
                 textDecoration: 'underline',
+                textTransform: 'uppercase',
+
             },
             text4: {
                 width: 120, marginRight: 20,
@@ -283,7 +287,6 @@ class PDFAlumno extends React.Component {
                                         <div style={{ borderBottom: 1, marginLeft: 20, width: "100%" }}>
                                             <Text style={styles.text2}>{" " + datosPersonales[2] + " " + datosPersonales[1] + " " + datosPersonales[0]}</Text>
                                         </div>
-
                                     </View>
                                     <View style={styles.container}>
                                         <Text style={styles.text4}>(Segun acta de nacimineto)</Text>
@@ -309,18 +312,18 @@ class PDFAlumno extends React.Component {
 
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>Municipio:</Text>
-                                        <div style={{ borderBottom: 1, marginLeft: 23, width: "60%" }}>
+                                        <div style={{ borderBottom: 1, marginLeft: 30, width: "40%" }}>
                                             <Text style={styles.text2}>{" " + datosPersonales[7]}</Text>
                                         </div>
                                         <Text style={styles.text1}>Lugar de nacimiento:</Text>
-                                        <div style={{ borderBottom: 1, marginLeft: 45, width: "80%" }}>
+                                        <div style={{ borderBottom: 1, marginLeft: 45, width: "60%" }}>
                                             <Text style={styles.text2}>{" " + datosPersonales[8]}</Text>
                                         </div>
                                     </View>
 
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>Fecha de nacimiento:</Text>
-                                        <div style={{ borderBottom: 1, marginLeft: 10, width: 180 }}>
+                                        <div style={{ borderBottom: 1, marginLeft: 15, width: 180 }}>
                                             <Text style={styles.text2}>{" " + datosPersonales[9]}</Text>
                                         </div>
                                         <Text style={styles.text1}>{" "}Edad:</Text>
@@ -373,11 +376,11 @@ class PDFAlumno extends React.Component {
 
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>Telefono casa:</Text>
-                                        <div style={{ borderBottom: 1, marginLeft: 28, width: "40%" }}>
+                                        <div style={{ borderBottom: 1, marginLeft: 40, width: "40%" }}>
                                             <Text style={styles.text2}>{" " + datosPersonales[14]}</Text>
                                         </div>
                                         <Text style={styles.text1}>Correo Electronico:</Text>
-                                        <div style={{ borderBottom: 1, marginLeft: 35, width: "60%" }}>
+                                        <div style={{ borderBottom: 1, marginLeft: 50, width: "60%" }}>
                                             <Text style={styles.text2}>{" " + datosPersonales[15]}</Text>
                                         </div>
                                     </View>
@@ -422,29 +425,41 @@ class PDFAlumno extends React.Component {
 
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>Sistema educativo de procedencia :</Text>
-                                        <div style={{ borderBottom: 1, marginLeft: 2, width: 280 }}>
+                                        <div style={{ borderBottom: 1, marginLeft: 80, width: '100%' }}>
                                             <Text style={styles.text2}>{" " + datoFormacionAcademica[2]}</Text>
                                         </div>
+                                    </View>
+                                    <View style={styles.container}>
                                         <Text style={styles.text1}>Otro :</Text>
-                                        <div style={{ borderBottom: 1, marginLeft: 2, width: 42 }}>
+                                        <div style={{ borderBottom: 1, marginLeft: 5, width: '100%' }}>
                                             <Text style={styles.text2}>{" " + datoFormacionAcademica[3]}</Text>
                                         </div>
                                     </View>
 
-                                    <View style={styles.container}>
+                                    {/* <View style={styles.container}>
                                         <Text style={styles.text1}>Institución educativa y/o de egreso :</Text>
-                                        <div style={{ borderBottom: 1, marginLeft: 2, width: 280 }}>
+                                        <div style={{ borderBottom: 1, marginLeft: 30, width: 280 }}>
                                             <Text style={styles.text2}>{" " + datoFormacionAcademica[4]}</Text>
                                         </div>
                                         <Text style={styles.text1}>Año de egreso:</Text>
                                         <div style={{ borderBottom: 1, marginLeft: 2, width: 42 }}>
                                             <Text style={styles.text2}>{" " + datoFormacionAcademica[5]}</Text>
                                         </div>
+                                    </View> */}
+                                    <View style={styles.container}>
+                                        <Text style={styles.text1}>Institución educativa y/o de egreso :</Text>
+                                        <div style={{ borderBottom: 1, marginLeft: 35, width: 250 }}>
+                                            <Text style={styles.text2}>{" " + datoFormacionAcademica[4]}</Text>
+                                        </div>
+                                        <Text style={styles.text1}>Año de egreso:</Text>
+                                        <div style={{ borderBottom: 1, marginLeft: 15, width: 42 }}>
+                                            <Text style={styles.text2}>{" " + datoFormacionAcademica[5]}</Text>
+                                        </div>
                                     </View>
 
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>Universidad a la que aspiras ingresar :</Text>
-                                        <div style={{ borderBottom: 1, marginLeft: 60, width: "100%" }}>
+                                        <div style={{ borderBottom: 1, marginLeft: 90, width: "100%" }}>
                                             <Text style={styles.text2}>{" " + datoFormacionAcademica[6]}</Text>
                                         </div>
 
@@ -452,7 +467,7 @@ class PDFAlumno extends React.Component {
                                     <View style={styles.container}>
 
                                         <Text style={styles.text1}>Carrera a la que aspiras ingresar :</Text>
-                                        <div style={{ borderBottom: 1, marginLeft: 55, width: "100%" }}>
+                                        <div style={{ borderBottom: 1, marginLeft: 80, width: "100%" }}>
                                             <Text style={styles.text2}>{" " + datoFormacionAcademica[7]}</Text>
                                         </div>
                                     </View>
@@ -475,11 +490,11 @@ class PDFAlumno extends React.Component {
 
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>Correo electrónico:</Text>
-                                        <div style={{ borderBottom: 1, marginLeft: 5, width: 300 }}>
+                                        <div style={{ borderBottom: 1, marginLeft: 20, width: 300 }}>
                                             <Text style={styles.text2}>{" "+datosContactoEmer[3]}</Text>
                                         </div>
                                         <Text style={styles.text1}>Telefono cel:</Text>
-                                        <div style={{ borderBottom: 1, marginLeft: 5, width: 110 }}>
+                                        <div style={{ borderBottom: 1, marginLeft: 10, width: 110 }}>
                                             <Text style={styles.text2}>{" "+datosContactoEmer[4]}</Text>
                                         </div>
                                     </View>
@@ -491,22 +506,22 @@ class PDFAlumno extends React.Component {
 
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>Nombre de la institución :</Text>
-                                        <div style={{ borderBottom: 1, marginLeft: 40, width: "40%" }}>
+                                        <div style={{ borderBottom: 1, marginLeft: 65, width: "40%" }}>
                                             <Text style={styles.text2}>{" "+datoLaboral[0]}</Text>
                                         </div>
                                         <Text style={styles.text1}>Direccion:</Text>
-                                        <div style={{ borderBottom: 1, marginLeft: 18, width: "70%" }}>
+                                        <div style={{ borderBottom: 1, marginLeft: 30, width: "70%" }}>
                                             <Text style={styles.text2}>{" "+datoLaboral[1]}</Text>
                                         </div>
                                     </View>
 
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>Puesto:</Text>
-                                        <div style={{ borderBottom: 1, marginLeft: 5, width: "80%" }}>
+                                        <div style={{ borderBottom: 1, marginLeft: 15, width: "80%" }}>
                                             <Text style={styles.text2}>{" "+datoLaboral[2]}</Text>
                                         </div>
                                         <Text style={styles.text1}>Telefono:</Text>
-                                        <div style={{ borderBottom: 1, marginLeft: 5, width: "110" }}>
+                                        <div style={{ borderBottom: 1, marginLeft: 10, width: "110" }}>
                                             <Text style={styles.text2}>{" "+datoLaboral[3]}</Text>
                                         </div>
                                     </View>
@@ -522,11 +537,11 @@ class PDFAlumno extends React.Component {
                                     <Text style={styles.title}>*Para accesso vehicular</Text>
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>Marca y Modelo:</Text>
-                                        <div style={{ borderBottom: 1, marginTop: 1, marginLeft: 5, marginBottom: 0, width: 340 }}>
+                                        <div style={{ borderBottom: 1, marginTop: 1, marginLeft: 10, marginBottom: 0, width: 340 }}>
                                             <Text style={styles.text2}>{" "+datoInformacionAdiciona[0]}</Text>
                                         </div>
                                         <Text style={styles.text1}>Placas:</Text>
-                                        <div style={{ borderBottom: 1, marginTop: 1, marginBottom: 0, width: 110 }}>
+                                        <div style={{ borderBottom: 1, marginTop: 1, marginBottom: 0,  marginLeft: 10,width: 110 }}>
                                             <Text style={styles.text2}>{" "+datoInformacionAdiciona[1]}</Text>
                                         </div>
                                     </View>
@@ -558,7 +573,7 @@ class PDFAlumno extends React.Component {
                                     <Text style={styles.title}>*Informacion adicional</Text>
                                     <View style={styles.container}>
                                         <Text style={styles.text1}> ¿Como se entero del curso? </Text>
-                                        <div style={{ borderBottom: 1, marginLeft: 30, width: "100%" }}>
+                                        <div style={{ borderBottom: 1, marginLeft: 50, width: "100%" }}>
                                             <Text style={styles.text2}>{" "+datoInformacionAdiciona[2]}</Text>
                                         </div>
                                         {/* <div>
@@ -611,7 +626,7 @@ class PDFAlumno extends React.Component {
                                     </View> */}
                                     <View style={styles.container}>
                                         <div>
-                                            <Text style={{ fontSize: 10, marginLeft: 5 }}>{"Otro medio , especificar"}</Text>
+                                            <Text style={{ fontSize: 10, marginLeft: 0 }}>{"Otro medio , especificar"}</Text>
                                         </div>
                                         <div style={{ borderBottom: 1, marginLeft: 30, width: "100%" }}>
                                             <Text style={styles.text2}>{" "+datoInformacionAdiciona[3]}</Text>
@@ -619,18 +634,21 @@ class PDFAlumno extends React.Component {
                                     </View>
                                     <View style={styles.container}>
                                         <Text style={styles.text1}> ¿A quien recomendaria este curso?  </Text>
-                                        <Text style={styles.text1}>Nombre: </Text>
-                                        <div style={{ borderBottom: 1, marginLeft: 0, width: "63%" }}>
+                                        <Text style={{ fontSize: 10,
+                textAlign: 'center',
+                alignItems: 'center',
+                textTransform: 'uppercase',marginLeft: 40}} > Nombre: </Text>
+                                        <div style={{ borderBottom: 1, marginLeft: 10, width: "63%" }}>
                                             <Text style={styles.text2}>{" "+datoInformacionAdiciona[4]}</Text>
                                         </div>
                                     </View>
                                     <View style={styles.container}>
                                         <Text style={styles.text1}>Correo electronico:</Text>
-                                        <div style={{ borderBottom: 1, marginLeft: 20, width: "80%" }}>
+                                        <div style={{ borderBottom: 1, marginLeft: 20, width: "60%" }}>
                                             <Text style={styles.text2}>{" "+datoInformacionAdiciona[5]}</Text>
                                         </div>
                                         <Text style={styles.text1}>Tel. cel:</Text>
-                                        <div style={{ borderBottom: 1, width: "20%", marginLeft: 10 }}>
+                                        <div style={{ borderBottom: 1, width: "20%", marginLeft: 8 }}>
                                             <Text style={styles.text2}>{" "+datoInformacionAdiciona[6]}</Text>
                                         </div>
                                     </View>
@@ -655,8 +673,9 @@ class PDFAlumno extends React.Component {
                                     <View style={{
                                         flexDirection: 'row',
                                         // backgroundColor: 'blue',
-                                        marginBottom: 5,
+                                        marginBottom: 0,
                                         margin: 0,
+                                        marginTop : 5
                                         // marginBottom:20  
                                     }}>
 

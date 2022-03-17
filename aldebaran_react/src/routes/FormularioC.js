@@ -1126,7 +1126,7 @@ class FormularioC extends React.Component {
                                             {
 
                                                 servicio.map(function (item) {
-                                                    return <option key={item[0]} value={item[0]}>{item[3]}</option>;
+                                                    return <option key={item[0]} value={item[0]}>{item[3] + " / "+item[1]}</option>;
                                                 })
                                             }
                                         </Form.Select>
