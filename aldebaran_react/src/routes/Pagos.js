@@ -192,7 +192,6 @@ class Pagos extends React.Component {
         var pagos = respuesta.pago[0];
         var alumno = respuesta.alumno[0];
         var servicio = respuesta.servicio[0];
-
         var fechahoraticket = new Moment(pagos.fechahoraticket).format('YYYY-MM-DD HH:mm');
         var fecha_inicio = new Moment(pagos.fecha_inicio).format('YYYY-MM-DD');
         var fecha_termino = new Moment(pagos.fecha_termino).format('YYYY-MM-DD');
@@ -383,6 +382,9 @@ class Pagos extends React.Component {
                 this.setState({ cantidadPago: event.target.value });
                 break;
             case "FechaInicio":
+                console.log(event.target.value);
+                console.log( typeof event.target.value);
+                
                 this.setState({ dateStart: event.target.value });
                 break;
             case "FechaFin":
@@ -452,8 +454,8 @@ class Pagos extends React.Component {
             campos.set('Referencia', this.state.referencia);
             campos.set('Fecha / Hora Vaucher', this.state.fechaHoraBaucher);
             campos.set('Cantidad', this.state.cantidadPago);
-            campos.set('Fecha Incio', this.state.dateStart);
-            campos.set('Fecha de Termino', this.state.dateFinish);
+            // campos.set('Fecha Incio', this.state.dateStart);
+            // campos.set('Fecha de Termino', this.state.dateFinish);
             campos.set('Descripcion', this.state.descripcionInput);
             let msg = "";
             for (let clave of campos.keys()) {
@@ -590,10 +592,22 @@ class Pagos extends React.Component {
         bodyFomrData.append('referencia' , this.state.referencia);
         bodyFomrData.append('fechaHoraBaucher' , this.state.fechaHoraBaucher);
         bodyFomrData.append('Cantidad' , this.state.cantidadPago);
-        bodyFomrData.append('dateInicio' , this.state.dateStart);
-        bodyFomrData.append('dateFinish' , this.state.dateFinish);
+        console.log('ss');
+        console.log( this.state.dateStart);
+        console.log('ss');
+        if (this.state.dateStart  === 'Invalid date'){
+            bodyFomrData.append('dateInicio' , '');
+            bodyFomrData.append('dateFinish' , '');
+        }else{
+            bodyFomrData.append('dateInicio' , this.state.dateStart);
+            bodyFomrData.append('dateFinish' , this.state.dateFinish);
+        }
+
         bodyFomrData.append('descripcion' , this.state.descripcionInput);
         bodyFomrData.append('idPagoUpdate' , this.state.idPagoUpdate);
+        console.log(this.state.seleccionInicioCurso);
+        bodyFomrData.append('inicioCurso' ,this.state.seleccionInicioCurso );
+
         Swal.fire({
             title: "¿Estas seguro de actualizar",
             text: "Actualizar",
@@ -991,6 +1005,19 @@ class Pagos extends React.Component {
                                       </Form.Group>
                                   </Col>
                               </Row>
+                              <Col sm >
+                                        <Form.Group controlId="formFile">
+                                            <Form.Label className="h6 ">Inicio de curso </Form.Label>
+                                            <Form.Select  onChange={this.onChangeInicioCurso} >
+                                                <option value="Seleccione una opcion">Seleccione una opcion</option>
+                                                {
+                                                    cursosdatesSeleccion.map(function (value ,item) {
+                                                        return <option key={item} value={value[3]}>{value[3]}</option>;
+                                                    })
+                                                }
+                                            </Form.Select>
+                                        </Form.Group>
+                                    </Col>
 
                               <Row>
                                   <Col sm>

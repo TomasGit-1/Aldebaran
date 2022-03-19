@@ -297,9 +297,11 @@ const UpdateServicio = async (req) => {
     return { "mensaje": 'Servicio actualizado' };
 };
 
-const UpdatePagos = async (query, data) => {
+const UpdatePagos = async (query, data , newCampo , idPagos) => {
 
     const response = await pool.query(query, data);
+    const response2 = await pool.query('UPDATE pagos SET FECHA_INICIO_OPCIONAL = $1  WHERE idPagos = $2', [newCampo ,idPagos ]);
+
     // console.log(response);
     return { "mensaje": 'Pago actualizado' };
 };

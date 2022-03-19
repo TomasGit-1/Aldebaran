@@ -483,6 +483,10 @@ routes.post('/UpdatePagos', (req, res) => {
     // const response = await pool.query('UPDATE servicioeducativo SET  registro_academico = $1 , tipo_evento = $2 , programa_academico = $3 , modalidad = $4 , cuota = $5 , nummodulo  = $6 , numHoras = $7  WHERE idServiciosEdu = $8' , [registroAcade,evento,nombreAcademico, modalidad ,cuota,numModulo , numHoras , idServicio]);
     // const contacto = await pool.query('INSERT INTO pagos  (idcurpfk , idServiciosEduFk , numModulo ,comprobantePath , cedulaPath ,referencia , cantidad, FechaHoraTicket , FECHA_INICIO , FECHA_TERMINO ,facturacion ,fechaHoraRegistro , descripcion) VALUES ($1, $2 , $3 , $4 , $5 , $6 , $7 , $8 , $9 , $10 , $11 , $12 , $13)',
 
+    if (datos.dateInicio === '') {
+        datos.dateInicio = null;
+        datos.dateFinish = null;
+    }
     data = [
         curp,
         datos.idServicioEducativo,
@@ -537,7 +541,9 @@ routes.post('/UpdatePagos', (req, res) => {
     }
 
 
-    db.UpdatePagos(query, data).then(respuesta => {
+
+
+    db.UpdatePagos(query, data , datos.inicioCurso , datos.idPagoUpdate).then(respuesta => {
         res.json(respuesta);
     }).catch(error => {
         logger.error(`UpdatePagos :${error.message}`);
