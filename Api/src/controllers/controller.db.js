@@ -22,7 +22,6 @@ const config = {
 const pool = new Pool(config);
 
 const Home = async () => {
-    // console.log("Hola Bd");
     return 200;
 };
 const getServicios = async () => {
@@ -90,13 +89,11 @@ const createServicio = async (req) => {
     let numModulo = datos.validacion.numModulo;
     let numHoras = datos.validacion.numHoras;
     const response = await pool.query('INSERT INTO servicioeducativo  (registro_academico , tipo_evento , programa_academico ,modalidad , cuota , habilitado , nummodulo , numHoras) VALUES ($1, $2 , $3 , $4 , $5 , $6 , $7 , $8)', [registroAcade, evento, nombreAcademico, modalidad, cuota, 1, numModulo, numHoras]);
-    console.log(response);
     return { "mensaje": 'Servicio agregado' };
 };
 
 
 const createIngreso = async (personas, emergencia, datoslaborales, filespath, formacionAcademica, InfoAdicional) => {
-    console.log("Empezamos a guardar la informacion")
     const persona = await pool.query('INSERT INTO personas  (Curp , email, Nombre , AppPat ,AppMat  , Sexo ,  FechaNacimiento  , TelPar , TelCel , Calle , Colonia , CodigoPostal ,Municipio , numDomicilio ,lugarNacimiento ) VALUES ($1, $2 , $3 , $4 , $5 , $6 ,$7 , $8 , $9 , $10 , $11 , $12 , $13 , $14, $15)',
         [
             personas[0],
@@ -293,7 +290,6 @@ const UpdateServicio = async (req) => {
     let numModulo = datos.validacion.numModulo;
     let numHoras = datos.validacion.numHoras;
     const response = await pool.query('UPDATE servicioeducativo SET  registro_academico = $1 , tipo_evento = $2 , programa_academico = $3 , modalidad = $4 , cuota = $5 , nummodulo  = $6 , numHoras = $7  WHERE idServiciosEdu = $8', [registroAcade, evento, nombreAcademico, modalidad, cuota, numModulo, numHoras, idServicio]);
-    // console.log(response);
     return { "mensaje": 'Servicio actualizado' };
 };
 
@@ -379,7 +375,6 @@ const createInicioCurso = async (req) => {
     let servicioName = datos.ServicioEducativo;
     let dateInicion = datos.dateInicio;
     const response = await pool.query('INSERT INTO iniciocursos  (idServiciosEduFK , fecha_inicio , habilitado_curso) VALUES ($1, $2 , $3)', [servicioID, dateInicion,1]);
-    console.log(response);
     return { "mensaje": 'Servicio agregado' };
 };
 

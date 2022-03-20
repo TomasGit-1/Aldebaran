@@ -110,7 +110,6 @@ class Pagos extends React.Component {
                 this.setState({ cantidadPago: servicios[index][5] });
                 this.setState({ servicioEducativoOpc : servicios[index][3] });
                 this.setState({ servicioEducativoID : select });
-                console.log(cursos_dates);
                 if(cursos_dates.length !== 0){
                     for (let j = 0; j < cursos_dates.length; j++) {
                         var element = cursos_dates[j];
@@ -337,7 +336,6 @@ class Pagos extends React.Component {
                 }
                 var responseCursos = responseJson['Cursos'];
                 var Cursos = [];
-                console.log(responseCursos);
                 for (var j = 0; j < responseCursos.length; j++) {
                     if (responseCursos[j].habilitado_curso === true) {
                         var tempArrayCursos = [];
@@ -381,10 +379,7 @@ class Pagos extends React.Component {
             case "cantidadPago":
                 this.setState({ cantidadPago: event.target.value });
                 break;
-            case "FechaInicio":
-                console.log(event.target.value);
-                console.log( typeof event.target.value);
-                
+            case "FechaInicio":    
                 this.setState({ dateStart: event.target.value });
                 break;
             case "FechaFin":
@@ -432,14 +427,12 @@ class Pagos extends React.Component {
     onChangeNumModulo(event){
         var opcion = event.target.value;
         if(opcion !== "Seleccione una opcion"){
-            console.log(event.target.value);
             this.setState({ numeroModuloOpc: event.target.value });
         }
     }
     onChangeInicioCurso(event){
         var opcion = event.target.value;
         if(opcion !== "Seleccione una opcion"){
-            console.log(event.target.value);
             this.setState({ seleccionInicioCurso: event.target.value });
         }
     }
@@ -592,9 +585,6 @@ class Pagos extends React.Component {
         bodyFomrData.append('referencia' , this.state.referencia);
         bodyFomrData.append('fechaHoraBaucher' , this.state.fechaHoraBaucher);
         bodyFomrData.append('Cantidad' , this.state.cantidadPago);
-        console.log('ss');
-        console.log( this.state.dateStart);
-        console.log('ss');
         if (this.state.dateStart  === 'Invalid date'){
             bodyFomrData.append('dateInicio' , '');
             bodyFomrData.append('dateFinish' , '');
@@ -605,7 +595,6 @@ class Pagos extends React.Component {
 
         bodyFomrData.append('descripcion' , this.state.descripcionInput);
         bodyFomrData.append('idPagoUpdate' , this.state.idPagoUpdate);
-        console.log(this.state.seleccionInicioCurso);
         bodyFomrData.append('inicioCurso' ,this.state.seleccionInicioCurso );
 
         Swal.fire({

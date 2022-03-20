@@ -149,7 +149,6 @@ class InicioCursos extends React.Component {
   onServicio(event) {
     var select = parseInt(event.target.value);
     var servicios = this.state.servicio;
-    console.log(select);
     for (let index = 0; index < servicios.length; index++) {
       if (servicios[index][0] === select) {
         let array = [];
@@ -397,7 +396,6 @@ class InicioCursos extends React.Component {
     }
   };
   editar(b) {
-    console.log(b);
     var msg = "";
     var opcion = false;
     // if (b[4] === "Habilitado") {

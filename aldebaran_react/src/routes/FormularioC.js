@@ -173,7 +173,6 @@ class FormularioC extends React.Component {
         })
     }
     getDownloadFile = async (curp, tipo) => {
-        console.log(tipo);
         let url = new URL(config.general[0].url + config.general[0].puerto_api + '/api/downloadFile');
         const params = {curp: curp , tipo:tipo};
         Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
@@ -238,8 +237,6 @@ class FormularioC extends React.Component {
         }
     }
     ShowForm(num , isActualizar) {
-        console.log(num);
-        console.log(isActualizar);
         this.setState({activateSend :false})
         if(isActualizar){
             this.setState({
@@ -289,8 +286,6 @@ class FormularioC extends React.Component {
         let dateNacimiento;
 
         dateNacimiento = new Moment(respuesta[0][0].fechanacimiento).format('YYYY-MM-DD');
-
-        console.log(dateNacimiento);
 
 
 
@@ -588,25 +583,21 @@ class FormularioC extends React.Component {
         this.setState({ genero: event.target.value });
     }
     SeleccMaxEstudios(event) {
-        console.log(event.target.value);
         if (event.target.value !== "Seleccione una opcion") {
             this.setState({ n_max_estudios: event.target.value });
         }
     }
     SeleccSituacionAcademina(event) {
-        console.log(event.target.value);
         if (event.target.value !== "Seleccione una opcion") {
             this.setState({ sitAcademico: event.target.value });
         }
     }
     SeleccSistemEducativo(event) {
-        console.log(event.target.value);
         if (event.target.value !== "Seleccione una opcion") {
             this.setState({ sistemaProcendenciaOpcion: event.target.value });
         }
     }
     SeleccMedioInformacio(event) {
-        console.log(event.target.value);
         if (event.target.value !== "Seleccione una opcion") {
             this.setState({ comoseenterodelcurso: event.target.value });
         }
@@ -620,7 +611,6 @@ class FormularioC extends React.Component {
 
     existeCurpAlum = async (pos , isActualizar) => {
         if (isActualizar){
-            console.log("Estamos actualizando");
             var campos = new Map();
             // campos.set('Fotografia', this.state.file_fotografia);
             campos.set('email', this.state.email_Alumno);
@@ -807,7 +797,6 @@ class FormularioC extends React.Component {
         }
     }
     sendData(isActualizar) {
-        console.log(isActualizar);
         var url;
         if(isActualizar){
             url = config.general[0].url + config.general[0].puerto_api + "/Api/UpdateRegistro";

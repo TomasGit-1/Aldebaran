@@ -79,10 +79,8 @@ class PDFPago extends React.Component {
 
         var fecha_inicio = new Moment(pagos[0].fecha_inicio).format('DD/MM/YYYY');
         if (fecha_inicio ==='Invalid date') {
-            console.log("Invalide date");
             arrayPago.push(' ');
             arrayPago.push(' ');
-            console.log(pagos);
         }else{
             arrayPago.push(fecha_inicio);
             var fecha_termino = new Moment(pagos[0].fecha_termino).format('DD/MM/YYYY');
@@ -90,7 +88,6 @@ class PDFPago extends React.Component {
         }
         arrayPago.push(pagos[0].cantidad);
         arrayPago.push(pagos[0].descripcion);
-        console.log(pagos[0].fecha_inicio_opcional);
         var msg = ( (pagos[0].fecha_inicio_opcional === null) ? ' ' : pagos[0].fecha_inicio_opcional  )
         arrayPago.push(msg);
         this.setState({ pagos: arrayPago });

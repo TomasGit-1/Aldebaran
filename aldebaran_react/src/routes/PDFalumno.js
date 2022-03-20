@@ -61,16 +61,13 @@ class PDFAlumno extends React.Component {
         let  hoy;
         let anios;
         dateNacimiento = Moment(respuesta[0][0].fechanacimiento, ["MM-DD-YYYY", "YYYY-MM-DD" , "DD/MM/YYYY"]);
-        console.log(dateNacimiento);
         nacimiento = Moment(dateNacimiento);
         hoy = Moment();
         anios = hoy.diff(nacimiento, "years");
 
         dateNacimiento = new Moment(respuesta[0][0].fechanacimiento).format('DD/MM/YYYY');
-        console.log(dateNacimiento);
 
         if (anios == NaN  || (anios ===undefined)){
-            console.log("Intentamos otra vez");
             dateNacimiento = new Moment(respuesta[0][0].fechanacimiento,).format('DD/MM/YYYY');
             nacimiento = Moment(dateNacimiento);
             hoy = Moment();
