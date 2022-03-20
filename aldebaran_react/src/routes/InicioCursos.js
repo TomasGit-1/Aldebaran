@@ -223,7 +223,7 @@ class InicioCursos extends React.Component {
     bodyFomrData.append("dateInicio", this.state.dateStart);
     bodyFomrData.append("idCurso", this.state.idInicioCurso);
     Swal.fire({
-      title: "¿Estas seguro de actualizar?",
+      title: "¿Actualizar informacion?",
       text: "",
       icon: "warning",
       showCancelButton: true,
@@ -284,7 +284,7 @@ class InicioCursos extends React.Component {
     bodyFomrData.append("idServicioEducativo", this.state.servicioEducativoID);
     bodyFomrData.append("dateInicio", this.state.dateStart);
     Swal.fire({
-      title: "¿Estas seguro de agregar un Inicio de curso?",
+      title: "¿Agregar un Inicio de curso?",
       text: "¡No podrás revertir esto!",
       icon: "warning",
       showCancelButton: true,
@@ -392,7 +392,7 @@ class InicioCursos extends React.Component {
         Swal.fire({
           icon: "error",
           title: "Oops..",
-          text: "No se encuentra la opcion",
+          text: "No se encuentra la opción",
         });
     }
   };
@@ -507,7 +507,7 @@ class InicioCursos extends React.Component {
                       </Form.Label>
                       <Form.Select onChange={this.onServicio}>
                         <option value="Seleccione una opcion">
-                          Seleccione una opcion
+                          Seleccione una opción
                         </option>
                         {servicio.map(function (item) {
                           return (
@@ -674,8 +674,8 @@ class InicioCursos extends React.Component {
                   <thead>
                     <tr>
                       <th>#</th>
-                      <th>Registro academico </th>
-                      <th>Nombre del programa academico</th>
+                      <th>Registro académico </th>
+                      <th>Nombre del programa académico</th>
                       <th>Fecha de inicio</th>
                       <th>Estatus</th>
                       <th>Opciones</th>

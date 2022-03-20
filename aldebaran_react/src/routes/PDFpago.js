@@ -193,7 +193,7 @@ class PDFPago extends React.Component {
                                 <Text >{" \n "}  </Text>
                                 <View style={styles.container}>
                                     
-                                <Text style={styles.text1}>{ "Numero de folio : "+ folio }</Text>
+                                <Text style={styles.text1}>{ "Número de folio : "+ folio }</Text>
 
                                 </View>
                                 <View style={styles.container}>
@@ -271,7 +271,7 @@ class PDFPago extends React.Component {
                                     <div style={{ borderBottom: 1, marginLeft: 10, width: "30%" }}>
                                         <Text style={styles.text2}>{" " + pagos[5]}</Text>
                                     </div>
-                                    <Text style={styles.text1}> Termino del curso :</Text>
+                                    <Text style={styles.text1}> Término del curso :</Text>
                                     <div style={{ borderBottom: 1, marginLeft: 10, width: "40%" }}>
                                         <Text style={styles.text2}>{" " + pagos[6]}</Text>
                                     </div>
@@ -291,7 +291,7 @@ class PDFPago extends React.Component {
                                    
                                 </View>
                                 <View style={styles.container}>
-                                    <Text style={styles.text1}> Falta descripcion:</Text>
+                                    <Text style={styles.text1}> Descripción:</Text>
                                     <div style={{ borderBottom: 1, marginLeft: 10, width: "100%" }}>
                                         <Text style={styles.text2}>{" " + pagos[8]}</Text>
                                     </div>

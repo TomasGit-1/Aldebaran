@@ -526,7 +526,7 @@ class Pagos extends React.Component {
         bodyFomrData.append('descripcion' , this.state.descripcionInput);
         bodyFomrData.append('inicioCurso' ,this.state.seleccionInicioCurso );
         Swal.fire({
-            title: "¿Estas seguro de agregar un nuevo pago?",
+            title: "¿Agregar un nuevo pago?",
             text: "¡No podrás revertir esto!",
             icon: 'warning',
             showCancelButton: true,
@@ -609,7 +609,7 @@ class Pagos extends React.Component {
         bodyFomrData.append('inicioCurso' ,this.state.seleccionInicioCurso );
 
         Swal.fire({
-            title: "¿Estas seguro de actualizar",
+            title: "¿Actualizar pago",
             text: "Actualizar",
             icon: 'warning',
             showCancelButton: true,
@@ -703,7 +703,7 @@ class Pagos extends React.Component {
                                         <Form.Group controlId="formFile">
                                             <Form.Label className="h6 ">Servicio educativo  <small style={{ color: "#600101" }}>*</small> </Form.Label>
                                             <Form.Select onChange={this.onServicio}   >
-                                                <option value="Seleccione una opcion">Seleccione una opcion</option>
+                                                <option value="Seleccione una opcion">Seleccione una opción</option>
                                                 {
 
                                                     servicio.map(function (item) {
@@ -715,9 +715,9 @@ class Pagos extends React.Component {
                                     </Col>
                                     <Col sm >
                                         <Form.Group controlId="formFile">
-                                            <Form.Label className="h6 ">Numero de modulo  <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                            <Form.Label className="h6 ">Número de modulo  <small style={{ color: "#600101" }}>*</small> </Form.Label>
                                             <Form.Select  onChange={this.onChangeNumModulo} >
-                                                <option value="Seleccione una opcion">Seleccione una opcion</option>
+                                                <option value="Seleccione una opcion">Seleccione una opción</option>
                                                 {
                                                     numModuloPago.map(function (item) {
                                                         return <option key={item} value={item}>{item}</option>;
@@ -730,7 +730,7 @@ class Pagos extends React.Component {
                                         <Form.Group controlId="formFile">
                                             <Form.Label className="h6 ">Alumnos <small style={{ color: "#600101" }}>*</small> </Form.Label>
                                             <Form.Select  onChange={this.onChangeAlumnos} >
-                                                <option value="Seleccione una opcion">Seleccione una opcion</option>
+                                                <option value="Seleccione una opcion">Seleccione una opción</option>
                                                 {
                                                     curpData.map(function (item) {
                                                         return <option key={item[0]} value={item[0]}>{item[1] +"  /  " + item[0]}</option>;
@@ -803,7 +803,7 @@ class Pagos extends React.Component {
                                     </Col>
                                     <Col sm>
                                         <Form.Group className="mb-3" >
-                                            <Form.Label className="h6">Fecha de Termino  </Form.Label>
+                                            <Form.Label className="h6">Fecha de Término  </Form.Label>
                                             <Form.Control type="date" value={this.state.dateFinish} onChange={(evt) => this.formularioSetData(evt, "FechaFin")}  />
                                         </Form.Group>
                                     </Col>
@@ -812,7 +812,7 @@ class Pagos extends React.Component {
                                         <Form.Group controlId="formFile">
                                             <Form.Label className="h6 ">Inicio de curso </Form.Label>
                                             <Form.Select  onChange={this.onChangeInicioCurso} >
-                                                <option value="Seleccione una opcion">Seleccione una opcion</option>
+                                                <option value="Seleccione una opcion">Seleccione una opción</option>
                                                 {
                                                     cursosdatesSeleccion.map(function (value ,item) {
                                                         return <option key={item} value={value[3]}>{value[3]}</option>;
@@ -826,7 +826,7 @@ class Pagos extends React.Component {
                                 <Row>
                                     <Col sm>
                                     <Form.Group controlId="formFile" >
-                                            <Form.Label className="h6 mb-3" >Descripcion <small style={{ color: "#600101" }}>*</small>  </Form.Label>
+                                            <Form.Label className="h6 mb-3" >Descripción <small style={{ color: "#600101" }}>*</small>  </Form.Label>
                                         <textarea
 
                                             className="col-12"
@@ -891,9 +891,9 @@ class Pagos extends React.Component {
                                   </Col>
                                   <Col sm >
                                       <Form.Group controlId="formFile">
-                                          <Form.Label className="h6 ">Numero de modulo  <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                          <Form.Label className="h6 ">Número de modulo  <small style={{ color: "#600101" }}>*</small> </Form.Label>
                                           <Form.Select  onChange={this.onChangeNumModulo} >
-                                              <option value="Seleccione una opcion">Seleccione una opcion</option>
+                                              <option value="Seleccione una opcion">Seleccione una opción</option>
                                               {
                                                   numModuloPago.map(function (item) {
                                                       return <option key={item} value={item}>{item}</option>;
@@ -1000,7 +1000,7 @@ class Pagos extends React.Component {
                                   </Col>
                                   <Col sm>
                                       <Form.Group className="mb-3" >
-                                          <Form.Label className="h5">Fecha de Termino  <small style={{ color: "#600101" }}>*</small> </Form.Label>
+                                          <Form.Label className="h5">Fecha de Término  <small style={{ color: "#600101" }}>*</small> </Form.Label>
                                           <Form.Control type="date" value={this.state.dateFinish} onChange={(evt) => this.formularioSetData(evt, "FechaFin")}  />
                                       </Form.Group>
                                   </Col>
@@ -1009,7 +1009,7 @@ class Pagos extends React.Component {
                                         <Form.Group controlId="formFile">
                                             <Form.Label className="h6 ">Inicio de curso </Form.Label>
                                             <Form.Select  onChange={this.onChangeInicioCurso} >
-                                                <option value="Seleccione una opcion">Seleccione una opcion</option>
+                                                <option value="Seleccione una opcion">Seleccione una opción</option>
                                                 {
                                                     cursosdatesSeleccion.map(function (value ,item) {
                                                         return <option key={item} value={value[3]}>{value[3]}</option>;
@@ -1022,7 +1022,7 @@ class Pagos extends React.Component {
                               <Row>
                                   <Col sm>
                                   <Form.Group controlId="formFile" >
-                                          <Form.Label className="h6 mb-3" >Descripcion <small style={{ color: "#600101" }}>*</small>  </Form.Label>
+                                          <Form.Label className="h6 mb-3" >Descripción <small style={{ color: "#600101" }}>*</small>  </Form.Label>
                                       <textarea
 
                                           className="col-12"
@@ -1094,13 +1094,13 @@ class Pagos extends React.Component {
                                             <th>#</th>
                                             <th>Curp</th>
                                             <th>Referencia</th>
-                                            <th>Registro Academico</th>
+                                            <th>Registro académico</th>
                                             <th>Servicio</th>
                                             <th>Cuota</th>
                                             <th>Fecha y Hora en ticket</th>
                                             <th>Fecha y Hora de registro</th>
                                             <th>Facturación</th>
-                                            <th>Descripcion</th>
+                                            <th>Descripción</th>
                                             <th>Opciones</th>
                                         </tr>
                                     </thead>

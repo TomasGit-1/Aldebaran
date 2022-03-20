@@ -128,7 +128,7 @@ class Servicios extends React.Component {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops..',
-                text: 'El campo registro academico esta vacio',
+                text: 'El campo registro académico esta vacio',
             })
         } else if (validacion.evento === "") {
             Swal.fire({
@@ -140,7 +140,7 @@ class Servicios extends React.Component {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops..',
-                text: 'El campo Nombre del programa academico esta vacio',
+                text: 'El campo Nombre del programa académico esta vacio',
             })
         } else if (validacion.cuota === "") {
             Swal.fire({
@@ -157,7 +157,7 @@ class Servicios extends React.Component {
         } else {
             if(isUpdate){
                 //Actualizamos los datos
-                var msg = '¿Estas seguro de actualizar el servicio ?';
+                var msg = '¿Actualizar el servicio ?';
                 Swal.fire({
                     title: msg,
                     text: "Actualizar",
@@ -201,7 +201,7 @@ class Servicios extends React.Component {
                 }) 
             }else{
                 //Insertamos datos
-                var msg = '¿Estas seguro de agregar\n - ' + validacion.registro + '- como servicio?';
+                var msg = '¿Agregar\n - ' + validacion.registro + '- como servicio?';
                 Swal.fire({
                     title: msg,
                     text: "¡No podrás revertir esto!",
@@ -453,20 +453,20 @@ class Servicios extends React.Component {
                             <Row className="mt-3 mb-3">
                                 <Col sm >
                                     <Form.Group >
-                                        <Form.Label className="h5">Registro academico</Form.Label>
-                                        <Form.Control type="text" placeholder="Registro academico" onChange={(evt) => this.dataForm0(evt, "resgitroid")} />
+                                        <Form.Label className="h5">Registro académico</Form.Label>
+                                        <Form.Control type="text" placeholder="Registro académico" onChange={(evt) => this.dataForm0(evt, "resgitroid")} />
                                     </Form.Group>
                                 </Col>
                                 <Col sm >
                                     <Form.Group >
-                                        <Form.Label className="h5">Numero de Modulos (1, 2, 3...)</Form.Label>
-                                        <Form.Control type="number" placeholder="Numero de modulos" onChange={(evt) => this.dataForm0(evt, "numModulo")} min={1} />
+                                        <Form.Label className="h5">Número de Modulos (1, 2, 3...)</Form.Label>
+                                        <Form.Control type="number" placeholder="Número de modulos" onChange={(evt) => this.dataForm0(evt, "numModulo")} min={1} />
                                     </Form.Group>
                                 </Col>
                                 <Col sm >
                                     <Form.Group >
-                                        <Form.Label className="h5">Numero de horas </Form.Label>
-                                        <Form.Control type="number" placeholder="Numero de horas" onChange={(evt) => this.dataForm0(evt, "numHoras")} min={1} />
+                                        <Form.Label className="h5">Número de horas </Form.Label>
+                                        <Form.Control type="number" placeholder="Número de horas" onChange={(evt) => this.dataForm0(evt, "numHoras")} min={1} />
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -479,8 +479,8 @@ class Servicios extends React.Component {
                                 </Col>
                                 <Col sm >
                                     <Form.Group >
-                                        <Form.Label className="h5">Nombre del programa academico</Form.Label>
-                                        <Form.Control type="text" placeholder="Programa academico" onChange={(evt) => this.dataForm0(evt, "nombre")} />
+                                        <Form.Label className="h5">Nombre del programa académico</Form.Label>
+                                        <Form.Control type="text" placeholder="Programa académico" onChange={(evt) => this.dataForm0(evt, "nombre")} />
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -548,20 +548,20 @@ class Servicios extends React.Component {
                             <Row className="mt-3 mb-3">
                                 <Col sm >
                                     <Form.Group >
-                                        <Form.Label className="h5">Registro academico</Form.Label>
-                                        <Form.Control type="text" placeholder="Registro academico" value={this.state.resAcademico} onChange={(evt) => this.dataForm0(evt, "resgitroid")} />
+                                        <Form.Label className="h5">Registro académico</Form.Label>
+                                        <Form.Control type="text" placeholder="Registro académico" value={this.state.resAcademico} onChange={(evt) => this.dataForm0(evt, "resgitroid")} />
                                     </Form.Group>
                                 </Col>
                                 <Col sm >
                                     <Form.Group >
-                                        <Form.Label className="h5">Numero de Modulos (1, 2, 3...)</Form.Label>
-                                        <Form.Control type="number" placeholder="Numero de modulos" value={this.state.numModulo} onChange={(evt) => this.dataForm0(evt, "numModulo")} min={1} />
+                                        <Form.Label className="h5">Número de Modulos (1, 2, 3...)</Form.Label>
+                                        <Form.Control type="number" placeholder="Número de modulos" value={this.state.numModulo} onChange={(evt) => this.dataForm0(evt, "numModulo")} min={1} />
                                     </Form.Group>
                                 </Col>
                                 <Col sm >
                                     <Form.Group >
-                                        <Form.Label className="h5">Numero de horas </Form.Label>
-                                        <Form.Control type="number" placeholder="Numero de horas" value={this.state.numHoras} onChange={(evt) => this.dataForm0(evt, "numHoras")} min={1} />
+                                        <Form.Label className="h5">Número de horas </Form.Label>
+                                        <Form.Control type="number" placeholder="Número de horas" value={this.state.numHoras} onChange={(evt) => this.dataForm0(evt, "numHoras")} min={1} />
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -574,8 +574,8 @@ class Servicios extends React.Component {
                                 </Col>
                                 <Col sm >
                                     <Form.Group >
-                                        <Form.Label className="h5">Nombre del programa academico</Form.Label>
-                                        <Form.Control type="text" placeholder="Programa academico" value={this.state.nombreServicio} onChange={(evt) => this.dataForm0(evt, "nombre")} />
+                                        <Form.Label className="h5">Nombre del programa académico</Form.Label>
+                                        <Form.Control type="text" placeholder="Programa académico" value={this.state.nombreServicio} onChange={(evt) => this.dataForm0(evt, "nombre")} />
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -700,14 +700,14 @@ class Servicios extends React.Component {
                                     <thead  >
                                         <tr>
                                             <th>#</th>
-                                            <th>Registro academico</th>
+                                            <th>Registro académico</th>
                                             <th>Tipo de evento</th>
                                             <th>Nombre</th>
                                             <th>Modalidad</th>
                                             <th>Cuota</th>
                                             <th>Estatus</th>
-                                            <th>Numero de modulos</th>
-                                            <th>Numero de horas</th>
+                                            <th>Número de modulos</th>
+                                            <th>Número de horas</th>
                                             <th>Opciones</th>
                                         </tr>
                                     </thead>

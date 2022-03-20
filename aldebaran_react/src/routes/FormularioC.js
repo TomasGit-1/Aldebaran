@@ -461,7 +461,7 @@ class FormularioC extends React.Component {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops..',
-                    text: "No se encuntra la opcion",
+                    text: "No se encuentra la opción",
                 })
         }
     }
@@ -499,7 +499,7 @@ class FormularioC extends React.Component {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops..',
-                    text: "No se encuntra la opcion",
+                    text: "No se encuentra la opción",
                 })
         }
     }
@@ -525,7 +525,7 @@ class FormularioC extends React.Component {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops..',
-                    text: "No se encuntra la opcion",
+                    text: "No se encuentra la opción",
                 })
         }
     }
@@ -553,7 +553,7 @@ class FormularioC extends React.Component {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops..',
-                    text: "No se encuntra la opcion",
+                    text: "No se encuentra la opción",
                 })
         }
     }
@@ -1207,7 +1207,7 @@ class FormularioC extends React.Component {
                                                         <Form.Label className="h6" >Genero <small style={{ color: "#600101" }}>*</small> </Form.Label>
                                                         {/* <Select   options={this.state.options}  /> */}
                                                         <Form.Select aria-label="Default select example" onChange={this.SeleccGenero} value={this.state.genero}>
-                                                            <option>Seleccione una opcion</option>
+                                                            <option>Seleccione una opción</option>
                                                             <option value="Mujer">Mujer</option>
                                                             <option value="Hombre">Hombre</option>
                                                         </Form.Select>
@@ -1415,7 +1415,7 @@ class FormularioC extends React.Component {
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">Nivel maximo de estudios</Form.Label>
                                                         <Form.Select onChange={this.SeleccMaxEstudios} value={this.state.n_max_estudios}>
-                                                            <option>Seleccione una opcion</option>
+                                                            <option>Seleccione una opción</option>
 
                                                             {
                                                                 MaxEstudiosOp.map((index) =>
@@ -1430,7 +1430,7 @@ class FormularioC extends React.Component {
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">Situacion academica</Form.Label>
                                                         <Form.Select onChange={this.SeleccSituacionAcademina} value={this.state.sitAcademico}>
-                                                            <option>Seleccione una opcion</option>
+                                                            <option>Seleccione una opción</option>
 
                                                             {
                                                                 situacionAcademica.map((index) =>
@@ -1446,7 +1446,7 @@ class FormularioC extends React.Component {
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">Sistema educativo de la Institución de procedencia</Form.Label>
                                                         <Form.Select onChange={this.SeleccSistemEducativo} value={this.state.sistemaProcendenciaOpcion}>
-                                                            <option>Seleccione una opcion</option>
+                                                            <option>Seleccione una opción</option>
 
                                                             {
                                                                 sistemaProcendencia.map((index) =>
@@ -1556,7 +1556,7 @@ class FormularioC extends React.Component {
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">¿Cómo se enteró del curso? *</Form.Label>
                                                         <Form.Select onChange={this.SeleccMedioInformacio} value={this.state.comoseenterodelcurso} >
-                                                            <option>Seleccione una opcion</option>
+                                                            <option>Seleccione una opción</option>
 
                                                             {
                                                                 MedioInformacion.map((index) =>
@@ -1691,7 +1691,7 @@ class FormularioC extends React.Component {
                                                         <Form.Label className="h6" >Genero <small style={{ color: "#600101" }}>*</small> </Form.Label>
                                                         {/* <Select   options={this.state.options}  /> */}
                                                         <Form.Select aria-label="Default select example" onChange={this.SeleccGenero} value={this.state.genero}>
-                                                            <option>Seleccione una opcion</option>
+                                                            <option>Seleccione una opción</option>
                                                             <option value="Mujer">Mujer</option>
                                                             <option value="Hombre">Hombre</option>
                                                         </Form.Select>
@@ -1899,7 +1899,7 @@ class FormularioC extends React.Component {
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">Nivel maximo de estudios</Form.Label>
                                                         <Form.Select onChange={this.SeleccMaxEstudios} value={this.state.n_max_estudios}>
-                                                            <option>Seleccione una opcion</option>
+                                                            <option>Seleccione una opción</option>
 
                                                             {
                                                                 MaxEstudiosOp.map((index) =>
@@ -1914,7 +1914,7 @@ class FormularioC extends React.Component {
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">Situacion academica</Form.Label>
                                                         <Form.Select onChange={this.SeleccSituacionAcademina} value={this.state.sitAcademico}>
-                                                            <option>Seleccione una opcion</option>
+                                                            <option>Seleccione una opción</option>
 
                                                             {
                                                                 situacionAcademica.map((index) =>
@@ -1930,7 +1930,7 @@ class FormularioC extends React.Component {
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">Sistema educativo de la Institución de procedencia</Form.Label>
                                                         <Form.Select onChange={this.SeleccSistemEducativo} value={this.state.sistemaProcendenciaOpcion}>
-                                                            <option>Seleccione una opcion</option>
+                                                            <option>Seleccione una opción</option>
 
                                                             {
                                                                 sistemaProcendencia.map((index) =>
@@ -2040,7 +2040,7 @@ class FormularioC extends React.Component {
                                                     <Form.Group className="mb-3">
                                                         <Form.Label className="h6">¿Cómo se enteró del curso? *</Form.Label>
                                                         <Form.Select onChange={this.SeleccMedioInformacio} value={this.state.comoseenterodelcurso} >
-                                                            <option>Seleccione una opcion</option>
+                                                            <option>Seleccione una opción</option>
 
                                                             {
                                                                 MedioInformacion.map((index) =>

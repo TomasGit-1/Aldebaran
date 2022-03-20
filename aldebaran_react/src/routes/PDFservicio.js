@@ -146,24 +146,24 @@ class PDFServicio extends React.Component {
                                 }
                                  <Text >{" \n "}  </Text>
                                  <View style={styles.container}>
-                                        <Text style={styles.text1}>Programa academico:</Text>
+                                        <Text style={styles.text1}>Programa académico:</Text>
                                         <div style={{borderBottom : 1,marginLeft:20,width:"100%"}}>
                                             <Text style={styles.text2}>{ " "+servicio[3]}</Text>
                                         </div>  
                                 </View> 
                                 <View style={styles.container}>
-                                        <Text style={styles.text1}>Registro academico:</Text>
+                                        <Text style={styles.text1}>Registro académico:</Text>
                                         <div style={{borderBottom : 1,marginLeft:10,width:"60%"}}>
                                             <Text style={styles.text2}>{ " "+servicio[1]}</Text>
                                         </div>  
-                                        <Text style={styles.text1}>Numero de modulos:</Text>
+                                        <Text style={styles.text1}>Número de modulos:</Text>
                                         <div style={{borderBottom : 1,marginLeft:10,width:"10%"}}>
                                             <Text style={styles.text2}>{ " "+servicio[7]}</Text>
 
                                         </div>   
                                 </View> 
                                 <View style={styles.container}>
-                                        <Text style={styles.text1}>Numero de horas:</Text>
+                                        <Text style={styles.text1}>Número de horas:</Text>
                                         <div style={{borderBottom : 1,marginLeft:23,width:"10%"}}>
                                             <Text style={styles.text2}>{ " "+servicio[8]}</Text>
                                         </div>  
