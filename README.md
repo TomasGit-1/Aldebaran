@@ -65,3 +65,6 @@ https://www.npmjs.com/package/pm2
 
 # 
 pm2 start ecosystem.config.js
+
+
+https://dev.to/taufiqtab/deploy-reactjs-production-build-with-pm2-5dfo
