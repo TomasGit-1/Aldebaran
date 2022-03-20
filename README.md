@@ -28,12 +28,19 @@
     6. En los archivos package.json se encuentra un apartado que se llama scripts presionar dev o build
 
 # Para desplegar las aplicaciones :
+    aldebaran_Api
+    1. pm2 start ecosystem.config.js
 
-    BackEnd
-    1. Generamos el archivo .exe para el Api ejecuntando el comando npm run build
+    aldebaran_front
+    1. npm run build 
+    2.
+        pm2 serve build 3000 --name "aldebaran_front" --spa 
+        or 
+        pm2 start frontend.config.js
 
-    FrontEnd
-    1. Entramos a la ruta aldebaran/aldebaran_react/
+
+    Base de datos
+    1. Entramos a la ruta DB_IPN/DB
     2. Ejecutamos docker-compose up --build
     3. Ejecutamos docker-compose start 
 
@@ -58,10 +65,10 @@
 
 
 # Lanzamiento PM2 
-https://desarrolloweb.com/articulos/ejecutar-aplicacion-nodejs-pm2.html
+    https://desarrolloweb.com/articulos/ejecutar-aplicacion-nodejs-pm2.html
 
 # Documentacion
-https://www.npmjs.com/package/pm2
+    https://www.npmjs.com/package/pm2
 
-# 
-pm2 start ecosystem.config.js
+# Lanzar aplicaciones
+    https://www.loginradius.com/blog/async/react-app-deployment/
