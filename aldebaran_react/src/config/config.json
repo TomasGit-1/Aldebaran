@@ -1,0 +1,8 @@
+{
+    "general":[
+        {
+            "puerto_api":"5000",
+            "url":"http://localhost:"
+        }
+    ]
+}
