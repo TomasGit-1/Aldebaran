@@ -2,8 +2,8 @@
     "postgresql":[
         {
             "host":"127.0.0.1",
-            "user":"admin",
-            "password":"admin",
+            "user":"postgres",
+            "password":"cvdroaxaca",
             "database":"IPN",
             "port":"5432"
         }
