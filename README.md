@@ -66,7 +66,8 @@
 
 # Lanzamiento PM2 
     https://desarrolloweb.com/articulos/ejecutar-aplicacion-nodejs-pm2.html
-
+# Error
+    https://stackoverflow.com/questions/36690442/error-cannot-find-module-users-wyb-nvm-versions-io-js-v3-0-0-lib-node-module
 # Documentacion
     https://www.npmjs.com/package/pm2
 
